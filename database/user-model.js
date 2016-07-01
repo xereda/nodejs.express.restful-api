@@ -3,8 +3,9 @@
 const mongoose = require("mongoose");
 const conn =  require("../config/connection");
 const schemaModuleUsers = require("./user-schema");
+const messages = require("../controller/messages");
 
-conn.on("error", console.error.bind(console, "Erro ao conectar no banco"));
+conn.on("error", console.error.bind(console, messages.getMessage("error", 1)));
 
 conn.once("open", function() {
 

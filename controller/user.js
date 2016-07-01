@@ -1,100 +1,155 @@
+// Controler users.js
+// Faz o controle das funções de CRUD da restapi
+
+// Importa o módulo de definação da collection de usuários do docmob
 const model = require("../database/user-model");
 
+// Define a função que será exportada como módulo
+// Recebe como parâmetro o controller de mensagens do sistema
 module.exports = function(messages) {
 
+  // ** READ ALL - GET **
+  // Funcão que retorna a lista de todos os usuários da collection users
+  // Recebe como parâmetro um callback contendo o response para
+  // o device chamador (navegador, aplicativo, etc...)
+  const _readAll = function(callback) {
+
+    model.User.find({}, function(err, users) {
+
+      if (err) {
+        // Não foi possível retornar a lista de usuários
+        callback({ error: messages.getMessage("error", 1), err });
+      } else {
+        callback(users);
+      }
+    });
+
+  }
+
+  // ** RED - GET **
+  // Função que retorna um determinado usuário da collection users
+  // Além do callback recebe também o id do usuário
+  const _read = function(_id, callback) {
+
+    // FindById é função filtro do mongoose. Com ela, basta passar o _id
+    // em formato string.
+    // Recebe um callback, onde err recebe o objeto de um eventual erro ou
+    // user, caso encontre o usuário na collection de usuários
+    model.User.findById(_id, function(err, user) {
+
+      if (err) {
+        // Nao foi possivel retornar o usuário
+        callback({ error: messages.getMessage("error", 3), err });
+      } else if (!user) {
+        // Usuário não localizado
+        callback({ response: messages.getMessage("message", 3) });
+      } else {
+        // Encontrou o usuáio e retorna para o callback o objeto respectivo
+        callback(user);
+      }
+    });
+
+  }
+
+  // ** CREATE POST **
+  // Função que cria novo usuário na collection de usuários
+  const _create = function(userObject, callback) {
+
+    // Cria um novo usuário na colletion de usuários com o objeto
+    // passado como parâmetro.
+    new model.User(userObject).save(function(err, user) {
+
+      // Caso ocorra erro na criação do usuário
+      if (err) {
+        // Não foi possível criar o usuário
+        callback({ error: messages.getMessage("error", 4), err });
+      } else {
+        // Cria o usuário e retorna um objecto com o documento recem criado
+        callback(user);
+      }
+    });
+  }
+
+  // ** PUT UPDATE **
+  // Funcão que atualiza um usuário. Recebe como parâmetro o _id do usuário
+  // a ser alterado, o objeto aos campos a serem atualizados e por final,
+  // o callback de retorno para express.
+  const _update = function(_id, userObject, callback) {
+
+    // Procura o usuário informado como parâmetro
+    model.User.findById(_id, function(err, user) {
+
+      // Caso tenha algum problema na procura
+      if (err) {
+
+        // Erro - Não foi possível retornar o usuário
+        callback({ error: messages.getMessage("error", 3), err });
+
+      } else if (!user) {
+
+        // Não localizou o usuário informado como parâmetro
+        callback({ response: messages.getMessage("message", 3) });
+
+      } else {
+
+        // Encontrou o usuário e vai atualizar os dados do documento
+        // na collection users do mongodb
+        (userObject.name) ? user.name = userObject.name : null;
+        (userObject.email) ? user.email = userObject.email : null;
+        (userObject.password) ? user.password = userObject.password : null;
+
+        user.save(function(err, user) {
+          // Erro - Não foi possível atualizar o usuário
+          if (err) {
+            callback({ error: messages.getMessage("error", 5), err });
+          } else {
+            // Atualiza e retorna para o callback o objeto do usuário
+            // atualizado referente ao documento da collection
+            callback(user);
+          }
+        });
+      }
+    });
+  }
+
+  // ** DELETE **
+  // Tenta localizar um usuário passado como parâmetro e se encontrar
+  // remove seu documento da collection de usuários
+  const _delete = function(_id, callback) {
+
+    // Pesquisa pelo usuário passado como parâmetro
+    model.User.findById(_id, function(err, user) {
+
+      // Caso ocorra algum erro na pesquisa do usuário
+      if (err) {
+        // Não foi possível localizar o usuário
+        callback({ error: messages.getMessage("error", 3), err});
+      } else if (!user) {
+        // Usuário inexistente
+        callback({ response: messages.getMessage("message", 3), err});
+      } else {
+
+        // Encontrou o usuário e irá remove-lo
+        user.remove(function(err) {
+
+          // Documento na collection de usuários foi removido com sucesso
+          if (!err) {
+            // Usuário excluído com sucesso
+            callback({ response: messages.getMessage("message", 4), user });
+          }
+
+        });
+      }
+    });
+  }
+
+  // Define o objeto encapsulador das funções de CRUD da api
   const userController = {
-
-    list: function(callback) {
-
-      model.User.find({}, function(err, users) {
-
-        if (err) {
-          callback({ error: "Não foi possível retonar a lista de usuários! " + err }); //
-        } else {
-          callback(users);
-        }
-      });
-
-    },
-    user: function(_id, callback) {
-
-      model.User.findById(_id, function(err, user) {
-
-        if (err) {
-          callback({ error: "Não foi possível retornar o usuário! " + err });
-        } else if (!user) {
-          callback({ response: messages.getMessage(3) });
-        } else {
-          callback(user);
-        }
-      });
-
-    },
-    save: function(fullname, email, callback) {
-
-      new model.User({
-        name: fullname,
-        email: email
-      }).save(function(err, user) {
-
-        if (err) {
-          callback({ error: "Não foi possível salvar o usuário! " + err });
-        } else {
-          callback(user);
-        }
-
-      });
-
-
-    },
-    update: function(_id, fullname, email, callback) {
-
-      model.User.findById(_id, function(err, user) {
-
-        if (err) {
-          callback({ error: "Não foi retornar o usuário" });
-        } else if (!user) {
-          callback({ response: messages.getMessage(3) });
-        } else {
-          user.name = fullname;
-          user.email = email;
-
-          user.save(function(err, user) {
-
-            if (err) {
-              callback({ error: "Não foi possível atualizar o usuário" });
-            } else {
-              callback(user);
-            }
-
-          });
-        }
-
-      });
-
-
-    },
-    delete: function(_id, callback) {
-
-      model.User.findById(_id, function(err, user) {
-
-        if ((err) || (!user)) {
-          callback({ error: "Não foi possível retornar o usuário" });
-        } else {
-
-          user.remove(function(err) {
-
-            if (!err) {
-              callback({ response: "Usuário " + _id + " excluído com sucesso" });
-            }
-
-          });
-
-        }
-      });
-
-    }
-
+    readAll:  _readAll, // get
+    read:     _read,    // get
+    create:   _create,  // post
+    update:   _update,  // put
+    delete:   _delete   // delete
   };
 
   return userController;

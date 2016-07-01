@@ -1,60 +1,66 @@
 "use strict";
 
-const messages = require("./config/messages");
-const service = require("./config/service")(messages);
+const config = require("./config/config");
+const messages = require("./controller/messages");
+const app = require("./config/listener")(messages, config);
 const userController = require("./controller/user")(messages);
 const validator = require("validator");
 
+const _validate = function(parameter) {
+  return validator.trim(validator.escape(parameter));
+}
 
-service.get("/", function(req, res) {
+const _getUserObject = function(req) {
+  const _userObject = {};
+  (req.body.name) ? _userObject.name = _validate(req.body.name) : null;
+  (req.body.email) ? _userObject.email = _validate(req.body.email) : null;
+  (req.body.password) ? _userObject.password = _validate(req.body.password) : null;
+  return _userObject;
+}
 
-  res.json({ response: messages.getMessage(1) });
+app.get("/", function(req, res) {
+
+  res.json({ response: messages.getMessage("message", 1) });
 
 });
 
-service.get("/users", function(req, res) {
+app.get("/users", function(req, res) {
 
-  userController.list(function(userlist) {
+  userController.readAll(function(userlist) {
     res.json(userlist);
   });
-  
+
 });
 
-service.get("/users/:_id", function(req, res) {
+app.get("/users/:_id", function(req, res) {
 
   const _id = validator.trim(validator.escape(req.params._id));
 
-  userController.user(_id, function(user) {
+  userController.read(_id, function(user) {
     res.json(user);
   });
 
 });
 
-service.post(["/users", "/users/:_id"], function(req, res) {
+app.post("/users", function(req, res) {
 
-  const fullname = validator.trim(validator.escape(req.body.fullname));
-  const email = validator.trim(validator.escape(req.body.email));
-
-  userController.save(fullname, email, function(createdUser) {
+  userController.create(_getUserObject(req), function(createdUser) {
       res.json(createdUser);
   });
 
 });
 
-service.put("/users", function(req, res) {
+app.put("/users", function(req, res) {
 
   const _id = validator.trim(validator.escape(req.body._id));
 
-  const fullname = validator.trim(validator.escape(req.body.fullname));
-  const email = validator.trim(validator.escape(req.body.email));
-
-  userController.update(_id, fullname, email, function(updatedUser) {
+  userController.update(_id, _getUserObject(req), function(updatedUser) {
     res.json(updatedUser);
   });
 
 });
 
-service.delete("/users/:_id", function(req, res) {
+app.delete("/users/:_id", function(req, res) {
 
   const _id = req.params._id;
 
