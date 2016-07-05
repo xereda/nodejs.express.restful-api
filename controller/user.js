@@ -2,7 +2,7 @@
 // Faz o controle das funções de CRUD da restapi
 
 // Importa o módulo de definação da collection de usuários do docmob
-const model = require("../database/user-model");
+const model = require("../database/user-schema-model");
 
 // Define a função que será exportada como módulo
 // Recebe como parâmetro o controller de mensagens do sistema
@@ -18,15 +18,15 @@ module.exports = function(messages) {
 
       if (err) {
         // Não foi possível retornar a lista de usuários
-        callback({ error: messages.getMessage("error", 1), err });
+        callback({ error: messages.getMessage("error", 1), err }, 400);
       } else {
-        callback(users);
+        callback(users, 200);
       }
     });
 
   }
 
-  // ** RED - GET **
+  // ** READ - GET **
   // Função que retorna um determinado usuário da collection users
   // Além do callback recebe também o id do usuário
   const _read = function(_id, callback) {
@@ -39,13 +39,13 @@ module.exports = function(messages) {
 
       if (err) {
         // Nao foi possivel retornar o usuário
-        callback({ error: messages.getMessage("error", 3), err });
+        callback({ error: messages.getMessage("error", 3), err }, 400);
       } else if (!user) {
         // Usuário não localizado
-        callback({ response: messages.getMessage("message", 3) });
+        callback({ response: messages.getMessage("message", 3) }, 404);
       } else {
         // Encontrou o usuáio e retorna para o callback o objeto respectivo
-        callback(user);
+        callback(user, 200);
       }
     });
 
@@ -62,10 +62,10 @@ module.exports = function(messages) {
       // Caso ocorra erro na criação do usuário
       if (err) {
         // Não foi possível criar o usuário
-        callback({ error: messages.getMessage("error", 4), err });
+        callback({ error: messages.getMessage("error", 4), err }, 400);
       } else {
         // Cria o usuário e retorna um objecto com o documento recem criado
-        callback(user);
+        callback(user, 201);
       }
     });
   }
@@ -83,12 +83,12 @@ module.exports = function(messages) {
       if (err) {
 
         // Erro - Não foi possível retornar o usuário
-        callback({ error: messages.getMessage("error", 3), err });
+        callback({ error: messages.getMessage("error", 3), err }, 400);
 
       } else if (!user) {
 
         // Não localizou o usuário informado como parâmetro
-        callback({ response: messages.getMessage("message", 3) });
+        callback({ response: messages.getMessage("message", 3) }, 404);
 
       } else {
 
@@ -101,11 +101,11 @@ module.exports = function(messages) {
         user.save(function(err, user) {
           // Erro - Não foi possível atualizar o usuário
           if (err) {
-            callback({ error: messages.getMessage("error", 5), err });
+            callback({ error: messages.getMessage("error", 5), err }, 400);
           } else {
             // Atualiza e retorna para o callback o objeto do usuário
             // atualizado referente ao documento da collection
-            callback(user);
+            callback(user, 200);
           }
         });
       }
@@ -123,10 +123,10 @@ module.exports = function(messages) {
       // Caso ocorra algum erro na pesquisa do usuário
       if (err) {
         // Não foi possível localizar o usuário
-        callback({ error: messages.getMessage("error", 3), err});
+        callback({ error: messages.getMessage("error", 3), err}, 400);
       } else if (!user) {
         // Usuário inexistente
-        callback({ response: messages.getMessage("message", 3), err});
+        callback({ response: messages.getMessage("message", 3), err}, 404);
       } else {
 
         // Encontrou o usuário e irá remove-lo
@@ -135,7 +135,7 @@ module.exports = function(messages) {
           // Documento na collection de usuários foi removido com sucesso
           if (!err) {
             // Usuário excluído com sucesso
-            callback({ response: messages.getMessage("message", 4), user });
+            callback({ response: messages.getMessage("message", 4), user }, 200);
           }
 
         });

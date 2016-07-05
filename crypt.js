@@ -3,7 +3,7 @@ const saltRounds = 10;
 const myPlaintextPassword = 'xereda';
 const someOtherPlaintextPassword = 'not_xereda';
 
-const hash = "$2a$10$HdsXCGpcSfqOiJhypHNQS.B6O219DXY/DaOeydxu7URJwC.Kh9v3K";
+const hash = "$2a$10$FRahmHeaMTIdMS8bvdr/hu3Pv.mwMgfIuAOs8LeCfnMLeUEmz1aQC";
 
 //var hash = bcrypt.hashSync(myPlaintextPassword, saltRounds);
 

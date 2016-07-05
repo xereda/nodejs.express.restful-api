@@ -1,5 +1,6 @@
 "use strict";
 
+const mongoose = require("mongoose");
 const config = require("./config/config");
 const messages = require("./controller/messages");
 const app = require("./config/listener")(messages, config);
@@ -18,54 +19,62 @@ const _getUserObject = function(req) {
   return _userObject;
 }
 
-app.get("/", function(req, res) {
+
+// app.route("*", function(req, res) {
+//
+//   console.log("dentro de route *: ", mongoose.connection.readyState);
+//   if (mongoose.connection.readyState === 0) res.status(500).json({error: "Banco de dados não está em execução"});
+//
+// });
+
+app.get("/", function(req, res, next) {
 
   res.json({ response: messages.getMessage("message", 1) });
 
 });
 
-app.get("/users", function(req, res) {
+app.get("/users", function(req, res, next) {
 
-  userController.readAll(function(userlist) {
-    res.json(userlist);
+  userController.readAll(function(userlist, status) {
+    res.status(status).json(userlist);
   });
 
 });
 
-app.get("/users/:_id", function(req, res) {
+app.get("/users/:_id", function(req, res, next) {
 
   const _id = validator.trim(validator.escape(req.params._id));
 
-  userController.read(_id, function(user) {
-    res.json(user);
+  userController.read(_id, function(user, status) {
+    res.status(status).json(user);
   });
 
 });
 
-app.post("/users", function(req, res) {
+app.post("/users", function(req, res, next) {
 
-  userController.create(_getUserObject(req), function(createdUser) {
-      res.json(createdUser);
+  userController.create(_getUserObject(req), function(createdUser, status) {
+    res.status(status).json(createdUser);
   });
 
 });
 
-app.put("/users", function(req, res) {
+app.put("/users", function(req, res, next) {
 
   const _id = validator.trim(validator.escape(req.body._id));
 
-  userController.update(_id, _getUserObject(req), function(updatedUser) {
-    res.json(updatedUser);
+  userController.update(_id, _getUserObject(req), function(updatedUser, status) {
+    res.status(status).json(updatedUser);
   });
 
 });
 
-app.delete("/users/:_id", function(req, res) {
+app.delete("/users/:_id", function(req, res, next) {
 
   const _id = req.params._id;
 
-  userController.delete(_id, function(deletedUser) {
-    res.json(deletedUser);
+  userController.delete(_id, function(deletedUser, status) {
+    res.status(status).json(deletedUser);
   });
 
 });
