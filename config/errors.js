@@ -7,4 +7,12 @@ module.exports = [
   { code: 3, description: "Não foi possível localizar o usuário" },
   { code: 4, description: "Não foi possível criar o usuário" },
   { code: 5, description: "Não foi possível atualizar o usuário" },
+  { code: 6, description: "Parâmetro identificador do usuário deve ser informado" },
+  { code: 7, description: "Campo aceita apenas valor lógico (%1)" },
+  { code: 8, description: "Campo (%1) é obrigatório" },
+  { code: 9, description: "O identificador informado para o campo 'createdById' não existe no coleção de usuários" },
+  { code: 10, description: "Informe o identificador do usuário que está criando este documento" },
+  { code: 11, description: "Informe o identificador do usuário que está atualizando este documento" },
+  { code: 12, description: "O identificador informado para o campo 'updatedById' não existe no coleção de usuários" },
+
 ];

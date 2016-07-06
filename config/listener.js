@@ -3,7 +3,7 @@
 const bodyParser = require("body-parser");
 const express = require("express");
 const allowCors = require("./cors");
-const mongoose = require("mongoose");
+const conn = require("../config/connection");
 const app = express();
 
 module.exports = function(messages, config) {
@@ -20,16 +20,11 @@ module.exports = function(messages, config) {
 
   app.use(function(req, res, next) {
 
-    mongoose.connect("mongodb://" + config.database_host + "/" + config.database_name, function(err) {
-
-      if ((err) && (mongoose.connection.readyState === 0)) {
-        res.status(500).json({ error: "Banco de dados desconectado", err });
-        return next(err);
-      }
-
-      next();
-
-    });
+    if (conn.readyState === 0) {
+      res.status(503).json({ error: "Erro com o banco de dados" });
+      return next(new Error("Erro com o banco de dados"));
+    }
+    next();
 
   });
 

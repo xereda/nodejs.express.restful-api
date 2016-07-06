@@ -4,6 +4,7 @@
 // Importa o módulo de definação da collection de usuários do docmob
 const model = require("../database/user-schema-model");
 
+
 // Define a função que será exportada como módulo
 // Recebe como parâmetro o controller de mensagens do sistema
 module.exports = function(messages) {
@@ -97,6 +98,10 @@ module.exports = function(messages) {
         (userObject.name) ? user.name = userObject.name : null;
         (userObject.email) ? user.email = userObject.email : null;
         (userObject.password) ? user.password = userObject.password : null;
+        (userObject.admin) ? user.admin = userObject.admin : null;
+        (userObject.active) ? user.admin = userObject.active : null;
+        (userObject.createdById) ? user.createdById = userObject.createdById : null;
+        (userObject.updatedById) ? user.updatedById = userObject.updatedById : null;
 
         user.save(function(err, user) {
           // Erro - Não foi possível atualizar o usuário

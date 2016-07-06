@@ -10,16 +10,9 @@ const _passwordCrypt = function(v) {
   return bcrypt.hashSync(v, 10);
 }
 
-conn.on("disconnected", function() {
-  console.log("banco de dados disconnected");
-});
-
-conn.on("error", console.error.bind(console, messages.getMessage("error", 1)));
-
 conn.once("open", function() {
 
-  const _userSchema = mongoose.Schema(schemaModuleUsers.schema);
-
+  const _userSchema = mongoose.Schema(schemaModuleUsers.schema, schemaModuleUsers.schemaProperties);
 
   _userSchema.pre("save", function(next) {
 
@@ -32,6 +25,35 @@ conn.once("open", function() {
 
   });
 
-  module.exports.User = mongoose.model("users", _userSchema);
+  _userSchema.path('createdById').validate(function (value, respond) {
+
+    console.log("eh novo? ", this.isNew);
+
+    if (!this.isNew) respond(true);
+
+      mongoose.models["users"].findOne({_id: value}, function (err, doc) {
+          if (err || !doc) {
+              respond(false);
+          } else {
+              respond(true);
+          }
+      });
+
+  }, messages.getMessage("error", 9) );
+
+  _userSchema.path('updatedById').validate(function (value, respond) {
+
+      mongoose.models["users"].findOne({_id: value}, function (err, doc) {
+          if (err || !doc) {
+              respond(false);
+          } else {
+              respond(true);
+          }
+      });
+
+  }, messages.getMessage("error", 12) );
+
+  const _userModel = mongoose.model("users", _userSchema);
+  module.exports.User = _userModel;
 
 });

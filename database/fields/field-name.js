@@ -5,7 +5,7 @@ const _validate = (v) => v.length >= 3;
 const _field = {
   type: String,
   validate: [ _validate, "Informe pelo menos 3 caracteres para o campo ({NAME})" ],
-  required: true,
+  required: "Campo nome é obrigatório",
 }
 
 
