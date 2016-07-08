@@ -6,6 +6,7 @@ const messages = require("./controller/messages");
 const app = require("./config/listener")(messages, config);
 const userController = require("./controller/user")(messages);
 const validator = require("validator");
+const schemaDefUsers = require("./database/user-schema-definition");
 
 const _validate = function(parameter) {
   return validator.trim(validator.escape(parameter));
@@ -13,26 +14,52 @@ const _validate = function(parameter) {
 
 const _getUserObject = function(req) {
   const _userObject = {};
-  (req.body.name) ? _userObject.name = _validate(req.body.name) : null;
-  (req.body.email) ? _userObject.email = _validate(req.body.email) : null;
-  (req.body.password) ? _userObject.password = _validate(req.body.password) : null;
-  (req.body.admin) ? _userObject.admin = _validate(req.body.admin) : null;
-  (req.body.active) ? _userObject.active = _validate(req.body.active) : null;
-  (req.body.createdById) ? _userObject.createdById = _validate(req.body.createdById) : null;
-  (req.body.updatedById) ? _userObject.updatedById = _validate(req.body.updatedById) : null;
+
+  console.log(req.body.updatedById + " - " + req.body.createdById);
+
+  if (req.method == "POST") {
+    if (req.body.createdById) {
+      console.log("o parametro createdById foi informado: " + req.body.updatedById + " - " + req.body.createdById);
+      req.body.updatedById = req.body.createdById;
+    } else {
+      req.body.updatedById = config.defaultCreatedById;
+      console.log(req.body.updatedById + " - " + req.body.createdById);
+    }
+  }
+
+  Object.keys(schemaDefUsers.schema).forEach(function (key) {
+    // exemplo apos parser do eval :
+    // (req.body.name) ? _userObject.name = _validate(req.body.name) : null;
+    eval("(req.body." + key + ") ? _userObject." + key + " = _validate(req.body." + key + ") : null;");
+  });
+
+  // (req.body.name) ? _userObject.name = _validate(req.body.name) : null;
+  // (req.body.email) ? _userObject.email = _validate(req.body.email) : null;
+  // (req.body.password) ? _userObject.password = _validate(req.body.password) : null;
+  // (req.body.admin) ? _userObject.admin = _validate(req.body.admin) : null;
+  // (req.body.active) ? _userObject.active = _validate(req.body.active) : null;
+  // (req.body.createdById) ? _userObject.createdById = _validate(req.body.createdById) : null;
+  // (req.body.updatedById) ? _userObject.updatedById = _validate(req.body.updatedById) : null;
+
   return _userObject;
 }
 
+const _toJSObject = function(param) {
+  const _obj = {};
+  if (param) {
+    _validate(param.replace(/[^A-Za-z0-9,]/g, '')).split(",").forEach(function(v) {
+      v ? _obj[v] = 1 : null;
+    });
+  }
+  return _obj;
+}
 
-app.get("/", function(req, res, next) {
-
-  res.json({ response: messages.getMessage("message", 1) });
-
-});
 
 app.get("/users", function(req, res, next) {
 
-  userController.readAll(function(userlist, status) {
+  const _fields = _toJSObject(req.query.fields);
+
+  userController.readAll(_fields, function(userlist, status) {
     res.status(status).json(userlist);
   });
 
@@ -41,8 +68,9 @@ app.get("/users", function(req, res, next) {
 app.get("/users/:_id", function(req, res, next) {
 
   const _id = _validate(req.params._id);
+  const _fields = _toJSObject(req.query.fields);
 
-  userController.read(_id, function(user, status) {
+  userController.read(_id, _fields, function(user, status) {
     res.status(status).json(user);
   });
 
@@ -78,4 +106,17 @@ app.delete("/users/:_id", function(req, res, next) {
     res.status(status).json(deletedUser);
   });
 
+});
+
+app.use(function(req, res, next) {
+  res.status(404).json({
+    error: messages.getMessage("error", 14).replace("%1", req.url),
+    path: req.url,
+    method: req.method
+  });
+});
+
+app.use(function(err, req, res, next) {
+  console.error(err.stack);
+  res.status(500).json({error: messages.getMessage("error", 15) });
 });

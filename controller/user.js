@@ -13,9 +13,9 @@ module.exports = function(messages) {
   // Funcão que retorna a lista de todos os usuários da collection users
   // Recebe como parâmetro um callback contendo o response para
   // o device chamador (navegador, aplicativo, etc...)
-  const _readAll = function(callback) {
+  const _readAll = function(_fields, callback) {
 
-    model.User.find({}, function(err, users) {
+    model.User.find({}, _fields, function(err, users) {
 
       if (err) {
         // Não foi possível retornar a lista de usuários
@@ -30,13 +30,16 @@ module.exports = function(messages) {
   // ** READ - GET **
   // Função que retorna um determinado usuário da collection users
   // Além do callback recebe também o id do usuário
-  const _read = function(_id, callback) {
+  const _read = function(_id, _fields, callback) {
 
     // FindById é função filtro do mongoose. Com ela, basta passar o _id
     // em formato string.
     // Recebe um callback, onde err recebe o objeto de um eventual erro ou
     // user, caso encontre o usuário na collection de usuários
-    model.User.findById(_id, function(err, user) {
+
+    console.log(_fields);
+
+    model.User.findById(_id, _fields, function(err, user) {
 
       if (err) {
         // Nao foi possivel retornar o usuário
@@ -95,24 +98,37 @@ module.exports = function(messages) {
 
         // Encontrou o usuário e vai atualizar os dados do documento
         // na collection users do mongodb
-        (userObject.name) ? user.name = userObject.name : null;
-        (userObject.email) ? user.email = userObject.email : null;
-        (userObject.password) ? user.password = userObject.password : null;
-        (userObject.admin) ? user.admin = userObject.admin : null;
-        (userObject.active) ? user.admin = userObject.active : null;
-        (userObject.createdById) ? user.createdById = userObject.createdById : null;
-        (userObject.updatedById) ? user.updatedById = userObject.updatedById : null;
 
-        user.save(function(err, user) {
-          // Erro - Não foi possível atualizar o usuário
-          if (err) {
-            callback({ error: messages.getMessage("error", 5), err }, 400);
-          } else {
-            // Atualiza e retorna para o callback o objeto do usuário
-            // atualizado referente ao documento da collection
-            callback(user, 200);
-          }
+        Object.keys(userObject).forEach(function (key) {
+          // exemplo apos parser do eval :
+          // (userObject.name) ? user.name = userObject.name : null;
+          eval("(userObject." + key + ") ? user." + key + " = userObject." + key + " : null;");
         });
+
+        // (userObject.name) ? user.name = userObject.name : null;
+        // (userObject.email) ? user.email = userObject.email : null;
+        // (userObject.password) ? user.password = userObject.password : null;
+        // (userObject.admin) ? user.admin = userObject.admin : null;
+        // (userObject.active) ? user.active = userObject.active : null;
+        // (userObject.createdById) ? user.createdById = userObject.createdById : null;
+        // (userObject.updatedById) ? user.updatedById = userObject.updatedById : null;
+
+        if (!userObject.updatedById) {
+          callback({ error: messages.getMessage("error", 13).replace("%1", "updatedById") }, 400);
+        } else {
+
+          user.save(function(err, user) {
+            // Erro - Não foi possível atualizar o usuário
+            if (err) {
+              callback({ error: messages.getMessage("error", 5), err }, 400);
+            } else {
+              // Atualiza e retorna para o callback o objeto do usuário
+              // atualizado referente ao documento da collection
+              callback(user, 200);
+            }
+          });
+
+        }
       }
     });
   }
@@ -140,7 +156,11 @@ module.exports = function(messages) {
           // Documento na collection de usuários foi removido com sucesso
           if (!err) {
             // Usuário excluído com sucesso
-            callback({ response: messages.getMessage("message", 4), user }, 200);
+            // Conforme material sobre boas práticas no desenvolvimento de
+            // restful apis, adotamos o retorno 204, que determina um resultado
+            // de sucesso, mas sem dados de retorno.
+            // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
+            callback({ response: messages.getMessage("message", 4) }, 204);
           }
 
         });

@@ -1,4 +1,7 @@
 // Regras para um campo tipo senha
+
+const messages = require("../../controller/messages");
+
 "use strict";
 
 // String regex para aceitar apenas senhas com o mínimo de 8 casas,
@@ -10,8 +13,8 @@ const _validate = (v) => v.length >= 5;
 
 const _field = {
   type: String,
-  validate: [ _validate, "Senha inválida. Informe pelo menos 5 caracteres" ],
-  required: "Senha é obrigatória"
+  validate: [ _validate, messages.getMessage("error", 16) ],
+  required: messages.getMessage("error", 8).replace("%1", "password")
 }
 
 module.exports = _field;

@@ -3,7 +3,7 @@
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const conn =  require("../config/connection");
-const schemaModuleUsers = require("./user-schema-definition");
+const schemaDefUsers = require("./user-schema-definition");
 const messages = require("../controller/messages");
 
 const _passwordCrypt = function(v) {
@@ -12,7 +12,7 @@ const _passwordCrypt = function(v) {
 
 conn.once("open", function() {
 
-  const _userSchema = mongoose.Schema(schemaModuleUsers.schema, schemaModuleUsers.schemaProperties);
+  const _userSchema = mongoose.Schema(schemaDefUsers.schema, schemaDefUsers.schemaProperties);
 
   _userSchema.pre("save", function(next) {
 
@@ -26,8 +26,6 @@ conn.once("open", function() {
   });
 
   _userSchema.path('createdById').validate(function (value, respond) {
-
-    console.log("eh novo? ", this.isNew);
 
     if (!this.isNew) respond(true);
 
