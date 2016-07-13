@@ -12,7 +12,7 @@ const _validate = function(parameter) {
   return validator.trim(validator.escape(parameter));
 }
 
-const _getUserObject = function(req) {
+const _getUserObject = function(req, schema) {
   const _userObject = {};
 
   console.log(req.body.updatedById + " - " + req.body.createdById);
@@ -27,7 +27,7 @@ const _getUserObject = function(req) {
     }
   }
 
-  Object.keys(schemaDefUsers.schema).forEach(function (key) {
+  Object.keys(schema).forEach(function (key) {
     // exemplo apos parser do eval :
     // (req.body.name) ? _userObject.name = _validate(req.body.name) : null;
     eval("(req.body." + key + ") ? _userObject." + key + " = _validate(req.body." + key + ") : null;");
@@ -44,22 +44,72 @@ const _getUserObject = function(req) {
   return _userObject;
 }
 
-const _toJSObject = function(param) {
+const _toJSObject = function(type, param) {
   const _obj = {};
   if (param) {
-    _validate(param.replace(/[^A-Za-z0-9,]/g, '')).split(",").forEach(function(v) {
-      v ? _obj[v] = 1 : null;
+    _validate(param.replace(/[^A-Za-z0-9,-_]/g, '')).split(",").forEach(function(v) {
+
+      if (v) {
+
+        if (v == "-_id") {
+          (type == "fields") ? _obj["_id"] = 0 : null;
+        } else if (v[0] == "-") {
+          (type == "fields") ? _obj[v.substring(1)] = 1 : _obj[v.substring(1)] = -1;
+        } else {
+          _obj[v] = 1;
+        }
+      }
+
     });
   }
   return _obj;
 }
 
+const _toFiltersObject = function(req, schema) {
+
+  let _obj = {};
+
+  Object.keys(req.query).forEach(function(key,index) {
+
+    const _cleanKey = key.replace("_start", "").replace("_end", "");
+
+    // O parametro informado na url é um campo do schema?
+    // Se sim, então determina-o como um filtro no find
+    if (schema.hasOwnProperty(_cleanKey)) {
+
+      switch (schema[_cleanKey].type) {
+        case Number:
+
+          _obj[key] = parseInt(req.query[key]);
+          break;
+
+        case Boolean:
+
+          ((req.query[key].toLowerCase() == "true") || (req.query[key].toLowerCase() == "yes")) ? _obj[key] = true : _obj[key] = false;
+          break;
+
+        default:
+          _obj[key] = req.query[key];
+      }
+    }
+
+  });
+
+
+  console.log("_obj", _obj);
+
+  return _obj;
+
+}
+
 
 app.get("/users", function(req, res, next) {
 
-  const _fields = _toJSObject(req.query.fields);
+  const _fields = _toJSObject("fields", req.query._fields);
+  const _sort = _toJSObject("sort", req.query._sort);
+  const _filters = _toFiltersObject(req, schemaDefUsers.schema);
 
-  userController.readAll(_fields, function(userlist, status) {
+  userController.readAll(_filters, _fields, _sort, function(userlist, status) {
     res.status(status).json(userlist);
   });
 
@@ -68,7 +118,7 @@ app.get("/users", function(req, res, next) {
 app.get("/users/:_id", function(req, res, next) {
 
   const _id = _validate(req.params._id);
-  const _fields = _toJSObject(req.query.fields);
+  const _fields = _toJSObject("fields", req.query._fields);
 
   userController.read(_id, _fields, function(user, status) {
     res.status(status).json(user);
@@ -78,7 +128,7 @@ app.get("/users/:_id", function(req, res, next) {
 
 app.post("/users", function(req, res, next) {
 
-  userController.create(_getUserObject(req), function(createdUser, status) {
+  userController.create(_getUserObject(req, schemaDefUsers.schema), function(createdUser, status) {
     res.status(status).json(createdUser);
   });
 
@@ -92,7 +142,7 @@ app.put("/users", function(req, res, next) {
   }
   const _id = _validate(req.body._id);
 
-  userController.update(_id, _getUserObject(req), function(updatedUser, status) {
+  userController.update(_id, _getUserObject(req, schemaDefUsers.schema), function(updatedUser, status) {
     res.status(status).json(updatedUser);
   });
 

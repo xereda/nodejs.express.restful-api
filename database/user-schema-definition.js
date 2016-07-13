@@ -12,6 +12,8 @@ module.exports.schema = {
   active: require("./fields/field-boolean")("active"),
   createdById: require("./fields/field-createdById")("createdById"),
   updatedById: require("./fields/field-updatedById")("updatedById"),
+  createdAt: require("./fields/field-date")("createdAt"),
+  updatedAt: require("./fields/field-date")("updateAt")
 };
 
 module.exports.schemaProperties = { timestamps: true };

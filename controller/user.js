@@ -13,9 +13,35 @@ module.exports = function(messages) {
   // Funcão que retorna a lista de todos os usuários da collection users
   // Recebe como parâmetro um callback contendo o response para
   // o device chamador (navegador, aplicativo, etc...)
-  const _readAll = function(_fields, callback) {
+  const _readAll = function(_filters, _fields, _sort, callback) {
 
-    model.User.find({}, _fields, function(err, users) {
+    const modelUser = model.User.find({}, _fields);
+
+    Object.keys(_filters).forEach(function(key,index) {
+
+      console.log(key, typeof _filters[key] === "string");
+
+      if ((typeof _filters[key]) === "string") {
+
+        if (key.indexOf("_start") > 0) {
+
+          modelUser.where(key.replace("_start", "")).gte(_filters[key]);
+
+        } else if (key.indexOf("_end") > 0) {
+          modelUser.where(key.replace("_end", "")).lte(_filters[key]);
+        } else if ((_filters[key].indexOf("/i") > 0) || (_filters[key][0] == "/")) {
+          modelUser.where(key).regex(eval(_filters[key]));
+        } else {
+          modelUser.where(key).equals(_filters[key]);
+        }
+      } else {
+          modelUser.where(key).equals(_filters[key]);
+      }
+
+    });
+
+    modelUser.sort(_sort);
+    modelUser.exec(function(err, users) {
 
       if (err) {
         // Não foi possível retornar a lista de usuários
