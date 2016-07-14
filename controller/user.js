@@ -13,13 +13,11 @@ module.exports = function(messages) {
   // Funcão que retorna a lista de todos os usuários da collection users
   // Recebe como parâmetro um callback contendo o response para
   // o device chamador (navegador, aplicativo, etc...)
-  const _readAll = function(_filters, _fields, _sort, callback) {
+  const _readAll = function(_pagination, _filters, _fields, _sort, callback) {
 
     const modelUser = model.User.find({}, _fields);
 
     Object.keys(_filters).forEach(function(key,index) {
-
-      console.log(key, typeof _filters[key] === "string");
 
       if ((typeof _filters[key]) === "string") {
 
@@ -39,13 +37,16 @@ module.exports = function(messages) {
       }
 
     });
-
+    console.log(_pagination);
+    modelUser.limit(_pagination.limit).skip(_pagination.limit * (_pagination.pag - 1));
     modelUser.sort(_sort);
     modelUser.exec(function(err, users) {
 
       if (err) {
         // Não foi possível retornar a lista de usuários
         callback({ error: messages.getMessage("error", 1), err }, 400);
+      } else if (users.length == 0) {
+        callback(users, 204);
       } else {
         callback(users, 200);
       }
@@ -62,8 +63,6 @@ module.exports = function(messages) {
     // em formato string.
     // Recebe um callback, onde err recebe o objeto de um eventual erro ou
     // user, caso encontre o usuário na collection de usuários
-
-    console.log(_fields);
 
     model.User.findById(_id, _fields, function(err, user) {
 
@@ -131,14 +130,6 @@ module.exports = function(messages) {
           eval("(userObject." + key + ") ? user." + key + " = userObject." + key + " : null;");
         });
 
-        // (userObject.name) ? user.name = userObject.name : null;
-        // (userObject.email) ? user.email = userObject.email : null;
-        // (userObject.password) ? user.password = userObject.password : null;
-        // (userObject.admin) ? user.admin = userObject.admin : null;
-        // (userObject.active) ? user.active = userObject.active : null;
-        // (userObject.createdById) ? user.createdById = userObject.createdById : null;
-        // (userObject.updatedById) ? user.updatedById = userObject.updatedById : null;
-
         if (!userObject.updatedById) {
           callback({ error: messages.getMessage("error", 13).replace("%1", "updatedById") }, 400);
         } else {
@@ -147,10 +138,13 @@ module.exports = function(messages) {
             // Erro - Não foi possível atualizar o usuário
             if (err) {
               callback({ error: messages.getMessage("error", 5), err }, 400);
+            } else if (Object.keys(user.updatedFields).length === 0 && user.updatedFields.constructor === Object) {
+              // nenhum campo da collection foi atualizado
+              callback({}, 204);
             } else {
-              // Atualiza e retorna para o callback o objeto do usuário
-              // atualizado referente ao documento da collection
-              callback(user, 200);
+              // Campos foram atualizado
+              // Retorna somente num objeto somente os campos alterados
+              callback(user.updatedFields, 200);
             }
           });
 

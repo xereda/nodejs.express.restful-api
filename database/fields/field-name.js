@@ -7,6 +7,7 @@ const _field = {
   set: _set,
   validate: [ _validate, "Informe pelo menos 3 caracteres para o campo ({NAME})" ],
   required: "Campo nome é obrigatório",
+  index: true
 }
 
 

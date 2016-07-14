@@ -33,14 +33,6 @@ const _getUserObject = function(req, schema) {
     eval("(req.body." + key + ") ? _userObject." + key + " = _validate(req.body." + key + ") : null;");
   });
 
-  // (req.body.name) ? _userObject.name = _validate(req.body.name) : null;
-  // (req.body.email) ? _userObject.email = _validate(req.body.email) : null;
-  // (req.body.password) ? _userObject.password = _validate(req.body.password) : null;
-  // (req.body.admin) ? _userObject.admin = _validate(req.body.admin) : null;
-  // (req.body.active) ? _userObject.active = _validate(req.body.active) : null;
-  // (req.body.createdById) ? _userObject.createdById = _validate(req.body.createdById) : null;
-  // (req.body.updatedById) ? _userObject.updatedById = _validate(req.body.updatedById) : null;
-
   return _userObject;
 }
 
@@ -72,34 +64,31 @@ const _toFiltersObject = function(req, schema) {
   Object.keys(req.query).forEach(function(key,index) {
 
     const _cleanKey = key.replace("_start", "").replace("_end", "");
-
     // O parametro informado na url é um campo do schema?
     // Se sim, então determina-o como um filtro no find
     if (schema.hasOwnProperty(_cleanKey)) {
-
       switch (schema[_cleanKey].type) {
         case Number:
-
           _obj[key] = parseInt(req.query[key]);
           break;
-
         case Boolean:
-
           ((req.query[key].toLowerCase() == "true") || (req.query[key].toLowerCase() == "yes")) ? _obj[key] = true : _obj[key] = false;
           break;
-
         default:
           _obj[key] = req.query[key];
       }
     }
-
   });
+  return _obj;
+}
 
+const _toPaginationObject = function(req) {
+  const _obj = {};
 
-  console.log("_obj", _obj);
+  ((_obj.limit = parseInt(req.query["_limit"])) && (_obj.limit <= config.pagination_limit)) ? null : _obj.limit = config.pagination_limit;
+  (_obj.pag = parseInt(req.query["_pag"])) ? null : _obj.pag = 1;
 
   return _obj;
-
 }
 
 
@@ -108,8 +97,9 @@ app.get("/users", function(req, res, next) {
   const _fields = _toJSObject("fields", req.query._fields);
   const _sort = _toJSObject("sort", req.query._sort);
   const _filters = _toFiltersObject(req, schemaDefUsers.schema);
+  const _pagination = _toPaginationObject(req);
 
-  userController.readAll(_filters, _fields, _sort, function(userlist, status) {
+  userController.readAll(_pagination, _filters, _fields, _sort, function(userlist, status) {
     res.status(status).json(userlist);
   });
 

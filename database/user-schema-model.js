@@ -21,6 +21,22 @@ conn.once("open", function() {
       //console.log("senha foi alterada!", this.password);
       this.password = _passwordCrypt(this.password);
     }
+
+    next();
+
+  });
+
+  _userSchema.pre("save", function(next) {
+
+    let _updatedFieldsObject = {};
+    const _this = this;
+    this.modifiedPaths().forEach(function(v) {
+      console.log("dentro do foreach: ", _this[v]);
+      _updatedFieldsObject[v] = _this[v];
+    });
+    this.updatedFields = _updatedFieldsObject;
+    console.log("array da campos alterados: ", this.updatedFields);
+
     next();
 
   });

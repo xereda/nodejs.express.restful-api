@@ -8,5 +8,7 @@ module.exports = {
 
   application_port: 5000,      // porta tcp onde a applicação esterá disponível
 
-  defaultCreatedById: "577d451eec7f1b87761e1bf2"
+  defaultCreatedById: "577d451eec7f1b87761e1bf2",
+
+  pagination_limit: 100
 };
