@@ -18,5 +18,6 @@ module.exports = [
   { code: 14, description: "Rota não está prevista na API. Verifique se o path e o método http estão corretos." },
   { code: 15, description: "Erro no servidor." },
   { code: 16, description: "Senha inválida! Informe pelo menos 5 caracteres." },
+  { code: 17, description: "Informe pelo menos 3 caracteres para o campo (%1)." },
 
 ];
