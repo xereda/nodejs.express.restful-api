@@ -7,6 +7,7 @@ const config = require("./config");
 // Importando o módulo mongoose
 const mongoose = require("mongoose");
 
+// Definindo a string de conexão com o banco de dados
 mongoose.connect("mongodb://" + config.database_host + "/" + config.database_name, { server: { reconnectTries: Number.MAX_VALUE } });
 
 // If the Node process ends, close the Mongoose connection
