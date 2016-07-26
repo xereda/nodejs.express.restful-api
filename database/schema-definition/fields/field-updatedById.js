@@ -11,7 +11,7 @@ module.exports = function(param) {
 
   const _field = {
     type: Schema.Types.ObjectId,
-    ref: "users",
+    ref: "User",
     index: param.index,
     required: [ param.required, messages.getMessage("error", 8).replace("%1", param.name) + messages.getDescription("error", 11) ]
   }

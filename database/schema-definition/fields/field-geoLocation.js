@@ -2,8 +2,6 @@
 
 module.exports = function(param) {
 
-  const mongoose = require("mongoose");
-
   const _validate = function(v) {
 
     // consiste se a geolocalização informada - LONGITUDE

@@ -18,12 +18,12 @@ const _error404 = function(req, res, next) {
 // Função que determina um erro de resposta quando ocorrer alguma inconsistência
 // no servidor.
 const _error500 = function(err, req, res, next) {
-  console.error(err.stack);
   res.status(500).json({
     error: messages.getMessage("error", 15),
     path: req.url,
     method: req.method,
-    body: req.body
+    body: req.body,
+    err: err
   });
 }
 

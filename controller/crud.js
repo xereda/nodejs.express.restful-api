@@ -2,6 +2,9 @@ module.exports = function(collection) {
 
 // Faz o controle das funções de CRUD da restapi
 
+// Módulo que define o esquema da collection informada como parâmetro
+const schemaDef  = require("../database/schema-definition/" + collection);
+
 // Importa o módulo de definação da collection de usuários do docmob
 const model = require("../database/schema-model")(collection);
 const messages = require("./messages");
@@ -10,9 +13,12 @@ const messages = require("./messages");
 // Funcão que retorna a lista de todos os documentos da collection
 // Recebe como parâmetro um callback contendo o response para
 // o device chamador (navegador, aplicativo, etc...)
-const _readAll = function(_pagination, _filters, _fields, _sort, callback) {
+const _readAll = function(_populate, _lean, _pagination, _filters, _fields, _sort, callback) {
 
   // Parâmetros recebidos na função anônima:
+  // * _lean: determina se a consulta irá retornar um objeto mongoose ou apenas
+  // objeto javascript simples. O uso do lean() melhora e muito a performance
+  // das querys.
   // * _pagination: objeto contendo as duas propriedades de paginação.
   // Propriedaedes do objeto _pagination: .limit e _pagination.sort
   // * _filters: objeto contendo os filtros informados na query string da
@@ -78,6 +84,15 @@ const _readAll = function(_pagination, _filters, _fields, _sort, callback) {
   // Determina a ordenação do resultado.
   modelDoc.sort(_sort);
 
+  // Se (_lean = true) retorna um objeto javascript simples e não um
+  // documento mongoose. A aplicação de lean() melhora e muito as querys e
+  // retorno de listas.
+  modelDoc.lean(_lean);
+
+  _populate.forEach(function(v) {
+    modelDoc.populate(v);
+  });
+
   // Após todas as definçòes acima, executa a query.
   modelDoc.exec(function(err, docs) {
 
@@ -87,8 +102,182 @@ const _readAll = function(_pagination, _filters, _fields, _sort, callback) {
     } else if (docs.length == 0) {
 
       // Caso não encontre documentos com os critérios informados, retorna
-      // para o requisitante o HTTP code 204 (no content).
-      callback(docs, 204);
+      // para o requisitante um array de objetos vazio
+      callback([{}], 200);
+
+    } else {
+
+      // Caso encontre documentos através dos critérios informados,
+      // retorna o objeto JSON para o requisitante.
+      callback(docs, 200);
+    }
+  });
+
+}
+
+const _subDocReadAll = function(_id, _field, _populate, _lean, _pagination, _filters, _fields, _sort, callback) {
+
+  // Parâmetros recebidos na função anônima:
+  // * _lean: determina se a consulta irá retornar um objeto mongoose ou apenas
+  // objeto javascript simples. O uso do lean() melhora e muito a performance
+  // das querys.
+  // * _pagination: objeto contendo as duas propriedades de paginação.
+  // Propriedaedes do objeto _pagination: .limit e _pagination.sort
+  // * _filters: objeto contendo os filtros informados na query string da
+  // requisição (/users/?active=[boolean]&createdAt_start=[isodate]&name=/[parte do nome]/i)
+  // * _fields: objeto contendo os campos da collection que serão retornados
+  // pela API.
+  // * _sort: objeto contendo os campos e orientação para ordenação.
+  // (/users/?_sort=-name) -> ordenará de forma descrescente pelo campo nome
+  // * callback: função de retorno para o express.
+
+  console.log("entrou na _subDocReadAll");
+
+  let _objFields= {};
+  _objFields[_field] = 1;
+  _objFields["_id"] = 0;
+
+  console.log(_objFields);
+
+
+  // cria uma instância do model para realizar a query no banco.
+  const modelDoc = model.findOne({ _id: _id }, _objFields);
+
+  // Percorre todos os filtros informados na query string.
+  Object.keys(_filters).forEach(function(key,index) {
+
+    // Caso o campo seja do tipo string
+    if ((typeof _filters[key]) === "string") {
+
+      // Caso o parâmetro de filtro termina com _start é porque ele deverá ser
+      // a data inicial para um filtro de data, com isso aplicamos .where(campo)
+      // e .gte(data) para o model do find(). Lembrando que gte significa
+      // "igual ou maior que".
+      if (key.indexOf("_start") > 0) {
+
+        modelDoc.where(key.replace("_start", "")).gte(_filters[key]);
+
+      } else if (key.indexOf("_end") > 0) {
+
+        // O mesmo controle mencionado acima ("_start"), mas agora determina
+        // que a data informado deve ser "igual ou menor que".
+        modelDoc.where(key.replace("_end", "")).lte(_filters[key]);
+
+      } else if ((_filters[key].indexOf("/i") > 0) || (_filters[key][0] == "/")) {
+
+        // Caso o filtro seja string e tenha sido informado uma regex simples,
+        // usamos o where com função regex() para filtrar pela expressão regular.
+        modelDoc.where(key).regex(eval(_filters[key]));
+
+      } else {
+
+        // Caso seja um parâmetro simples (não é data ou expressão regular),
+        // verifica apenas se existem documentos com o campo com valor igual ao
+        // informado.
+        modelDoc.where(key).equals(_filters[key]);
+      }
+    } else {
+      // Caso seja um parâmetro simples (não é data ou expressão regular),
+      // verifica apenas se existem documentos com o campo com valor igual ao
+      // informado.
+        modelDoc.where(key).equals(_filters[key]);
+    }
+
+  });
+
+  // Determina o limite e paginação. A função skip() determina quantos
+  // documentos devem ser pulados. Como o valor informado como filtro na API é
+  // referente ao número da página, para que consigamos chegar no valor exato de
+  // documentos a serem "pulados", subtraímos 1 do valor informato e o
+  // multiplacamos pela quantidade de documento que podem ser rornados por página.
+  modelDoc.limit(_pagination.limit).skip(_pagination.limit * (_pagination.pag - 1));
+
+  // Determina a ordenação do resultado.
+  modelDoc.sort(_sort);
+
+  // Se (_lean = true) retorna um objeto javascript simples e não um
+  // documento mongoose. A aplicação de lean() melhora e muito as querys e
+  // retorno de listas.
+  modelDoc.lean(_lean);
+
+  const _objSubDoc = schemaDef.subDocs.find(function(element) {
+    return element.fieldName === _field;
+  });
+
+  if (!_objSubDoc) {
+
+    _populate.forEach(function(v) {
+      modelDoc.populate(v);
+    });
+
+  } else {
+
+    let _objPopulate = {};
+    let _objPopulateTemp = {};
+
+    _objPopulate["path"] = _objSubDoc.fieldName + "." + _objSubDoc.indexField;
+    _objPopulate["model"] = _objSubDoc.ref;
+    //(_populate.length == 0) ? modelDoc.populate(_objPopulate) : null;
+    modelDoc.populate(_objPopulate);
+
+    _populate.forEach(function(v) {
+
+      let _slicePopulateParam = v.split(".");
+
+      console.log(_slicePopulateParam[0], _slicePopulateParam[1], _slicePopulateParam[2]);
+
+      if ((_slicePopulateParam[0].toUpperCase() != _objSubDoc.ref.toUpperCase()) &&
+          (_slicePopulateParam[1] != _objSubDoc.fieldName) &&
+          (_slicePopulateParam[2] != _objSubDoc.indexField)) {
+
+        switch (_slicePopulateParam.length) {
+          case 1:
+            _objPopulateTemp["path"] = v;
+            break;
+          case 2:
+            _objPopulateTemp["path"] = _slicePopulateParam[1];
+            _objPopulateTemp["model"] = _slicePopulateParam[0];
+            break;
+          case 3:
+            _objPopulateTemp["path"] = _slicePopulateParam[1] + "." + _slicePopulateParam[2];
+            _objPopulateTemp["model"] = _slicePopulateParam[0];
+            break;
+          default:
+
+        }
+
+        _objPopulate["populate"] = _objPopulateTemp;
+        modelDoc.populate(_objPopulate);
+
+      }
+
+    });
+
+
+  }
+
+  //
+  //
+  // modelDoc.populate({
+  //      path: 'providers.provider',
+  //      model: 'Provider',
+  //      populate: {
+  //        path: 'workplaces.workplace',
+  //        model: 'Workplace'
+  //      }});
+
+
+  // Após todas as definçòes acima, executa a query.
+  modelDoc.exec(function(err, docs) {
+
+    if (err) {
+      // Não foi possível retornar a lista de documentos
+      callback({ error: messages.getMessage("error", 1), err }, 400);
+    } else if (docs.length == 0) {
+
+      // Caso não encontre documentos com os critérios informados, retorna
+      // para o requisitante um array de objetos vazio
+      callback([{}], 200);
 
     } else {
 
@@ -103,14 +292,27 @@ const _readAll = function(_pagination, _filters, _fields, _sort, callback) {
 // ** READ - GET **
 // Função que retorna um determinado documento da collection.
 // Além do callback recebe também o id do usuário
-const _read = function(_id, _fields, callback) {
+const _read = function(_populate, _id, _fields, callback) {
 
-  // FindById é função filtro do mongoose. Com ela, basta passar o _id
-  // em formato string.
+  // Função que pesquisa por um determinado documento.
   // Recebe um callback, onde err recebe o objeto de um eventual erro ou
   // doc, caso encontre o documento na collection
 
-  model.findOne({ _id: _id }, _fields, function(err, doc) {
+  const modelDoc = model.findOne({ _id: _id }, _fields);
+
+  _populate.forEach(function(v) {
+    modelDoc.populate(v);
+  });
+
+  // modelDoc.populate({
+  //        path: "providers.provider",
+  //        model: "Provider",
+  //        populate: {
+  //          path: "workplaces.workplace",
+  //          model: "Workplace"
+  //        }});
+
+  modelDoc.exec(function(err, doc) {
 
     if (err) {
       // Nao foi possivel retornar o usuário
@@ -182,6 +384,8 @@ const _update = function(_id, docObject, callback) {
               doc[key].coordinates[0] = parseFloat(docObject[key].coordinates[0]);
               doc[key].coordinates[1] = parseFloat(docObject[key].coordinates[1]);
             }
+          } else {
+            (docObject[key]) ? doc[key] = docObject[key] : null;
           }
         } else { // para todos os demais campos
           (docObject[key]) ? doc[key] = docObject[key] : null;
@@ -250,11 +454,12 @@ const _delete = function(_id, callback) {
 
 // Define o objeto encapsulador das funções de CRUD da api
 const docController = {
-  readAll:  _readAll, // get
-  read:     _read,    // get
-  create:   _create,  // post
-  update:   _update,  // put
-  delete:   _delete   // delete
+  readAll: _readAll, // get
+  subDocReadAll: _subDocReadAll, // get para um subdocumento
+  read: _read, // get
+  create: _create, // post
+  update: _update, // put
+  delete: _delete // delete
 };
 
 return docController;

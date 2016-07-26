@@ -58,7 +58,6 @@ module.exports = function(collection) {
 
       // percorre todos os campos que foram atulizados (modifiedPaths)
       this.modifiedPaths().forEach(function(v) {
-        console.log("campo alterado: ", v);
         // adiciona o campo e o valor no objeto a ser retornado
         _updatedFieldsObject[v] = _this[v];
 

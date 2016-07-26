@@ -11,9 +11,20 @@ const validator = require("validator");
 // Módulo que define as configurações gerais da API.
 const config = require("../config/config");
 
+const _getLeanParam = function(param) {
+
+  if (param) {
+    if ((param.toLowerCase() == "false") || (param.toLowerCase() == "no")) {
+      return false;
+    }
+  }
+  return true;
+
+}
+
 // Executa um trim e um escape no parâmetro informado.
-const _validate = function(parameter) {
-  return validator.trim(validator.escape(parameter));
+const _validate = function(param) {
+  return validator.trim(validator.escape(param));
 }
 
 // Monta um objeto contendo os campos que foram informados no corpo da
@@ -157,14 +168,16 @@ const _passwordCrypt = function(v) {
   return bcrypt.hashSync(v, 10);
 }
 
+
 // Define a interface encapsuladora das funções aqui existentes.
 const controller = {
   toPaginationObject: _toPaginationObject,
-  toFiltersObject:    _toFiltersObject,
-  toJSObject:         _toJSObject,
-  getObjectBody:      _getObjectBody,
-  validate:           _validate,
-  passwordCrypt:      _passwordCrypt
+  toFiltersObject: _toFiltersObject,
+  toJSObject: _toJSObject,
+  getObjectBody: _getObjectBody,
+  validate: _validate,
+  passwordCrypt: _passwordCrypt,
+  getLeanParam: _getLeanParam
 };
 
 module.exports = controller;

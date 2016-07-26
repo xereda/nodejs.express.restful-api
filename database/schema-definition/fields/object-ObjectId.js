@@ -9,13 +9,13 @@ module.exports = function(param) {
   (!param.index) ? param.index = false : null;
   (!param.required) ? param.required = false : null;
 
-  const _field = {
+  const _object = {
     type: Schema.Types.ObjectId,
-    ref: "User",
-    index: param.index,
-    required: [ param.required, messages.getMessage("error", 8).replace("%1", param.name) + " " + messages.getDescription("error", 10) ]
-  }
+    ref: param.schemaName,
+    requerid: [ param.required, messages.getMessage("error", 8).replace("%1", param.name) ],
+    index: param.index
+  };
 
-  return _field;
+  return _object;
 
 }

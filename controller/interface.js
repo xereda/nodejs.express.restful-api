@@ -22,6 +22,17 @@ module.exports = function(collection) {
   // Usada no HTTP GET - retorna uma lista de documentos.
   const _list = function(req, res, next) {
 
+
+    // Verifica se o parâmetro lean foi informado. Caso sim, repassa como true
+    // para que o find() retorne apenas um objeto javascript simples, melhorando
+    // assim a performance das querys no método GET.
+    const _lean = utils.getLeanParam(req.query._lean);
+
+    let _populate = [];
+    if (req.query._populate) {
+      _populate = req.query._populate.split(",");
+    }
+
     // Retorna em um objeto JSON a lista de campos da collection que devem
     // ser considerados na montagem do objeto de retorno.
     const _fields = utils.toJSObject("fields", req.query._fields);
@@ -41,7 +52,54 @@ module.exports = function(collection) {
     const _pagination = utils.toPaginationObject(req);
 
     // Lista todos os documentos.
-    controllerCRUD.readAll(_pagination, _filters, _fields, _sort, function(objectList, status) {
+    controllerCRUD.readAll(_populate, _lean, _pagination, _filters, _fields, _sort, function(objectList, status) {
+      res.status(status).json(objectList);
+    });
+
+  }
+
+  // Usada no HTTP GET - retorna uma lista de documentos.
+  const _subDocList = function(req, res, next) {
+
+    console.log("entrou no subdolist");
+
+    // Verifica se o parâmetro lean foi informado. Caso sim, repassa como true
+    // para que o find() retorne apenas um objeto javascript simples, melhorando
+    // assim a performance das querys no método GET.
+    const _lean = utils.getLeanParam(req.query._lean);
+
+    let _populate = [];
+    if (req.query._populate) {
+      _populate = req.query._populate.split(",");
+    }
+
+    // Limpa o campo informado como parâmetro. (trim e escape)
+    const _id = utils.validate(req.params._id);
+
+    const _field = utils.validate(req.params._field);
+
+    // Retorna em um objeto JSON a lista de campos da collection que devem
+    // ser considerados na montagem do objeto de retorno.
+    const _fields = utils.toJSObject("fields", req.query._fields);
+
+    // Retorna um objeto JSON contendo a regra para ordenação dos resultados.
+    const _sort = utils.toJSObject("sort", req.query._sort);
+
+    // Retorna um objeto Javascript contendo os filtros repassados na url
+    // da requisição.
+    const _filters = utils.toFiltersObject(req, schemaDef.schema);
+
+    // Retorna um objeto Javascript contendo os parâmetros para paginação.
+    // _limit: define o número máximo de documento que serào retornados.
+    // Obdecendo máximo permitido e informado nas configurações gerais
+    // (config/config.js).
+    // _pag: Define qual a página de documentos a ser retornada.
+    const _pagination = utils.toPaginationObject(req);
+
+    console.log("vai chamar subDocReadAll");
+
+    // Lista todos os documentos.
+    controllerCRUD.subDocReadAll(_id, _field, _populate, _lean, _pagination, _filters, _fields, _sort, function(objectList, status) {
       res.status(status).json(objectList);
     });
 
@@ -51,14 +109,18 @@ module.exports = function(collection) {
   // /resource/:_id
   const _get = function(req, res, next) {
 
-    // Limpa o campo informado como parâmetro. (trim e escape)
+    let _populate = [];
+    if (req.query._populate) {
+      _populate = req.query._populate.split(",");
+    }
+        // Limpa o campo informado como parâmetro. (trim e escape)
     const _id = utils.validate(req.params._id);
 
     // Recupera a lista de campos da collection que serão retornadas pelo API
     const _fields = utils.toJSObject("fields", req.query._fields);
 
     // Lista o documento.
-    controllerCRUD.read(_id, _fields, function(object, status) {
+    controllerCRUD.read(_populate, _id, _fields, function(object, status) {
       res.status(status).json(object);
     });
 
@@ -110,10 +172,11 @@ module.exports = function(collection) {
   // Implementação da interface encapsuladora das funções. Determina as funções
   // que ficarão expostas quando o módulo for exportado.
   const controller = {
-    list:   _list,
-    get:    _get,
-    post:   _post,
-    put:    _put,
+    list: _list,
+    subDocList: _subDocList,
+    get: _get,
+    post: _post,
+    put: _put,
     delete: _delete
   };
 

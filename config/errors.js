@@ -23,5 +23,12 @@ module.exports = [
   { code: 19, description: "Informe corretamente as coordenadas geográficas." },
   { code: 20, description: "Informe um valor entre %1 e %2 para o campo %3." },
   { code: 21, description: "O campo de geolocalização (%1) requer uma array com dois elementos do tipo float. Sendo que o primeiro é referente a longitude e seu valor deve estar entre -180 à 180. O segundo elemento é a latiudade e deve estar entre -85 à 85." },
+  { code: 22, description: "Informe uma das opções (%1) para o campo (%2)." },
+  { code: 23, description: "O campo (%1) deve estrar entre %2 e %3 caracteres." },
+  { code: 24, description: "O campo (%1) deve ser igual ou maior que %2 caracteres." },
+  { code: 25, description: "O campo (%1) deve ser igual ou menor que %2 caracteres." },
+  { code: 26, description: "O campo (%1) deve ter %2 caracteres exatos." },
+  { code: 27, description: "Informe um CPF válido para o campo (%1)." },
+  { code: 28, description: "Informe um CNPJ válido para o campo (%1)." },
 
 ];

@@ -45,5 +45,9 @@ conn.on('disconnected', function() {
   //mongoose.connect("mongodb://" + config.database_host + "/" + config.database_name, {server:{auto_reconnect:true}});
 });
 
+process.on('uncaughtException', function(err) {
+  console.log("deu um erro daqueles: ", err);
+  process.exit(1);
+});
 
 module.exports = conn;
