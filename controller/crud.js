@@ -128,10 +128,12 @@ const _subDocReadAll = function(_id, _field, _populate, _populatedFields, _lean,
   });
 
 
-  let _objFields= {};
+  let _objFields = {};
   _objFields["_id"] = 0;
   _objFields[_field] = _field;
-  _objFields[_objSubDoc.fieldName] = 1;
+  if (_objSubDoc !== undefined) {
+    _objFields[_objSubDoc.fieldName] = 1;
+  }
 
   console.log("_objFields: ", _objFields);
 
@@ -140,59 +142,13 @@ const _subDocReadAll = function(_id, _field, _populate, _populatedFields, _lean,
   // cria uma instância do model para realizar a query no banco.
   const modelDoc = model.findOne({ _id: _id }, _objFields);
 
-  // // Percorre todos os filtros informados na query string.
-  // Object.keys(_filters).forEach(function(key,index) {
-  //
-  //   console.log("_filters: ", _filters);
-  //
-  //   // Caso o campo seja do tipo string
-  //   if ((typeof _filters[key]) === "string") {
-  //
-  //     // Caso o parâmetro de filtro termina com _start é porque ele deverá ser
-  //     // a data inicial para um filtro de data, com isso aplicamos .where(campo)
-  //     // e .gte(data) para o model do find(). Lembrando que gte significa
-  //     // "igual ou maior que".
-  //     if (key.indexOf("_start") > 0) {
-  //
-  //       modelDoc.where(key.replace("_start", "")).gte(_filters[key]);
-  //
-  //     } else if (key.indexOf("_end") > 0) {
-  //
-  //       // O mesmo controle mencionado acima ("_start"), mas agora determina
-  //       // que a data informado deve ser "igual ou menor que".
-  //       modelDoc.where(key.replace("_end", "")).lte(_filters[key]);
-  //
-  //     } else if ((_filters[key].indexOf("/i") > 0) || (_filters[key][0] == "/")) {
-  //
-  //       // Caso o filtro seja string e tenha sido informado uma regex simples,
-  //       // usamos o where com função regex() para filtrar pela expressão regular.
-  //       modelDoc.where("providers." + key).regex(eval(_filters[key]));
-  //
-  //     } else {
-  //
-  //       // Caso seja um parâmetro simples (não é data ou expressão regular),
-  //       // verifica apenas se existem documentos com o campo com valor igual ao
-  //       // informado.
-  //       modelDoc.where(key).equals(_filters[key]);
-  //     }
-  //   } else {
-  //     // Caso seja um parâmetro simples (não é data ou expressão regular),
-  //     // verifica apenas se existem documentos com o campo com valor igual ao
-  //     // informado.
-  //       modelDoc.where(key).equals(_filters[key]);
-  //   }
-  //
-  // });
-
-  //modelDoc.where("providers.email").equals("zx@x.com.br");
-
   // Se (_lean = true) retorna um objeto javascript simples e não um
   // documento mongoose. A aplicação de lean() melhora e muito as querys e
   // retorno de listas.
   modelDoc.lean(_lean);
 
 
-  if (!_objSubDoc) {
+  if (_objSubDoc === undefined) {
 
     _populate.forEach(function(v) {
       modelDoc.populate(v);
@@ -278,6 +234,8 @@ const _subDocReadAll = function(_id, _field, _populate, _populatedFields, _lean,
       // para o requisitante um array de objetos vazio
       callback([{}], 404);
 
+    } else if (_objSubDoc === undefined) {
+      callback(docs, 200);
     } else {
 
       const _filteredPopulate = docs[_objSubDoc.fieldName].filter(function(element, index, array) {

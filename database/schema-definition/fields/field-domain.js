@@ -3,7 +3,6 @@
 module.exports = function(param) {
 
   const _validate = function(v) {
-    console.log("dentro da _validate: ", v, param.domain );
     if (param.domain.includes(v)) {
       return true;
     }

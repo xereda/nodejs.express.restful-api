@@ -9,14 +9,20 @@ module.exports = function(param) {
   (!param.required) ? param.required = false : null;
 
   const _validate = function(v) {
-    if (CNPJ.isValid(v.replace("&#x2F;", ""))) {
+    const _cleanedCNPJ = CNPJ.strip(v.replace(/&#{0,1}[a-z0-9]+;/ig, ""));
+    if (CNPJ.isValid(_cleanedCNPJ)) {
       return true;
     }
     return false;
   }
 
+  const _set = function(v) {
+    return CNPJ.strip(v.replace(/&#{0,1}[a-z0-9]+;/ig, ""));
+  }
+
   const _field = {
     type: String,
+    set: _set,
     validate: [ _validate, messages.getMessage("error", 28).replace("%1", param.name) ],
     required: [ param.required, messages.getMessage("error",  8).replace("%1", param.name) ],
     index: param.index

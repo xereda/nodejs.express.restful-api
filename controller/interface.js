@@ -84,10 +84,18 @@ module.exports = function(collection) {
       return element.fieldName === _field;
     });
 
-    const _subDocSchema  = require("../database/schema-definition/fields/object-" + _objSubDoc.indexField)({});
-    const _subDocSchemaPopulated  = require("../database/schema-definition/" + _objSubDoc.ref);
+    let _filters = {};
+    let _populatedFilters = {};
 
-    //console.log("_subDocSchema: ", _subDocSchema);
+    if ((_objSubDoc !== undefined) && (_objSubDoc !== null)) {
+
+      const _subDocSchema  = require("../database/schema-definition/fields/object-" + _objSubDoc.indexField)({});
+      const _subDocSchemaPopulated  = require("../database/schema-definition/" + _objSubDoc.ref);
+      // Retorna um objeto Javascript contendo os filtros repassados na url
+      // da requisição.
+      _filters = utils.toFiltersObject(req, _subDocSchema[0]);
+      _populatedFilters = utils.toPopulatedFiltersObject(req, _subDocSchemaPopulated.schema);
+    }
 
     // Retorna em um objeto JSON a lista de campos da collection que devem
     // ser considerados na montagem do objeto de retorno.
@@ -95,13 +103,6 @@ module.exports = function(collection) {
 
     // Retorna um objeto JSON contendo a regra para ordenação dos resultados.
     const _sort = utils.toJSObject("sort", req.query._sort);
-
-    // Retorna um objeto Javascript contendo os filtros repassados na url
-    // da requisição.
-    const _filters = utils.toFiltersObject(req, _subDocSchema[0]);
-    const _populatedFilters = utils.toPopulatedFiltersObject(req, _subDocSchemaPopulated.schema);
-
-    //console.log("_filters: ", _filters);
 
     // Retorna um objeto Javascript contendo os parâmetros para paginação.
     // _limit: define o número máximo de documento que serào retornados.
