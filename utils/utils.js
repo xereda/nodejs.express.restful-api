@@ -135,16 +135,65 @@ const _toFiltersObject = function(req, schema) {
     if (schema.hasOwnProperty(_cleanKey)) {
       switch (schema[_cleanKey].type) {
         case Number:
-          _obj[key] = parseInt(req.query[key]);
+          if (parseInt(req.query[key])) {
+            _obj[key] = parseInt(req.query[key]);
+          }
           break;
         case Boolean:
           ((req.query[key].toLowerCase() == "true") || (req.query[key].toLowerCase() == "yes")) ? _obj[key] = true : _obj[key] = false;
           break;
         default:
-          _obj[key] = req.query[key];
+          if (req.query[key] != "") {
+            _obj[key] = req.query[key];
+          }
       }
     }
   });
+
+  console.log("_obj: ", _obj);
+  return _obj;
+
+}
+
+// Função para criar um objeto de filtros para a query (find)
+const _toPopulatedFiltersObject = function(req, schema) {
+
+  let _obj = {};
+
+  // Percorre todos os parametros encaminhados via query string (pela url).
+  Object.keys(req.query).forEach(function(key,index) {
+
+    let _prefix = key.substr(0, key.indexOf(".") + 1);
+
+    if (!_prefix) {
+      return;
+    }
+
+    // Remove as strings finais dos filtros do tipo data ("_start" e "_end") e
+    // adiciona em um novo objeto. Isso é necessário, pois o campo precisa
+    // existir no esquema da colletion.
+    const _cleanKey = key.replace("_start", "").replace("_end", "").replace(_prefix, "");
+
+    // O parametro informado na url é um campo do schema?
+    // Se sim, então determina-o como um filtro no find
+    if (schema.hasOwnProperty(_cleanKey)) {
+      switch (schema[_cleanKey].type) {
+        case Number:
+          if (parseInt(req.query[key])) {
+            _obj[key] = parseInt(req.query[key]);
+          }
+          break;
+        case Boolean:
+          ((req.query[key].toLowerCase() == "true") || (req.query[key].toLowerCase() == "yes")) ? _obj[key] = true : _obj[key] = false;
+          break;
+        default:
+          if (req.query[key] != "") {
+            _obj[key] = req.query[key];
+          }
+      }
+    }
+  });
+
   return _obj;
 }
 
@@ -173,6 +222,7 @@ const _passwordCrypt = function(v) {
 const controller = {
   toPaginationObject: _toPaginationObject,
   toFiltersObject: _toFiltersObject,
+  toPopulatedFiltersObject: _toPopulatedFiltersObject,
   toJSObject: _toJSObject,
   getObjectBody: _getObjectBody,
   validate: _validate,

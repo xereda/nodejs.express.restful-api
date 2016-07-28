@@ -22,7 +22,6 @@ module.exports = function(collection) {
   // Usada no HTTP GET - retorna uma lista de documentos.
   const _list = function(req, res, next) {
 
-
     // Verifica se o parâmetro lean foi informado. Caso sim, repassa como true
     // para que o find() retorne apenas um objeto javascript simples, melhorando
     // assim a performance das querys no método GET.
@@ -61,8 +60,6 @@ module.exports = function(collection) {
   // Usada no HTTP GET - retorna uma lista de documentos.
   const _subDocList = function(req, res, next) {
 
-    console.log("entrou no subdolist");
-
     // Verifica se o parâmetro lean foi informado. Caso sim, repassa como true
     // para que o find() retorne apenas um objeto javascript simples, melhorando
     // assim a performance das querys no método GET.
@@ -73,10 +70,24 @@ module.exports = function(collection) {
       _populate = req.query._populate.split(",");
     }
 
+    let _populatedFields = "";
+    if (req.query._populatedFields) {
+      _populatedFields = utils.validate(req.query._populatedFields);
+    }
+
     // Limpa o campo informado como parâmetro. (trim e escape)
     const _id = utils.validate(req.params._id);
 
     const _field = utils.validate(req.params._field);
+
+    const _objSubDoc = schemaDef.subDocs.find(function(element) {
+      return element.fieldName === _field;
+    });
+
+    const _subDocSchema  = require("../database/schema-definition/fields/object-" + _objSubDoc.indexField)({});
+    const _subDocSchemaPopulated  = require("../database/schema-definition/" + _objSubDoc.ref);
+
+    //console.log("_subDocSchema: ", _subDocSchema);
 
     // Retorna em um objeto JSON a lista de campos da collection que devem
     // ser considerados na montagem do objeto de retorno.
@@ -87,7 +98,10 @@ module.exports = function(collection) {
 
     // Retorna um objeto Javascript contendo os filtros repassados na url
     // da requisição.
-    const _filters = utils.toFiltersObject(req, schemaDef.schema);
+    const _filters = utils.toFiltersObject(req, _subDocSchema[0]);
+    const _populatedFilters = utils.toPopulatedFiltersObject(req, _subDocSchemaPopulated.schema);
+
+    //console.log("_filters: ", _filters);
 
     // Retorna um objeto Javascript contendo os parâmetros para paginação.
     // _limit: define o número máximo de documento que serào retornados.
@@ -96,10 +110,10 @@ module.exports = function(collection) {
     // _pag: Define qual a página de documentos a ser retornada.
     const _pagination = utils.toPaginationObject(req);
 
-    console.log("vai chamar subDocReadAll");
 
+    console.log("vai chamar a crud");
     // Lista todos os documentos.
-    controllerCRUD.subDocReadAll(_id, _field, _populate, _lean, _pagination, _filters, _fields, _sort, function(objectList, status) {
+    controllerCRUD.subDocReadAll(_id, _field, _populate, _populatedFields, _lean, _pagination, _filters, _populatedFilters, _fields, _sort, function(objectList, status) {
       res.status(status).json(objectList);
     });
 

@@ -81,8 +81,6 @@ const _readAll = function(_populate, _lean, _pagination, _filters, _fields, _sor
   // multiplacamos pela quantidade de documento que podem ser rornados por página.
   modelDoc.limit(_pagination.limit).skip(_pagination.limit * (_pagination.pag - 1));
 
-  // Determina a ordenação do resultado.
-  modelDoc.sort(_sort);
 
   // Se (_lean = true) retorna um objeto javascript simples e não um
   // documento mongoose. A aplicação de lean() melhora e muito as querys e
@@ -99,11 +97,17 @@ const _readAll = function(_populate, _lean, _pagination, _filters, _fields, _sor
     if (err) {
       // Não foi possível retornar a lista de documentos
       callback({ error: messages.getMessage("error", 1), err }, 400);
-    } else if (docs.length == 0) {
+    } else if ((docs) && (docs.length == 0)) {
 
       // Caso não encontre documentos com os critérios informados, retorna
       // para o requisitante um array de objetos vazio
       callback([{}], 200);
+
+    } else if (!docs) {
+
+      // Caso não encontre documentos com os critérios informados, retorna
+      // para o requisitante um array de objetos vazio
+      callback([{}], 404);
 
     } else {
 
@@ -115,94 +119,78 @@ const _readAll = function(_populate, _lean, _pagination, _filters, _fields, _sor
 
 }
 
-const _subDocReadAll = function(_id, _field, _populate, _lean, _pagination, _filters, _fields, _sort, callback) {
+const _subDocReadAll = function(_id, _field, _populate, _populatedFields, _lean, _pagination, _filters, _populatedFilters, _fields, _sort, callback) {
 
-  // Parâmetros recebidos na função anônima:
-  // * _lean: determina se a consulta irá retornar um objeto mongoose ou apenas
-  // objeto javascript simples. O uso do lean() melhora e muito a performance
-  // das querys.
-  // * _pagination: objeto contendo as duas propriedades de paginação.
-  // Propriedaedes do objeto _pagination: .limit e _pagination.sort
-  // * _filters: objeto contendo os filtros informados na query string da
-  // requisição (/users/?active=[boolean]&createdAt_start=[isodate]&name=/[parte do nome]/i)
-  // * _fields: objeto contendo os campos da collection que serão retornados
-  // pela API.
-  // * _sort: objeto contendo os campos e orientação para ordenação.
-  // (/users/?_sort=-name) -> ordenará de forma descrescente pelo campo nome
-  // * callback: função de retorno para o express.
+  console.log("dentro da subdocreadall");
 
-  console.log("entrou na _subDocReadAll");
+  const _objSubDoc = schemaDef.subDocs.find(function(element) {
+    return element.fieldName === _field;
+  });
+
 
   let _objFields= {};
-  _objFields[_field] = 1;
   _objFields["_id"] = 0;
+  _objFields[_field] = _field;
+  _objFields[_objSubDoc.fieldName] = 1;
 
-  console.log(_objFields);
+  console.log("_objFields: ", _objFields);
 
+  Object.assign(_objFields, _fields);
 
   // cria uma instância do model para realizar a query no banco.
   const modelDoc = model.findOne({ _id: _id }, _objFields);
 
-  // Percorre todos os filtros informados na query string.
-  Object.keys(_filters).forEach(function(key,index) {
+  // // Percorre todos os filtros informados na query string.
+  // Object.keys(_filters).forEach(function(key,index) {
+  //
+  //   console.log("_filters: ", _filters);
+  //
+  //   // Caso o campo seja do tipo string
+  //   if ((typeof _filters[key]) === "string") {
+  //
+  //     // Caso o parâmetro de filtro termina com _start é porque ele deverá ser
+  //     // a data inicial para um filtro de data, com isso aplicamos .where(campo)
+  //     // e .gte(data) para o model do find(). Lembrando que gte significa
+  //     // "igual ou maior que".
+  //     if (key.indexOf("_start") > 0) {
+  //
+  //       modelDoc.where(key.replace("_start", "")).gte(_filters[key]);
+  //
+  //     } else if (key.indexOf("_end") > 0) {
+  //
+  //       // O mesmo controle mencionado acima ("_start"), mas agora determina
+  //       // que a data informado deve ser "igual ou menor que".
+  //       modelDoc.where(key.replace("_end", "")).lte(_filters[key]);
+  //
+  //     } else if ((_filters[key].indexOf("/i") > 0) || (_filters[key][0] == "/")) {
+  //
+  //       // Caso o filtro seja string e tenha sido informado uma regex simples,
+  //       // usamos o where com função regex() para filtrar pela expressão regular.
+  //       modelDoc.where("providers." + key).regex(eval(_filters[key]));
+  //
+  //     } else {
+  //
+  //       // Caso seja um parâmetro simples (não é data ou expressão regular),
+  //       // verifica apenas se existem documentos com o campo com valor igual ao
+  //       // informado.
+  //       modelDoc.where(key).equals(_filters[key]);
+  //     }
+  //   } else {
+  //     // Caso seja um parâmetro simples (não é data ou expressão regular),
+  //     // verifica apenas se existem documentos com o campo com valor igual ao
+  //     // informado.
+  //       modelDoc.where(key).equals(_filters[key]);
+  //   }
+  //
+  // });
 
-    // Caso o campo seja do tipo string
-    if ((typeof _filters[key]) === "string") {
-
-      // Caso o parâmetro de filtro termina com _start é porque ele deverá ser
-      // a data inicial para um filtro de data, com isso aplicamos .where(campo)
-      // e .gte(data) para o model do find(). Lembrando que gte significa
-      // "igual ou maior que".
-      if (key.indexOf("_start") > 0) {
-
-        modelDoc.where(key.replace("_start", "")).gte(_filters[key]);
-
-      } else if (key.indexOf("_end") > 0) {
-
-        // O mesmo controle mencionado acima ("_start"), mas agora determina
-        // que a data informado deve ser "igual ou menor que".
-        modelDoc.where(key.replace("_end", "")).lte(_filters[key]);
-
-      } else if ((_filters[key].indexOf("/i") > 0) || (_filters[key][0] == "/")) {
-
-        // Caso o filtro seja string e tenha sido informado uma regex simples,
-        // usamos o where com função regex() para filtrar pela expressão regular.
-        modelDoc.where(key).regex(eval(_filters[key]));
-
-      } else {
-
-        // Caso seja um parâmetro simples (não é data ou expressão regular),
-        // verifica apenas se existem documentos com o campo com valor igual ao
-        // informado.
-        modelDoc.where(key).equals(_filters[key]);
-      }
-    } else {
-      // Caso seja um parâmetro simples (não é data ou expressão regular),
-      // verifica apenas se existem documentos com o campo com valor igual ao
-      // informado.
-        modelDoc.where(key).equals(_filters[key]);
-    }
-
-  });
-
-  // Determina o limite e paginação. A função skip() determina quantos
-  // documentos devem ser pulados. Como o valor informado como filtro na API é
-  // referente ao número da página, para que consigamos chegar no valor exato de
-  // documentos a serem "pulados", subtraímos 1 do valor informato e o
-  // multiplacamos pela quantidade de documento que podem ser rornados por página.
-  modelDoc.limit(_pagination.limit).skip(_pagination.limit * (_pagination.pag - 1));
-
-  // Determina a ordenação do resultado.
-  modelDoc.sort(_sort);
+  //modelDoc.where("providers.email").equals("zx@x.com.br");
 
   // Se (_lean = true) retorna um objeto javascript simples e não um
   // documento mongoose. A aplicação de lean() melhora e muito as querys e
   // retorno de listas.
   modelDoc.lean(_lean);
 
-  const _objSubDoc = schemaDef.subDocs.find(function(element) {
-    return element.fieldName === _field;
-  });
 
   if (!_objSubDoc) {
 
@@ -212,19 +200,24 @@ const _subDocReadAll = function(_id, _field, _populate, _lean, _pagination, _fil
 
   } else {
 
+
     let _objPopulate = {};
     let _objPopulateTemp = {};
 
     _objPopulate["path"] = _objSubDoc.fieldName + "." + _objSubDoc.indexField;
     _objPopulate["model"] = _objSubDoc.ref;
-    //(_populate.length == 0) ? modelDoc.populate(_objPopulate) : null;
+    _objPopulate["select"] = _populatedFields.replace(new RegExp(",", 'g'), " ");
+    //_objPopulate["match"] = _objFilters;
+
+    if (((Object.keys(_sort).length === 0) && (_sort.constructor === Object)) === false) {
+      _objPopulate["options"] = { sort: _sort };
+    }
+
     modelDoc.populate(_objPopulate);
 
     _populate.forEach(function(v) {
 
       let _slicePopulateParam = v.split(".");
-
-      console.log(_slicePopulateParam[0], _slicePopulateParam[1], _slicePopulateParam[2]);
 
       if ((_slicePopulateParam[0].toUpperCase() != _objSubDoc.ref.toUpperCase()) &&
           (_slicePopulateParam[1] != _objSubDoc.fieldName) &&
@@ -273,21 +266,230 @@ const _subDocReadAll = function(_id, _field, _populate, _lean, _pagination, _fil
     if (err) {
       // Não foi possível retornar a lista de documentos
       callback({ error: messages.getMessage("error", 1), err }, 400);
-    } else if (docs.length == 0) {
+    } else if ((docs) && (docs.length == 0)) {
 
       // Caso não encontre documentos com os critérios informados, retorna
       // para o requisitante um array de objetos vazio
       callback([{}], 200);
 
+    } else if (!docs) {
+
+      // Caso não encontre documentos com os critérios informados, retorna
+      // para o requisitante um array de objetos vazio
+      callback([{}], 404);
+
     } else {
+
+      const _filteredPopulate = docs[_objSubDoc.fieldName].filter(function(element, index, array) {
+
+        let control = true;
+
+        //console.log("_filters: ", _filters);
+
+        // Percorre todos os filtros informados na query string.
+        Object.keys(_populatedFilters).forEach(function(key,index) {
+
+          const originalKey = key.substr(key.indexOf(".") + 1);
+          //console.log("nome do campo: ", key, " - valor do campo: ", _filters[key]);
+
+          // Caso o campo seja do tipo string
+          if ((typeof _populatedFilters[key]) === "string") {
+
+            // Caso o parâmetro de filtro termina com _start é porque ele deverá ser
+            // a data inicial para um filtro de data, com isso aplicamos .where(campo)
+            // e .gte(data) para o model do find(). Lembrando que gte significa
+            // "igual ou maior que".
+            if (key.indexOf("_start") > 0) {
+
+              //console.log("vai aplicar filtro de data _start");
+
+              //console.log("a data informado é menor que a data no banco? ", new Date(_filters[key]) < new Date(element.provider[key.replace("_start", "")]));
+
+              if (new Date(_populatedFilters[key]) > new Date(element[_objSubDoc.indexField][originalKey.replace("_start", "")])) {
+                //console.log("o valor informado em " + key + " e menor que " + element.provider[key.replace("_start", "")]);
+                control = false;
+              }
+
+              //_objFilters[key.replace("_start", "")] = { $gte: _filters[key] };
+              //modelDoc.where(_objSubDoc.fieldName + "." + key.replace("_start", "")).gte(_filters[key]);
+
+            } else if (originalKey.indexOf("_end") > 0) {
+
+              if (new Date(_populatedFilters[key]) < new Date(element[_objSubDoc.indexField][originalKey.replace("_end", "")])) {
+                control = false;
+              }
+
+              // O mesmo controle mencionado acima ("_start"), mas agora determina
+              // que a data informado deve ser "igual ou menor que".
+              //_objFilters[key.replace("_end", "")] = { $lte: _filters[key] };
+              //modelDoc.where(key.replace("_end", "")).lte(_filters[key]);
+
+            } else if ((_populatedFilters[key].indexOf("/i") > 0) || (_populatedFilters[key][0] == "/")) {
+
+              // Caso o filtro seja string e tenha sido informado uma regex simples,
+              // usamos o where com função regex() para filtrar pela expressão regular.
+              if (!((new RegExp(eval(_populatedFilters[key]))).test(element[_objSubDoc.indexField][originalKey]))) {
+                  control = false;
+              }
+
+            } else {
+
+              if (typeof element[_objSubDoc.indexField][originalKey]  !== "string") {
+
+                if (element[_objSubDoc.indexField][originalKey].toISOString() !== _populatedFilters[key]) {
+                  control = false;
+                }
+
+              } else {
+
+                // Caso seja um parâmetro simples (não é data ou expressão regular),
+                // verifica apenas se existem documentos com o campo com valor igual ao
+                // informado.
+                if (element[_objSubDoc.indexField][originalKey].toUpperCase() !== _populatedFilters[key].toUpperCase()) {
+                  control = false;
+                }
+              }
+
+            }
+          } else if ((typeof _populatedFilters[key]) === "boolean") {
+
+            // Caso seja um parâmetro simples (não é data ou expressão regular),
+            // verifica apenas se existem documentos com o campo com valor igual ao
+            // informado.
+            if (element[_objSubDoc.indexField][originalKey] !== _populatedFilters[key]) {
+              control = false;
+            }
+          } else {
+
+            // Caso seja um parâmetro simples (não é data ou expressão regular),
+            // verifica apenas se existem documentos com o campo com valor igual ao
+            // informado.
+            if (element[_objSubDoc.indexField][originalKey].toUpperCase() !== _populatedFilters[key].toUpperCase()) {
+              control = false;
+            }
+
+          }
+
+        });
+
+        // Percorre todos os filtros informados na query string.
+        Object.keys(_filters).forEach(function(key,index) {
+
+          // Caso o campo seja do tipo string
+          if ((typeof _filters[key]) === "string") {
+
+            // Caso o parâmetro de filtro termina com _start é porque ele deverá ser
+            // a data inicial para um filtro de data, com isso aplicamos .where(campo)
+            // e .gte(data) para o model do find(). Lembrando que gte significa
+            // "igual ou maior que".
+            if (key.indexOf("_start") > 0) {
+
+              //console.log("vai aplicar filtro de data _start");
+
+              //console.log("a data informado é menor que a data no banco? ", new Date(_filters[key]) < new Date(element.provider[key.replace("_start", "")]));
+
+              if (new Date(_filters[key]) > new Date(element[key.replace("_start", "")])) {
+                //console.log("o valor informado em " + key + " e menor que " + element.provider[key.replace("_start", "")]);
+                control = false;
+              }
+
+              //_objFilters[key.replace("_start", "")] = { $gte: _filters[key] };
+              //modelDoc.where(_objSubDoc.fieldName + "." + key.replace("_start", "")).gte(_filters[key]);
+
+            } else if (key.indexOf("_end") > 0) {
+
+              if (new Date(_filters[key]) < new Date(element[key.replace("_end", "")])) {
+                control = false;
+              }
+
+              // O mesmo controle mencionado acima ("_start"), mas agora determina
+              // que a data informado deve ser "igual ou menor que".
+              //_objFilters[key.replace("_end", "")] = { $lte: _filters[key] };
+              //modelDoc.where(key.replace("_end", "")).lte(_filters[key]);
+
+            } else if ((_filters[key].indexOf("/i") > 0) || (_filters[key][0] == "/")) {
+
+              // Caso o filtro seja string e tenha sido informado uma regex simples,
+              // usamos o where com função regex() para filtrar pela expressão regular.
+              if (!((new RegExp(eval(_filters[key]))).test(element[key]))) {
+                  control = false;
+              }
+
+            } else {
+
+              if (typeof element[key]  !== "string") {
+
+                if (element[key].toISOString() !== _filters[key]) {
+                  control = false;
+                }
+
+              } else {
+
+                // Caso seja um parâmetro simples (não é data ou expressão regular),
+                // verifica apenas se existem documentos com o campo com valor igual ao
+                // informado.
+                if (element[key].toUpperCase() !== _filters[key].toUpperCase()) {
+                  control = false;
+                }
+              }
+
+            }
+
+          } else if (((typeof _filters[key]) === "boolean") || ((typeof _filters[key]) === "number")) {
+
+            // Caso seja um parâmetro simples (não é data ou expressão regular),
+            // verifica apenas se existem documentos com o campo com valor igual ao
+            // informado.
+            if (element[key] !== _filters[key]) {
+              control = false;
+            }
+
+          } else {
+
+            // Caso seja um parâmetro simples (não é data ou expressão regular),
+            // verifica apenas se existem documentos com o campo com valor igual ao
+            // informado.
+            if (element[key].toUpperCase() !== _filters[key].toUpperCase()) {
+              control = false;
+            }
+
+          }
+
+        });
+
+        if (control) {
+          return true;
+        }
+        return false;
+
+      });
+
+      // apresenta apenas os campos informados no parametro query string "_fields"
+      if (Object.keys(_fields).length > 0) {
+        _filteredPopulate.forEach(function(element, index) {
+          console.log("element: ", element);
+          for (var property in element) {
+            console.log("é propriedade: ", property);
+            if (!_fields.hasOwnProperty(property)) {
+              console.log("nao foi informado na _fields");
+              delete element[property];
+            }
+          }
+        });
+      }
+
+      // paginacao dos subdocs
+      const _sliceStartPag = (_pagination.pag - 1) * _pagination.limit;
+      const _sliceEndPag = _sliceStartPag + _pagination.limit;
 
       // Caso encontre documentos através dos critérios informados,
       // retorna o objeto JSON para o requisitante.
-      callback(docs, 200);
+      callback(_filteredPopulate.slice(_sliceStartPag, _sliceEndPag), 200);
     }
   });
 
 }
+
 
 // ** READ - GET **
 // Função que retorna um determinado documento da collection.
