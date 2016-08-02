@@ -11,9 +11,13 @@ module.exports = function(param) {
 
 
   const _object = [{
-    provider: require("./object-ObjectId")({ name: "provider", index: true, schemaName: "Provider" }),
-    phoneExtension: require("./field-number")({ name: "phoneExtension", required: true }),
+    provider: require("./object-ObjectId")({ name: "provider", index: true, required: true, schemaName: "Provider" }),
+    phoneExtension: require("./field-number")({ name: "phoneExtension" }),
     email: require("./field-email")({ name: "email", required: true }),
+    createdById: require("./field-createdById")({ name: "createdById", required: true, subDoc: "provider" }),
+    updatedById: require("./field-updatedById")({ name: "updatedById", required: true, subDoc: "provider" }),
+    createdAt: require("./field-date")({ name: "createdAt", required: true, subDoc: "provider" }),
+    updatedAt: require("./field-date")({ name: "updatedAt", required: true, subDoc: "provider" }),
     _id: false
   }];
 

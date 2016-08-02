@@ -73,6 +73,7 @@ module.exports = function(collection) {
 
     });
 
+
     // Adiciona uma característica de validação para o campo (path) "createdById".
     _schema.path('createdById').validate(function (value, respond) {
 
@@ -114,6 +115,9 @@ module.exports = function(collection) {
       }
 
     }, messages.getMessage("error", 12) );
+
+
+
 
   });
 

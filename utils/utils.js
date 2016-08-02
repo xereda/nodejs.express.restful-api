@@ -44,10 +44,10 @@ const _getObjectBody = function(req, schema) {
     }
   }
 
+  console.log("req.body: ", req.body);
+
   // Percorre todos os campos informados no corpo da requisição.
   Object.keys(req.body).forEach(function (key) {
-
-    //console.log(key, req.body[key], typeof req.body[key], (typeof req.body[key]) === "string");
 
     // Verifica se o campo informado faz parte do esquema atual.
     if (schema[key]) {
@@ -65,7 +65,7 @@ const _getObjectBody = function(req, schema) {
     }
 
   });
-
+  console.log("_objectBody: ", _objectBody);
   return _objectBody;
 
 }
@@ -216,12 +216,32 @@ const _passwordCrypt = function(v) {
   return bcrypt.hashSync(v, 10);
 }
 
+const _toSubDocUpdateObject = function(_field, _object) {
+
+  let _returnObject = {};
+
+  Object.keys(_object).forEach(function(key,index) {
+
+    if (key !== "_id") {
+      _returnObject[_field + ".$." + key] = _object[key];
+    }
+
+  });
+
+  // adiciona data de atualização
+  _returnObject[_field + ".$." + "updatedAt"] = (new Date()).toISOString();
+
+  return _returnObject;
+
+}
+
 
 // Define a interface encapsuladora das funções aqui existentes.
 const controller = {
   toPaginationObject: _toPaginationObject,
   toFiltersObject: _toFiltersObject,
   toPopulatedFiltersObject: _toPopulatedFiltersObject,
+  toSubDocUpdateObject: _toSubDocUpdateObject,
   toJSObject: _toJSObject,
   getObjectBody: _getObjectBody,
   validate: _validate,

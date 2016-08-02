@@ -1,0 +1,15 @@
+
+
+db.workplaces.update({_id: ObjectId('5797bddb6f1bce0736bfde51'), 'providers.provider': ObjectId('5797dce417dbdc313e3e4afa') },
+                               {$pull: { providers: { provider: ObjectId('5797dce417dbdc313e3e4afa') } } });
+
+
+ {$pull: { providers: { provider: ObjectId('5797dce417dbdc313e3e4afa') } } }
+
+let _tempObject = {};
+let _tempObject2 = {};
+let _filterPull = {};
+let _temp = '5797dce417dbdc313e3e4afa';
+_tempObject["provider"] = _temp;
+_tempObject2["providers"] = _tempObject;
+_filterPull["$pull"] = _tempObject2;

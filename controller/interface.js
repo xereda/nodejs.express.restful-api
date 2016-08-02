@@ -111,8 +111,6 @@ module.exports = function(collection) {
     // _pag: Define qual a página de documentos a ser retornada.
     const _pagination = utils.toPaginationObject(req);
 
-
-    console.log("vai chamar a crud");
     // Lista todos os documentos.
     controllerCRUD.subDocReadAll(_id, _field, _populate, _populatedFields, _lean, _pagination, _filters, _populatedFilters, _fields, _sort, function(objectList, status) {
       res.status(status).json(objectList);
@@ -150,6 +148,18 @@ module.exports = function(collection) {
 
   }
 
+  // Cria um novo documento na collection.
+  const _subDocPost = function(req, res, next) {
+
+    // Limpa o campo informado como parâmetro. (trim e escape)
+    const _id = utils.validate(req.params._id);
+    const _field = utils.validate(req.params._field);
+    controllerCRUD.subDocCreate(_id, _field, utils.getObjectBody(req, schemaDef.schema[_field][0]), function(createdObject, status) {
+      res.status(status).json(createdObject);
+    });
+
+  }
+
   // Atualiza um documento existente
   const _put = function(req, res, next) {
 
@@ -157,17 +167,66 @@ module.exports = function(collection) {
     // um erro de bad request (400) para o requisitante.
     if (!req.body._id) {
       res.status(400).json({ error: messages.getMessage("error", 6) });
-      next(new Error(messages.getMessage("error", 6)));
+    } else {
+
+      // Limpa o campo informado como parâmetro. (trim e escape)
+      const _id = utils.validate(req.body._id);
+
+      // Atualiza do documento com os campos informado no corpo da requisição.
+      // A API retornará apenas os campos alterados.
+      controllerCRUD.update(_id, utils.getObjectBody(req, schemaDef.schema), function(updatedObject, status) {
+        res.status(status).json(updatedObject);
+      });
+
     }
+  }
+
+
+  // Atualiza um documento existente
+  const _subDocPut = function(req, res, next) {
 
     // Limpa o campo informado como parâmetro. (trim e escape)
-    const _id = utils.validate(req.body._id);
+    const _id = utils.validate(req.params._id);
+    const _field = utils.validate(req.params._field);
 
-    // Atualiza do documento com os campos informado no corpo da requisição.
-    // A API retornará apenas os campos alterados.
-    controllerCRUD.update(_id, utils.getObjectBody(req, schemaDef.schema), function(updatedObject, status) {
-      res.status(status).json(updatedObject);
+    const _objSubDoc = schemaDef.subDocs.find(function(element) {
+      return element.fieldName === _field;
     });
+
+    if ((_objSubDoc.fieldName === undefined) || (_objSubDoc.fieldName === null)) {
+
+      // Subdocumento informado não está definido na collection pai
+      const _message = messages.getMessage("error", 34).replace("%1", _field).replace("%2", collection);
+      res.status(404).json({ error: _message });
+
+    } else {
+
+      const _subDoc_id = utils.validate(req.params._subDoc_id);
+
+      const _updateObject = utils.toSubDocUpdateObject(_field, utils.getObjectBody(req, schemaDef.schema[_field][0]));
+
+      const _message = messages.getMessage("error", 35);
+
+      if (Object.keys(_updateObject).length === 0) {
+
+        res.status(400).json({ error: _message });
+
+      } else if ((req.body.updatedById === undefined) || (!req.body.updatedById)) {
+
+        res.status(400).json({ error: messages.getMessage("error", 8).replace("%1", "updatedById") });
+
+      } else {
+
+        // Atualiza do documento com os campos informado no corpo da requisição.
+        // A API retornará apenas os campos alterados.
+        controllerCRUD.subDocUpdate(_id, _field, _objSubDoc.indexField, _subDoc_id, _updateObject, function(updatedObject, status) {
+
+          res.status(status).json(updatedObject);
+
+        });
+
+      }
+    }
 
   }
 
@@ -184,6 +243,42 @@ module.exports = function(collection) {
 
   }
 
+
+  // Remove um documento informado como parâmetro.
+  const _subDocDelete = function(req, res, next) {
+
+    console.log("dentro do delete subdoc");
+
+    // Limpa o campo informado como parâmetro. (trim e escape)
+    const _id = utils.validate(req.params._id);
+    const _field = utils.validate(req.params._field);
+
+    const _objSubDoc = schemaDef.subDocs.find(function(element) {
+      return element.fieldName === _field;
+    });
+
+    if ((_objSubDoc.fieldName === undefined) || (_objSubDoc.fieldName === null)) {
+
+      // Subdocumento informado não está definido na collection pai
+      const _message = messages.getMessage("error", 34).replace("%1", _field).replace("%2", collection);
+      res.status(404).json({ error: _message });
+
+    } else {
+
+      const _subDoc_id = utils.validate(req.params._subDoc_id);
+
+      console.log("vai chamar o crud delete");
+
+      // Remove o documento.
+      controllerCRUD.subDocDelete(_id, _field, _objSubDoc.indexField, _subDoc_id, function(deletedObject, status) {
+        res.status(status).json(deletedObject);
+      });
+
+    }
+
+  }
+
+
   // Implementação da interface encapsuladora das funções. Determina as funções
   // que ficarão expostas quando o módulo for exportado.
   const controller = {
@@ -191,8 +286,11 @@ module.exports = function(collection) {
     subDocList: _subDocList,
     get: _get,
     post: _post,
+    subDocPost: _subDocPost,
     put: _put,
-    delete: _delete
+    subDocPut: _subDocPut,
+    delete: _delete,
+    subDocDelete: _subDocDelete
   };
 
   return controller;

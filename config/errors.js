@@ -30,5 +30,12 @@ module.exports = [
   { code: 26, description: "O campo (%1) deve ter %2 caracteres exatos." },
   { code: 27, description: "Informe um CPF válido para o campo (%1)." },
   { code: 28, description: "Informe um CNPJ válido para o campo (%1)." },
+  { code: 29, description: "Informe o identificador do usuário que está criando este sub documento." },
+  { code: 30, description: "Informe o identificador do usuário que está atualizando este sub documento." },
+  { code: 31, description: "O campo %1 não é referente a um sub documento na collection %2." },
+  { code: 32, description: "Sub documento já está vinculado ao documento principal" },
+  { code: 33, description: "Sub documento não existe na collection %1" },
+  { code: 34, description: "%1 não é um sub documento da collection %2 ou a propriedade 'subDoc' (Array) não está definida em seu esquema." },
+  { code: 35, description: "Não foram informados campos para atualização do sub documento." },
 
 ];

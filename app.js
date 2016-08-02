@@ -28,6 +28,7 @@ if (cluster.isWorker) {
 
   // Módulo que trata rotas informadas, mas não existentes (404) ou ainda
   // rotinas com erro no servidor (500)
+
   const exceptions = require("./controller/exceptions");
 
   // Métodos HTTP para tratativas das requisições feitas na API.
@@ -70,10 +71,16 @@ if (cluster.isWorker) {
   app.delete("/workplaces/:_id", workplaceInterface.delete);
 
   app.get("/workplaces/:_id/:_field", workplaceInterface.subDocList);
+  // o subDocGet não será implementado para subdocumentos, pois não há a
+  // necessidade para tal. Um subdocumento pode ser acessado integralmente
+  // através de seu próprio resource na API, como por exemplo:
+  // http://localhost:5000/workplaces/5797bddb6f1bce0736bfde51/providers -> lista todos os providers de um workplace
+  // http://localhost:5000/providers/579a6404308a23780dcfdaad -> para pegar apenas um provider, basta acessar diretamente o provider em seu resource na api.
   // app.get("/workplaces/:_id/providers/:provider", workplaceInterface.subDocGet);
-  // app.post("/workplaces/:_id/providers", workplaceInterface.subDocPost);
-  // app.put("/workplaces/:_id/providers", workplaceInterface.subDocPut);
-  // app.delete("/workplaces/:_id/providers/:provider", workplaceInterface.subDocDelete);
+
+  app.post("/workplaces/:_id/:_field", workplaceInterface.subDocPost);
+  app.put("/workplaces/:_id/:_field/:_subDoc_id", workplaceInterface.subDocPut);
+  app.delete("/workplaces/:_id/:_field/:_subDoc_id", workplaceInterface.subDocDelete);
 
 
   const providerInterface = require("./controller/interface")("Provider");

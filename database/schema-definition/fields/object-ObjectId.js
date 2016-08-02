@@ -13,7 +13,7 @@ module.exports = function(param) {
     type: Schema.Types.ObjectId,
     ref: param.schemaName,
     requerid: [ param.required, messages.getMessage("error", 8).replace("%1", param.name) ],
-    index: param.index
+    index: { unique: param.index } 
   };
 
   return _object;
