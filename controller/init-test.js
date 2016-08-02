@@ -18,8 +18,6 @@ const _test = function(callback) {
       // Caso ocorra algum erro na pesquisa ou // documento inexistente
       if ((err) || (!doc)) {
 
-        console.log("deu merda");
-
         callback(false);
 
       } else {

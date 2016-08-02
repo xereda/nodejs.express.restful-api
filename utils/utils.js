@@ -44,8 +44,6 @@ const _getObjectBody = function(req, schema) {
     }
   }
 
-  console.log("req.body: ", req.body);
-
   // Percorre todos os campos informados no corpo da requisição.
   Object.keys(req.body).forEach(function (key) {
 
@@ -65,7 +63,6 @@ const _getObjectBody = function(req, schema) {
     }
 
   });
-  console.log("_objectBody: ", _objectBody);
   return _objectBody;
 
 }
@@ -149,7 +146,6 @@ const _toFiltersObject = function(req, schema) {
     }
   });
 
-  console.log("_obj: ", _obj);
   return _obj;
 
 }

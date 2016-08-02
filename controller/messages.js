@@ -42,5 +42,3 @@ const messageObject = {
 
 // Exporta o objeto de interface
 module.exports = messageObject;
-
-//console.log(messageObject.getMessage("error", 1));
