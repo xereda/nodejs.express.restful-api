@@ -49,6 +49,8 @@ module.exports = function(collection, model) {
 
       const _userValidation = function() {
 
+        //console.log("docObject: ", docObject);
+
         mongoose.models["User"].findOne({ "_id": docObject["createdById"] }, function (err, userExists) {
 
           // Caso tenha algum problema na pesquisa do subdocumento
@@ -77,7 +79,7 @@ module.exports = function(collection, model) {
       const _mainSubDocLocated = function() {
 
         // Procura o documento informado como parâmetro
-        model.findOne({ _id: _id }, function(err, doc) {
+        model.findOne({ _id: _id },  function(err, doc) {
 
           // Caso tenha algum problema na procura
           if (err) {

@@ -8,7 +8,7 @@ module.exports = function(collection, schemaDef, controllerCRUD) {
 
   // Módulo contendo funções geréricas.
   const utils           = require("../utils/utils");
-  
+
   // Módulo de controle de mensagens
   const messages        = require("../controller/messages");
 

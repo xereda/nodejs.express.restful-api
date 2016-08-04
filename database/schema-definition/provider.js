@@ -3,13 +3,13 @@
 "use strict";
 
 module.exports.schema = {
-  name: require("./fields/field-name")({ name: "name", required: true, index: true, minLength: 3 }),
+  name: require("./fields/field-name")({ name: "name", required: true, index: true, unique: true, minLength: 3 }),
   description: require("./fields/field-string")({ name: "description" }),
   email: require("./fields/field-email")({ name: "email", required: true }),
   active: require("./fields/field-boolean")({ name: "active" }),
   entityType: require("./fields/field-domain")({ name: "entityType", required: true, domain: ["F", "J"] }),
-  cpf: require("./fields/field-cpf")({ name: "cpf" }),
-  cnpj: require("./fields/field-cnpj")({ name: "cnpj" }),
+  cpf: require("./fields/field-cpf")({ name: "cpf", index: true, unique: true }),
+  cnpj: require("./fields/field-cnpj")({ name: "cnpj", index: true, unique: true }),
   workplaces: require("./fields/object-workplace")({ name: "workplaces" }),
   createdById: require("./fields/field-createdById")({ name: "createdById", required: true }),
   updatedById: require("./fields/field-updatedById")({ name: "updatedById", required: true }),

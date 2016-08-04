@@ -6,6 +6,7 @@ module.exports = function(param) {
   const CPF = require("cpf_cnpj").CPF;
 
   (!param.index) ? param.index = false : null;
+  (param.unique === true) ? param.index = { unique: true } : null;
   (!param.required) ? param.required = false : null;
 
   const _validate = function(v) {

@@ -1,12 +1,10 @@
-// Definção do esquema da collection de usuários
+// RAMOS DE ATIVIDADE - MEDICINE, ODONTOLOGIA, FISIOTERAPIA
 
 "use strict";
 
 module.exports.schema = {
-  name: require("./fields/field-name")({ name: "name", required: true, minLength: 3, index: true }),
-  email: require("./fields/field-email")({ name: "email", required: true, index: true, unique: true }),
-  password: require("./fields/field-password")({ name: "password", required: true, minLength: 5 }),
-  admin: require("./fields/field-boolean")({ name: "admin" }),
+  name: require("./fields/field-name")({ name: "name", required: true, index: true, unique: true, minLength: 3 }),
+  regionalCouncilAcronym: require("./fields/field-string")({ name: "regionalCouncilAcronym", index: true, unique: true }),
   active: require("./fields/field-boolean")({ name: "active" }),
   createdById: require("./fields/field-createdById")({ name: "createdById", required: true }),
   updatedById: require("./fields/field-updatedById")({ name: "updatedById", required: true }),

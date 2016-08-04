@@ -18,7 +18,7 @@ module.exports.schema = {
   geoLocation: require("./fields/field-geolocation")({ name: "geoLocation", required: true }),
   phone: require("./fields/field-number")({ name: "phone", required: true, min: 1111111111, max: 99999999999 }),
   deadlineUserChoose: require("./fields/field-number")({ name: "deadlineUserChoose" }),
-  cnes: require("./fields/field-number")({ name: "cnes" }), //  Cadastro Nacional de Estabelecimentos de Saúde
+  nationalCode: require("./fields/field-string")({ name: "nationalCode" }), //  Cadastro Nacional de Estabelecimentos de Saúde
   providers: require("./fields/object-provider")({ name: "providers" }),
   createdById: require("./fields/field-createdById")({ name: "createdById", required: true }),
   updatedById: require("./fields/field-updatedById")({ name: "updatedById", required: true }),

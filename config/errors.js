@@ -37,5 +37,6 @@ module.exports = [
   { code: 33, description: "Sub documento não existe na collection %1" },
   { code: 34, description: "%1 não é um sub documento da collection %2 ou a propriedade 'subDoc' (Array) não está definida em seu esquema." },
   { code: 35, description: "Não foram informados campos para atualização do sub documento." },
+  { code: 36, description: "O valor informado no campo '%1' não é um documento na collection '%2." },
 
 ];

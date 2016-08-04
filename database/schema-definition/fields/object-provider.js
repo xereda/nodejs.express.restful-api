@@ -7,11 +7,12 @@ module.exports = function(param) {
   const Schema = mongoose.Schema;
 
   (!param.index) ? param.index = false : null;
+  (param.unique === true) ? param.index = { unique: true } : null;
   (!param.required) ? param.required = false : null;
 
 
   const _object = [{
-    provider: require("./object-ObjectId")({ name: "provider", index: true, required: true, schemaName: "Provider" }),
+    provider: require("./object-objectId")({ name: "provider", index: true, unique: true, required: true, schemaName: "Provider" }),
     phoneExtension: require("./field-number")({ name: "phoneExtension" }),
     email: require("./field-email")({ name: "email", required: true }),
     createdById: require("./field-createdById")({ name: "createdById", required: true, subDoc: "provider" }),

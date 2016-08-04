@@ -32,6 +32,8 @@ module.exports = function(collection, schemaDef, controllerCRUD) {
     // Retorna um objeto JSON contendo a regra para ordenação dos resultados.
     const _sort = utils.toJSObject("sort", req.query._sort);
 
+    console.log("_sort: ", _sort);
+
     // Retorna um objeto Javascript contendo os filtros repassados na url
     // da requisição.
 

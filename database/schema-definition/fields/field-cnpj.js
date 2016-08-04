@@ -6,7 +6,10 @@ module.exports = function(param) {
   const CNPJ = require("cpf_cnpj").CNPJ;
 
   (!param.index) ? param.index = false : null;
+  (param.unique === true) ? param.index = { unique: true } : null;
   (!param.required) ? param.required = false : null;
+
+
 
   const _validate = function(v) {
     const _cleanedCNPJ = CNPJ.strip(v.replace(/&#{0,1}[a-z0-9]+;/ig, ""));

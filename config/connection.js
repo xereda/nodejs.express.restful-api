@@ -45,6 +45,12 @@ conn.on('disconnected', function() {
   //mongoose.connect("mongodb://" + config.database_host + "/" + config.database_name, {server:{auto_reconnect:true}});
 });
 
+conn.on('index', function(err) {
+  if (err) {
+    console.log("erro de indice: ", err);
+  }
+});
+
 process.on('uncaughtException', function(err) {
   console.log("deu um erro daqueles: ", err);
   process.exit(1);

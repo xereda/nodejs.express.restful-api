@@ -110,6 +110,8 @@ module.exports = function(collection, model) {
         modelDoc.populate(v);
       });
 
+      modelDoc.sort(_sort);
+
       // Após todas as definçòes acima, executa a query.
       modelDoc.exec(function(err, docs) {
 
