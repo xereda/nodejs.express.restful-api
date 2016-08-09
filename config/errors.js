@@ -38,5 +38,7 @@ module.exports = [
   { code: 34, description: "%1 não é um sub documento da collection %2 ou a propriedade 'subDoc' (Array) não está definida em seu esquema." },
   { code: 35, description: "Não foram informados campos para atualização do sub documento." },
   { code: 36, description: "O valor informado no campo '%1' não é um documento na collection '%2." },
+  { code: 37, description: "O sub documento não pode ter seu índice duplicado." },
+  { code: 38, description: "O sub documento '%1' deve ser tratado em seu controle individual na API." },
 
 ];

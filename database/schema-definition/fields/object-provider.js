@@ -12,7 +12,7 @@ module.exports = function(param) {
 
 
   const _object = [{
-    provider: require("./object-objectId")({ name: "provider", index: true, unique: true, required: true, schemaName: "Provider" }),
+    provider: require("./object-objectId")({ name: "provider", index: true, required: true, schemaName: "Provider" }),
     phoneExtension: require("./field-number")({ name: "phoneExtension" }),
     email: require("./field-email")({ name: "email", required: true }),
     createdById: require("./field-createdById")({ name: "createdById", required: true, subDoc: "provider" }),

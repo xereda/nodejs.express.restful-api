@@ -5,7 +5,7 @@ module.exports = function(param) {
   const messages = require("../../../controller/messages");
 
   (!param.index) ? param.index = false : null;
-  (param.unique === true) ? param.index = { unique: true } : null;
+  (param.unique === true) ? param.index = { unique: true, sparse: true } : null;
   (!param.required) ? param.required = false : null;
 
   //const _get = (v) => v.toUpperCase();

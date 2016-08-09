@@ -141,6 +141,8 @@ module.exports = function(collection, model) {
 
         docObject.updatedById = docObject.createdById;
 
+        console.log("docObject: ", docObject);
+
         doc[_field].push(docObject);
 
         doc.save(function(err, docUpdated) {

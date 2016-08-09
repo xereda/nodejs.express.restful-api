@@ -13,72 +13,45 @@ module.exports = function(collection, model) {
   // Função que cria novo docunento na collection especificada
   const _create = function(docObject, callback) {
 
+    let createControl = true;
+
+    // Adiciona validacao para sub documentos. Sub documentos não podem ser
+    // manipulados diretamente na colllection pai. Apenas no controle específico
+    // para sub documentos. Para manipular sub documentos, siga o padrão:
+    // http://server:5000/resource/codigo/campoSubDocumento
     if (schemaDef.subDocs !== undefined) {
+
       Object.keys(schemaDef.subDocs).forEach(function (key, i) {
-        if ((docObject[schemaDef.subDocs[i].fieldName] !== undefined) && (docObject[schemaDef.subDocs[i].fieldName] !== null)) {
-          Object.keys(docObject[schemaDef.subDocs[i].fieldName]).forEach(function (key2, i2) {
-            docObject[schemaDef.subDocs[i].fieldName][i2].createdAt = new Date();
-            docObject[schemaDef.subDocs[i].fieldName][i2].updatedAt = new Date();
-          });
+
+        if (docObject[schemaDef.subDocs[key].fieldName] !== undefined) {
+
+          console.log("schemaDef.subDocs[key].fieldName: ", schemaDef.subDocs[key].fieldName);
+          console.log("docObject[schemaDef.subDocs[key].fieldName]: ", docObject[schemaDef.subDocs[key].fieldName]);
+
+          if (docObject[schemaDef.subDocs[key].fieldName].length > 0) {
+            createControl = false;
+            callback({ error: messages.getMessage("error", 38).replace("%1", schemaDef.subDocs[key].fieldName) }, 400);
+          }
+
         }
+
       });
     }
 
-    if (schemaDef.referencedFields !== undefined) {
-      Object.keys(schemaDef.referencedFields).forEach(function (key, i) {
-        if ((docObject[schemaDef.referencedFields[key].fieldName] !== undefined) &&
-            (docObject[schemaDef.referencedFields[key].fieldName] !== null) &&
-            (docObject[schemaDef.referencedFields[key].fieldName] !== "")) {
+    if (createControl === true) {
+      // Cria um novo documento com o objeto passado como parâmetro.
+      new model(docObject).save(function(err, doc) {
 
-          _referencedValidation(schemaDef.referencedFields[key], docObject, callback)
-
+        // Caso ocorra erro na criação do documento
+        if (err) {
+          // Não foi possível criar o documento
+          callback({ error: messages.getMessage("error", 4), err }, 400);
         } else {
-          _docCreater(docObject, callback);
+          // Cria o documento e retorna um objecto com o documento recem criado
+          callback(doc, 201);
         }
-      });
-    }
 
-  }
-
-  const _referencedValidation = function(referencedFields, docObject, callback) {
-
-    mongoose.models[referencedFields.ref].findOne({ "_id": docObject[referencedFields.fieldName] }, function (err, refDocExists) {
-
-      // Caso tenha algum problema na pesquisa do subdocumento
-      if (err) {
-
-        // Erro - Não foi possível retornar o documento
-        callback({ error: messages.getMessage("error", 3), err }, 400);
-
-      } else if ((refDocExists === undefined) || (!refDocExists) || (refDocExists.length == 0)) {
-
-        // documento referenciado não existem em sua collection principal
-        callback({ error: messages.getMessage("error", 36).replace("%1", referencedFields.fieldName).replace("%2", referencedFields.ref) }, 404);
-
-      } else { // documento referenciado encontrado em sua collection principal
-
-        _docCreater(docObject, callback);
-
-      }
-
-    });
-
-  }
-
-  const _docCreater = function(docObject, callback) {
-    // Cria um novo documento com o objeto passado como parâmetro.
-    new model(docObject).save(function(err, doc) {
-
-      // Caso ocorra erro na criação do documento
-      if (err) {
-        // Não foi possível criar o documento
-        callback({ error: messages.getMessage("error", 4), err }, 400);
-      } else {
-        // Cria o documento e retorna um objecto com o documento recem criado
-        callback(doc, 201);
-      }
-
-    });
+      });    }
 
   }
 

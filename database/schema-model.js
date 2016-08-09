@@ -37,7 +37,7 @@ module.exports = function(collection) {
 
       // Verifica se é a collection "users" (usuários) e se a senha foi
       // foi alterada.
-      if ((collection == "user") && (this.isModified("password"))) {
+      if ((collection == "User") && (this.isModified("password"))) {
         // Altera a senha para a sua versão criptografada
         this.password = utils.passwordCrypt(this.password);
       }
@@ -73,9 +73,33 @@ module.exports = function(collection) {
 
     });
 
+    if (schemaDef.referencedFields !== undefined) {
+
+      Object.keys(schemaDef.referencedFields).forEach(function (key, i) {
+
+        // Adiciona uma característica de validação para os campos que fazem
+        // referência a outras collections
+        _schema.path(schemaDef.referencedFields[key].fieldName).validate(function (value, respond) {
+
+          // Verifica se usuário informado no campo "updatedById" existe
+          // na collection de usuários.
+          mongoose.models[schemaDef.referencedFields[key].ref].findOne({_id: value}, function (err, doc) {
+
+            if (err || !doc) {
+                respond(false); // documento informado nao tem referência em outra collection
+            } else {
+                respond(true); // ok, não apresenta erro.
+            }
+
+          });
+
+        }, messages.getMessage("error", 36).replace("%1", schemaDef.referencedFields[key].fieldName).replace("%2", schemaDef.referencedFields[key].ref) );
+
+      });
+    }
 
     // Adiciona uma característica de validação para o campo (path) "createdById".
-    _schema.path('createdById').validate(function (value, respond) {
+    _schema.path("createdById").validate(function (value, respond) {
 
       // Validação é feita apenas quando for criação de um novo documento
       if (this.isNew) {
@@ -83,11 +107,11 @@ module.exports = function(collection) {
         // Verifica se usuário informado no campo "createdById" existe
         // na collection de usuários.
         mongoose.models["User"].findOne({_id: value}, function (err, doc) {
-            if (err || !doc) {
-                respond(false); // usuário informado não está pre-cadastrado
-            } else {
-                respond(true); // ok, não apresenta erro.
-            }
+          if (err || !doc) {
+              respond(false); // usuário informado não está pre-cadastrado
+          } else {
+              respond(true); // ok, não apresenta erro.
+          }
         });
       } else { // está criando atulizando um documento, então ignora a validação do campo "createdById"
         respond(true); // ok, não apresenta erro. Callback para aplicação continuar.
@@ -115,9 +139,6 @@ module.exports = function(collection) {
       }
 
     }, messages.getMessage("error", 12) );
-
-
-
 
   });
 
