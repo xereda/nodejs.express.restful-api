@@ -17,4 +17,16 @@ module.exports = {
   // informato o parâmetro "_limit" na query string (/?_limit=[número]).
   pagination_limit: 100,
 
+  // lista de resources da API
+  resources: [
+              { name: "workplaces", collection: "Workplace" },
+              { name: "providers", collection: "Provider" },
+              { name: "professionalActivities", collection: "professionalActivity" },
+              { name: "specialties", collection: "Specialty" },
+              { name: "users", collection: "User" },
+              { name: "healthInsurances", collection: "HealthInsurance" },
+              { name: "operators", collection: "Operator" },
+              { name: "workplaceProviderHIs", collection: "WorkplaceProviderHI" },
+            ]
+
 };

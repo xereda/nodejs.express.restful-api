@@ -6,15 +6,11 @@ module.exports = function(param) {
   const mongoose = require("mongoose");
   const Schema = mongoose.Schema;
 
-  (!param.index) ? param.index = false : null;
-  (param.unique === true) ? param.index = { unique: true, sparse: true } : null;
-  (!param.required) ? param.required = false : null;
-
   const _object = {
     type: Schema.Types.ObjectId,
     ref: param.schemaName,
-    //required: [ param.required, messages.getMessage("error", 8).replace("%1", param.name) ],
-    required: [ true, messages.getMessage("error", 8).replace("%1", param.name) ],
+    required: [ param.required, messages.getMessage("error", 8).replace("%1", param.name) ],
+    //required: [ true, messages.getMessage("error", 8).replace("%1", param.name) ],
     index: param.index
   };
 

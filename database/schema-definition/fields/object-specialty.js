@@ -6,10 +6,6 @@ module.exports = function(param) {
   const mongoose = require("mongoose");
   const Schema = mongoose.Schema;
 
-  (!param.index) ? param.index = false : null;
-  (param.unique === true) ? param.index = { unique: true } : null;
-  (!param.required) ? param.required = false : null;
-
   const _object = [{
     specialty: require("./object-objectId")({ name: "specialty", required: true, index: true, schemaName: "Specialty" }),
     regionalCouncilCode: require("./field-string")({ name: "regionalCouncilCode", index: true }),

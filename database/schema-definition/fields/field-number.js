@@ -17,12 +17,15 @@ module.exports = function(param) {
     }
   }
 
-
   const _field = {
     type: Number,
     validate: [ _validate, messages.getMessage("error", 20).replace("%1", param.min).replace("%2", param.max).replace("%3", param.name) ],
     required: [ param.required, messages.getMessage("error",  8).replace("%1", param.name) ],
     index: param.index
+  }
+
+  if (param.default !== undefined) {
+    _field["default"] = param.default;
   }
 
   return _field;

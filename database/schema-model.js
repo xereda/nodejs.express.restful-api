@@ -142,6 +142,11 @@ module.exports = function(collection) {
 
   });
 
+  // Caso as propriedades sejam definidas no arquivo de esquema, cria um índice customizado
+  if ((schemaDef.setIndexFields !== undefined) && (schemaDef.setIndexOptions !== undefined)) {
+    _schema.index(schemaDef.setIndexFields, schemaDef.setIndexOptions);
+  }
+
   (schemaDef.schema.geoLocation) ? _schema.index({ geoLocation : '2dsphere' }) : null;
 
   // Exporta o model com a definição do esquema e suas regras

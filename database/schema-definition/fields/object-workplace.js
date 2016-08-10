@@ -6,10 +6,6 @@ module.exports = function(param) {
   const mongoose = require("mongoose");
   const Schema = mongoose.Schema;
 
-  (!param.index) ? param.index = false : null;
-  (param.unique === true) ? param.index = { unique: true } : null;
-  (!param.required) ? param.required = false : null;
-
   const _object = [{
     workplace: require("./object-objectId")({ name: "workplace", index: true, schemaName: "Workplace" }),
     createdById: require("./field-createdById")({ name: "createdById", required: true, subDoc: "workplace" }),

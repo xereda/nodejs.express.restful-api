@@ -111,22 +111,28 @@ module.exports = function(collection, model) {
 
       if (err) {
         // Não foi possível retornar a lista de documentos
+
         callback({ error: messages.getMessage("error", 1), err }, 400);
+
       } else if ((docs) && (docs.length == 0)) {
 
         // Caso não encontre documentos com os critérios informados, retorna
         // para o requisitante um array de objetos vazio
         callback([{}], 200);
 
-      } else if (!docs) {
+      } else if ((Object.keys(docs).length === 0 && docs.constructor === Object) || (!docs) || (docs === undefined) || (docs === null)) {
 
         // Caso não encontre documentos com os critérios informados, retorna
         // para o requisitante um array de objetos vazio
         callback([{}], 404);
 
       } else if (_objSubDoc === undefined) {
+
         callback(docs, 200);
+
       } else {
+
+        console.log("docs: ", docs, typeof docs);
 
         const _filteredPopulate = docs[_objSubDoc.fieldName].filter(function(element, index, array) {
 
