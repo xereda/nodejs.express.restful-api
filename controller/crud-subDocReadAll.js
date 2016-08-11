@@ -14,6 +14,8 @@ module.exports = function(collection, model) {
       return element.fieldName === _field;
     });
 
+    console.log("dentro ");
+
 
     let _objFields = {};
     _objFields["_id"] = 0;
@@ -23,6 +25,8 @@ module.exports = function(collection, model) {
     }
 
     Object.assign(_objFields, _fields);
+
+    console.log("_objFields: ", _objFields);
 
     // cria uma instância do model para realizar a query no banco.
     const modelDoc = model.findOne({ _id: _id }, _objFields);
@@ -54,7 +58,9 @@ module.exports = function(collection, model) {
         _objPopulate["options"] = { sort: _sort };
       }
 
-      modelDoc.populate(_objPopulate);
+      console.log("_objPopulate: ", _objPopulate);
+
+      (_objSubDoc.simple !== true) ? modelDoc.populate(_objPopulate) : null;
 
       // loop para todos os populates internos primeiramente para nao ocorrer erro
       _populate.forEach(function(v) {

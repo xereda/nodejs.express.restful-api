@@ -44,13 +44,37 @@ module.exports = function(collection, schemaDef, controllerCRUD) {
 
     if ((_objSubDoc !== undefined) && (_objSubDoc !== null)) {
 
-      const _subDocSchema  = require("../database/schema-definition/fields/object-" + _objSubDoc.indexField)({});
+      console.log("_objSubDoc: ", _objSubDoc);
+
+      // if (_objSubDoc.simple === true) {
+      //   console.log("---> schemaDef.schema[_objSubDoc.fieldName][0]: ", schemaDef.schema[_objSubDoc.fieldName][0]);
+      //   const _subDocSchema  = schemaDef.schema[_objSubDoc.fieldName];
+      //   console.log("_subDocSchema[0]: ", _subDocSchema[0]);
+      // } else {
+      //   const _subDocSchema  = require("../database/schema-definition/fields/object-" + _objSubDoc.indexField)({});
+      // }
+
+      let _subDocSchema;
+
+      if (_objSubDoc.simple === true) {
+        _subDocSchema  = schemaDef.schema[_objSubDoc.fieldName];
+      } else {
+        _subDocSchema  = require("../database/schema-definition/fields/object-" + _objSubDoc.indexField)({});
+      }
+
       const _subDocSchemaPopulated  = require("../database/schema-definition/" + _objSubDoc.ref);
+      console.log(2);
       // Retorna um objeto Javascript contendo os filtros repassados na url
       // da requisição.
+      //_filters = utils.toFiltersObject(req, _subDocSchema[0]);
       _filters = utils.toFiltersObject(req, _subDocSchema[0]);
+
+      console.log(3);
+
       _populatedFilters = utils.toPopulatedFiltersObject(req, _subDocSchemaPopulated.schema);
     }
+
+    console.log(4);
 
     // Retorna em um objeto JSON a lista de campos da collection que devem
     // ser considerados na montagem do objeto de retorno.

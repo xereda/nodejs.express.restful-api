@@ -15,6 +15,8 @@ module.exports = function(collection, model) {
 
     let createControl = true;
 
+    console.log("_create");
+
     // Adiciona validacao para sub documentos. Sub documentos não podem ser
     // manipulados diretamente na colllection pai. Apenas no controle específico
     // para sub documentos. Para manipular sub documentos, siga o padrão:
@@ -25,10 +27,7 @@ module.exports = function(collection, model) {
 
         if (docObject[schemaDef.subDocs[key].fieldName] !== undefined) {
 
-          console.log("schemaDef.subDocs[key].fieldName: ", schemaDef.subDocs[key].fieldName);
-          console.log("docObject[schemaDef.subDocs[key].fieldName]: ", docObject[schemaDef.subDocs[key].fieldName]);
-
-          if (docObject[schemaDef.subDocs[key].fieldName].length > 0) {
+          if ((docObject[schemaDef.subDocs[key].fieldName] !== undefined) || (docObject[schemaDef.subDocs[key].fieldName].length > 0)) {
             createControl = false;
             callback({ error: messages.getMessage("error", 38).replace("%1", schemaDef.subDocs[key].fieldName) }, 400);
           }

@@ -50,7 +50,7 @@ module.exports = function(collection, model) {
 
             // subdocumento atualizado
             callback(updatedDoc[_field].find(function(element) {
-              if (element.provider == _subDoc_id) return true;
+              if (element[_indexField] == _subDoc_id) return true;
               return false;
             }), 200);
 

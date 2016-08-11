@@ -27,6 +27,7 @@ module.exports = {
               { name: "healthInsurances", collection: "HealthInsurance" },
               { name: "operators", collection: "Operator" },
               { name: "workplaceProviderHIs", collection: "WorkplaceProviderHI" },
+              { name: "people", collection: "Person" },
             ]
 
 };

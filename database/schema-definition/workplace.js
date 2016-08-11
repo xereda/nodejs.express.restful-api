@@ -24,6 +24,6 @@ module.exports.schemaProperties = { timestamps: true };
 
 // array contendo os campos referentes a subdocumentos.
 module.exports.subDocs = [
-  { fieldName: "providers", ref: "Provider", indexField: "provider"},
-  { fieldName: "users", ref: "User", indexField: "user"},
+  { fieldName: "providers", ref: "Provider", indexField: "provider" },
+  { fieldName: "users", ref: "User", indexField: "user" },
 ];

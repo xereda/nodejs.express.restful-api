@@ -120,19 +120,29 @@ const _toJSObject = function(type, param) {
 // Função para criar um objeto de filtros para a query (find)
 const _toFiltersObject = function(req, schema) {
 
+  console.log("dentro da _toFiltersObject - 1");
+
   let _obj = {};
 
   // Percorre todos os parametros encaminhados via query string (pela url).
   Object.keys(req.query).forEach(function(key,index) {
+
+    console.log("dentro da _toFiltersObject - 2");
 
     // Remove as strings finais dos filtros do tipo data ("_start" e "_end") e
     // adiciona em um novo objeto. Isso é necessário, pois o campo precisa
     // existir no esquema da colletion.
     const _cleanKey = key.replace("_start", "").replace("_end", "");
 
+    console.log("dentro da _toFiltersObject - 3");
+
+
     // O parametro informado na url é um campo do schema?
     // Se sim, então determina-o como um filtro no find
     if (schema.hasOwnProperty(_cleanKey)) {
+
+      console.log("dentro da _toFiltersObject - 4");
+
       switch (schema[_cleanKey].type) {
         case Number:
           if (parseInt(req.query[key])) {
