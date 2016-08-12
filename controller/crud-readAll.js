@@ -54,24 +54,26 @@ module.exports = function(collection, model) {
       // Percorre todos os filtros informados na query string.
       Object.keys(_filters).forEach(function(key,index) {
 
+        // Caso o parâmetro de filtro termina com _start é porque ele deverá ser
+        // a data inicial para um filtro de data, com isso aplicamos .where(campo)
+        // e .gte(data) para o model do find(). Lembrando que gte significa
+        // "igual ou maior que".
+        if (key.indexOf("_start") > 0) {
+
+          console.log("dentro de start", key.replace("_start", ""), _filters[key], typeof _filters[key]);
+
+          modelDoc.where(key.replace("_start", "")).gte(_filters[key]);
+
+        } else if (key.indexOf("_end") > 0) {
+
+          // O mesmo controle mencionado acima ("_start"), mas agora determina
+          // que a data informado deve ser "igual ou menor que".
+          modelDoc.where(key.replace("_end", "")).lte(_filters[key]);
+
         // Caso o campo seja do tipo string
-        if ((typeof _filters[key]) === "string") {
+        } else if ((typeof _filters[key]) === "string") {
 
-          // Caso o parâmetro de filtro termina com _start é porque ele deverá ser
-          // a data inicial para um filtro de data, com isso aplicamos .where(campo)
-          // e .gte(data) para o model do find(). Lembrando que gte significa
-          // "igual ou maior que".
-          if (key.indexOf("_start") > 0) {
-
-            modelDoc.where(key.replace("_start", "")).gte(_filters[key]);
-
-          } else if (key.indexOf("_end") > 0) {
-
-            // O mesmo controle mencionado acima ("_start"), mas agora determina
-            // que a data informado deve ser "igual ou menor que".
-            modelDoc.where(key.replace("_end", "")).lte(_filters[key]);
-
-          } else if ((_filters[key].indexOf("/i") > 0) || (_filters[key][0] == "/")) {
+          if ((_filters[key].indexOf("/i") > 0) || (_filters[key][0] == "/")) {
 
             // Caso o filtro seja string e tenha sido informado uma regex simples,
             // usamos o where com função regex() para filtrar pela expressão regular.
@@ -88,10 +90,11 @@ module.exports = function(collection, model) {
           // Caso seja um parâmetro simples (não é data ou expressão regular),
           // verifica apenas se existem documentos com o campo com valor igual ao
           // informado.
-            modelDoc.where(key).equals(_filters[key]);
+          modelDoc.where(key).equals(_filters[key]);
         }
 
       });
+
 
       // Determina o limite e paginação. A função skip() determina quantos
       // documentos devem ser pulados. Como o valor informado como filtro na API é
