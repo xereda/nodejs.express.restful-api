@@ -9,10 +9,10 @@ module.exports = function(param) {
   const _object = [{
     specialty: require("./object-objectId")({ name: "specialty", required: true, index: true, schemaName: "Specialty" }),
     regionalCouncilCode: require("./field-string")({ name: "regionalCouncilCode", index: true }),
-    createdById: require("./field-createdById")({ name: "createdById", required: true, subDoc: "specialty" }),
-    updatedById: require("./field-updatedById")({ name: "updatedById", required: true, subDoc: "specialty" }),
-    createdAt: require("./field-date")({ name: "createdAt", required: true, subDoc: "specialty" }),
-    updatedAt: require("./field-date")({ name: "updatedAt", required: true, subDoc: "specialty" }),
+    createdById: require("./field-createdById")({ name: "createdById", required: true, subDoc: "specialties" }),
+    updatedById: require("./field-updatedById")({ name: "updatedById", required: true, subDoc: "specialties" }),
+    createdAt: require("./field-date")({ name: "createdAt", required: true, subDoc: "specialties" }),
+    updatedAt: require("./field-date")({ name: "updatedAt", required: true, subDoc: "specialties" }),
     _id: false
   }];
 

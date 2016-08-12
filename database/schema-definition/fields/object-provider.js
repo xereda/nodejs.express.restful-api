@@ -13,8 +13,9 @@ module.exports = function(param) {
     deadlineScheduleCancel: require("./field-number")({ name: "deadlineScheduleCancel", required: true, min: 0, max: 99 }),
     lockedCancel: require("./field-boolean")({ name: "lockedCancel", required: true, default: false }),
     alertCancel: require("./field-string")({ name: "msgCancelAlert" }),
-    // lkdCanNoIntSched -> determina se é possível cancelar uma agenda quando
-    // o prestador não possui agenda integrada ao docmob.
+    // lkdCanNoIntSched (locked Cancel Without Integrated Schedule)
+    // Determina se é possível cancelar uma agenda quando o  prestador não
+    // possui agenda integrada ao docmob. Yes => "Não permite cancelar"
     lkdCanNoIntSched: require("./field-boolean")({ name: "lkdCanNoIntSched", required: true, default: false }),
     msgCanNoIntSched: require("./field-string")({ name: "msgCanNoIntSched" }),
     createdById: require("./field-createdById")({ name: "createdById", required: true, subDoc: "provider" }),

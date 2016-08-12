@@ -18,7 +18,6 @@ process.on('SIGINT', function() {
   });
 });
 
-
 // Instanciando uma conexão com o banco de dados.
 const conn = mongoose.connection;
 
@@ -51,9 +50,12 @@ conn.on('index', function(err) {
   }
 });
 
+
 process.on('uncaughtException', function(err) {
   console.log("deu um erro daqueles: ", err);
   process.exit(1);
 });
+
+conn.setMaxListeners(30);
 
 module.exports = conn;

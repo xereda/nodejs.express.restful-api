@@ -62,19 +62,20 @@ module.exports = function(collection, schemaDef, controllerCRUD) {
         _subDocSchema  = require("../database/schema-definition/fields/object-" + _objSubDoc.indexField)({});
       }
 
+      console.log(1);
+
       const _subDocSchemaPopulated  = require("../database/schema-definition/" + _objSubDoc.ref);
-      console.log(2);
+
       // Retorna um objeto Javascript contendo os filtros repassados na url
       // da requisição.
       //_filters = utils.toFiltersObject(req, _subDocSchema[0]);
       _filters = utils.toFiltersObject(req, _subDocSchema[0]);
 
-      console.log(3);
-
       _populatedFilters = utils.toPopulatedFiltersObject(req, _subDocSchemaPopulated.schema);
-    }
 
-    console.log(4);
+      console.log(2);
+
+    }
 
     // Retorna em um objeto JSON a lista de campos da collection que devem
     // ser considerados na montagem do objeto de retorno.

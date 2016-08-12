@@ -40,5 +40,8 @@ module.exports = [
   { code: 36, description: "O valor informado no campo '%1' não é um documento na collection '%2." },
   { code: 37, description: "O sub documento não pode ter seu índice duplicado." },
   { code: 38, description: "O sub documento '%1' deve ser tratado em seu controle individual na API." },
+  { code: 39, description: "Informe o campo '%1' no formato correto (HH:MM)." },
+  { code: 40, description: "O valor informado em '%1' não pode ser igual ou maior que o valor informado em '%2'." },
+  { code: 41, description: "A data informada em '%1' não pode ser igual ou maior que a data informada em '%2'." },
 
 ];

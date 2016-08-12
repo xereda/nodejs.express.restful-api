@@ -12,6 +12,7 @@ module.exports.schema = {
   cnpj: require("./fields/field-cnpj")({ name: "cnpj", index: true, unique: true }),
   workplaces: require("./fields/object-workplace")({ name: "workplaces" }),
   specialties: require("./fields/object-specialty")({ name: "specialties" }),
+  blockedLives: require("./fields/object-blockedLife")({ name: "blockedLives" }),
   createdById: require("./fields/field-createdById")({ name: "createdById", required: true }),
   updatedById: require("./fields/field-updatedById")({ name: "updatedById", required: true }),
   createdAt: require("./fields/field-date")({ name: "createdAt" }),
@@ -24,5 +25,6 @@ module.exports.schemaProperties = { timestamps: true };
 module.exports.subDocs = [
   { fieldName: "workplaces", ref: "Workplace", indexField: "workplace"},
   { fieldName: "specialties", ref: "Specialty", indexField: "specialty"},
+  { fieldName: "blockedLives", ref: "Life", indexField: "blockedLife"},
 
 ];

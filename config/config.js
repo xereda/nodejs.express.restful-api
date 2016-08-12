@@ -28,6 +28,8 @@ module.exports = {
               { name: "operators", collection: "Operator" },
               { name: "workplaceProviderHIs", collection: "WorkplaceProviderHI" },
               { name: "people", collection: "Person" },
+              { name: "lives", collection: "Life" },
+              { name: "scheduleDefinitions", collection: "ScheduleDefinition" },
             ]
 
 };
