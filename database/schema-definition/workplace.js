@@ -8,6 +8,7 @@ module.exports.schema = {
   description: require("./fields/field-string")({ name: "description" }),
   active: require("./fields/field-boolean")({ name: "active" }),
   address: require("./fields/object-address")({ name: "address" }),
+  city: require("./fields/object-objectId")({ name: "city", index: true, required: true, schemaName: "City" }),
   geoLocation: require("./fields/field-geolocation")({ name: "geoLocation", required: true }),
   phone: require("./fields/field-number")({ name: "phone", required: true, min: 1111111111, max: 99999999999 }),
   deadlineUserChoose: require("./fields/field-number")({ name: "deadlineUserChoose" }),
@@ -21,6 +22,10 @@ module.exports.schema = {
 };
 
 module.exports.schemaProperties = { timestamps: true };
+
+module.exports.referencedFields = [
+  { fieldName: "city", ref: "City"},
+];
 
 // array contendo os campos referentes a subdocumentos.
 module.exports.subDocs = [

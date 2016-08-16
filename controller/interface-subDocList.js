@@ -59,6 +59,7 @@ module.exports = function(collection, schemaDef, controllerCRUD) {
       if (_objSubDoc.simple === true) {
         _subDocSchema  = schemaDef.schema[_objSubDoc.fieldName];
       } else {
+        console.log("../database/schema-definition/fields/object-" + _objSubDoc.indexField);
         _subDocSchema  = require("../database/schema-definition/fields/object-" + _objSubDoc.indexField)({});
       }
 

@@ -36,6 +36,8 @@ module.exports = function(collection, model) {
     // retorno de listas.
     modelDoc.lean(_lean);
 
+    console.log(1);
+
 
     if (_objSubDoc === undefined) {
 
@@ -43,7 +45,11 @@ module.exports = function(collection, model) {
         modelDoc.populate(v);
       });
 
+      console.log(2);
+
     } else {
+
+      console.log(3);
 
 
       let _objPopulate = {};
@@ -114,6 +120,9 @@ module.exports = function(collection, model) {
 
     // Após todas as definçòes acima, executa a query.
     modelDoc.exec(function(err, docs) {
+
+      console.log(4);
+
 
       if (err) {
         // Não foi possível retornar a lista de documentos

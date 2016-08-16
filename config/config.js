@@ -30,6 +30,10 @@ module.exports = {
               { name: "people", collection: "Person" },
               { name: "lives", collection: "Life" },
               { name: "scheduleDefinitions", collection: "ScheduleDefinition" },
+              { name: "scheduledAbsences", collection: "ScheduledAbsence" },
+              { name: "cities", collection: "City" },
+              { name: "holidays", collection: "Holiday" },
+              { name: "holidayExceptions", collection: "HolidayException" },
             ]
 
 };

@@ -43,5 +43,6 @@ module.exports = [
   { code: 39, description: "Informe o campo '%1' no formato correto (HH:MM)." },
   { code: 40, description: "O valor informado em '%1' não pode ser igual ou maior que o valor informado em '%2'." },
   { code: 41, description: "A data informada em '%1' não pode ser igual ou maior que a data informada em '%2'." },
+  { code: 42, description: "A data informada em '%1' deve ser maior ou igual a '%2'." },
 
 ];
