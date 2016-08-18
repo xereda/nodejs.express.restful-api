@@ -8,7 +8,8 @@ module.exports.schema = {
   workplace: require("./fields/object-objectId")({ name: "workplace", index: true, required: true, schemaName: "Workplace" }),
   provider: require("./fields/object-objectId")({ name: "provider", index: true, required: true, schemaName: "Provider" }),
   allowedHIs: require("./fields/object-allowedHI")({ name: "allowedHIs" }),
-  active: require("./fields/field-boolean")({ name: "active" }),
+  active: require("./fields/field-boolean")({ name: "active", required: true }), // éctive
+  autoApproval: require("./fields/field-boolean")({ name: "automaticApproval", required: true }), // auto "appríval"
   weekDay: require("./fields/field-domain")({ name: "weekDay", required: true, domain: ["SEG", "TER", "QUA", "QUI", "SEX", "SAB", "DOM"] }),
   durationMinutes: require("./fields/field-number")({ name: "durationMinutes", required: true, min: 15, max: 120 }),
   startHour: require("./fields/field-hhmm")({ name: "startHour", required: true, endValueValidator: true, endFieldValidator: "endHour" }),
@@ -17,8 +18,9 @@ module.exports.schema = {
                                               endValueValidator: true,
                                               required: true,
                                               endFieldValidator: "endDate",
-                                              // requiredStartDate -> determina a data mínima a ser informada - default: 1900-01-01
-                                              requiredStartDate: (function() { const _temp = new Date(); _temp.setHours(0,0,0,0); return _temp; })(),
+                                              // requireStartDate -> determina se a data informado vai ser consistida,
+                                              // ou seja, se deve ser maior ou igual a data atual
+                                              requireStartDate: true,
                                               setHours: { hour: 0, min: 0, sec: 0, millisec: 0 } }),
   endDate: require("./fields/field-date")({ name: "endDate" }),
   createdById: require("./fields/field-createdById")({ name: "createdById", required: true }),

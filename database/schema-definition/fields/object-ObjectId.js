@@ -6,6 +6,10 @@ module.exports = function(param) {
   const mongoose = require("mongoose");
   const Schema = mongoose.Schema;
 
+  (!param.index) ? param.index = false : null;
+  (!param.required) ? param.required = false : null;
+
+
   const _object = {
     type: Schema.Types.ObjectId,
     ref: param.schemaName,

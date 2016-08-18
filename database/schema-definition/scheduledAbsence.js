@@ -10,7 +10,7 @@ module.exports.schema = {
                                               endValueValidator: true,
                                               endFieldValidator: "endDate",
                                               // requiredStartDate -> determina a data mínima a ser informada - default: 1900-01-01
-                                              requiredStartDate: (function() { const _temp = new Date(); _temp.setHours(0,0,0,0); return _temp; })(),
+                                              requireStartDate: true,
                                               setHours: { hour: 0, min: 0, sec: 0, millisec: 0 } }),
   endDate: require("./fields/field-date")({ name: "endDate", required: true }),
   startHour: require("./fields/field-hhmm")({ name: "startHour", endValueValidator: true, endFieldValidator: "endHour" }),

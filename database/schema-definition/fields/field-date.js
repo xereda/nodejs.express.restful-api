@@ -7,7 +7,7 @@ module.exports = function(param) {
 
   (!param.endValueValidator) ? param.endValueValidator = false : null;
   (!param.endFieldValidator) ? param.endFieldValidator = "" : null;
-  (!param.requiredStartDate) ? param.requiredStartDate = new Date("1900-01-01") : null;
+  (!param.requireStartDate) ? param.requireStartDate = false : null;
   (!param.index) ? param.index = false : null;
   (!param.required) ? param.required = false : null;
 
@@ -17,6 +17,8 @@ module.exports = function(param) {
   if ((param.subDoc !== undefined) && (param.subDoc !== "")) {
     _prefix = param.subDoc + ".";
   }
+
+  let _now;
 
   const _validator = [
     validate({
@@ -31,15 +33,19 @@ module.exports = function(param) {
       message: messages.getMessage("error", 41).replace("%1", param.name).replace("%2", param.endFieldValidator)
     }),
     validate({
+
       validator: function(value) {
-        if (param.requiredStartDate) {
 
-          console.log("typeof param.requiredStartDate: ", typeof param.requiredStartDate);
+        if (param.requireStartDate === true) {
 
-          (param.setHours) ? param.requiredStartDate.setHours(0,0,0,0) : null;
+          _now = new Date();
 
-          if (value < param.requiredStartDate) {
-            console.log("param.requiredStartDate: ", param.requiredStartDate);
+          console.log("vai validar a data");
+
+          (param.setHours) ? _now.setHours(0,0,0,0) : null;
+
+          if (value < _now) {
+            console.log("_now: ", _now);
             console.log("value: ", value);
             console.log("value.toISOString(): ", value.toISOString());
             return false;
@@ -48,7 +54,7 @@ module.exports = function(param) {
           return true;
         }
       },
-      message: messages.getMessage("error", 42).replace("%1", param.name).replace("%2", param.requiredStartDate)
+      message: messages.getMessage("error", 42).replace("%1", param.name)
     }),
   ];
 
