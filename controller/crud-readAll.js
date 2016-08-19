@@ -35,7 +35,7 @@ module.exports = function(collection, model) {
     // * _pagination: objeto contendo as duas propriedades de paginação.
     // Propriedaedes do objeto _pagination: .limit e _pagination.sort
     // * _filters: objeto contendo os filtros informados na query string da
-    // requisição (/users/?active=[boolean]&createdAt_start=[isodate]&name=/[parte do nome]/i)
+    // requisição (/users/?active=[boolean]&createdAt_gte=[isodate]&name=/[parte do nome]/i)
     // * _fields: objeto contendo os campos da collection que serão retornados
     // pela API.
     // * _sort: objeto contendo os campos e orientação para ordenação.
@@ -54,21 +54,21 @@ module.exports = function(collection, model) {
       // Percorre todos os filtros informados na query string.
       Object.keys(_filters).forEach(function(key,index) {
 
-        // Caso o parâmetro de filtro termina com _start é porque ele deverá ser
+        // Caso o parâmetro de filtro termina com _gte é porque ele deverá ser
         // a data inicial para um filtro de data, com isso aplicamos .where(campo)
         // e .gte(data) para o model do find(). Lembrando que gte significa
         // "igual ou maior que".
-        if (key.indexOf("_start") > 0) {
+        if (key.indexOf("_gte") > 0) {
 
-          console.log("dentro de start", key.replace("_start", ""), _filters[key], typeof _filters[key]);
+          console.log("dentro de start", key.replace("_gte", ""), _filters[key], typeof _filters[key]);
 
-          modelDoc.where(key.replace("_start", "")).gte(_filters[key]);
+          modelDoc.where(key.replace("_gte", "")).gte(_filters[key]);
 
-        } else if (key.indexOf("_end") > 0) {
+        } else if (key.indexOf("_lte") > 0) {
 
-          // O mesmo controle mencionado acima ("_start"), mas agora determina
+          // O mesmo controle mencionado acima ("_gte"), mas agora determina
           // que a data informado deve ser "igual ou menor que".
-          modelDoc.where(key.replace("_end", "")).lte(_filters[key]);
+          modelDoc.where(key.replace("_lte", "")).lte(_filters[key]);
 
         // Caso o campo seja do tipo string
         } else if ((typeof _filters[key]) === "string") {

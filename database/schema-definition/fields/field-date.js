@@ -36,18 +36,15 @@ module.exports = function(param) {
 
       validator: function(value) {
 
-        if (param.requireStartDate === true) {
+
+
+        if ((param.requireStartDate === true) && ((this.isNew === true) || (this.isModified(param.name) === true))) {
 
           _now = new Date();
-
-          console.log("vai validar a data");
 
           (param.setHours) ? _now.setHours(0,0,0,0) : null;
 
           if (value < _now) {
-            console.log("_now: ", _now);
-            console.log("value: ", value);
-            console.log("value.toISOString(): ", value.toISOString());
             return false;
           }
 

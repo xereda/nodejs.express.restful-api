@@ -125,30 +125,66 @@ const _toFiltersObject = function(req, schema) {
   // Percorre todos os parametros encaminhados via query string (pela url).
   Object.keys(req.query).forEach(function(key,index) {
 
-    // Remove as strings finais dos filtros do tipo data ("_start" e "_end") e
-    // adiciona em um novo objeto. Isso é necessário, pois o campo precisa
-    // existir no esquema da colletion.
-    const _cleanKey = key.replace("_start", "").replace("_end", "");
+    // o filtro informado na query string é um objeto interno da collection
+    if (key.indexOf(".") > 0) {
 
-    // O parametro informado na url é um campo do schema?
-    // Se sim, então determina-o como um filtro no find
-    if (schema.hasOwnProperty(_cleanKey)) {
+      const _qObject = key.split(".")[0];
+      const _qPropertie = key.split(".")[1];
 
-      switch (schema[_cleanKey].type) {
-        case Number:
-          if (parseInt(req.query[key])) {
-            _obj[key] = parseInt(req.query[key]);
-          }
-          break;
-        case Boolean:
-          ((req.query[key].toLowerCase() == "true") || (req.query[key].toLowerCase() == "yes")) ? _obj[key] = true : _obj[key] = false;
-          break;
-        default:
-          if (req.query[key] != "") {
-            _obj[key] = req.query[key];
-          }
+      // Remove as strings finais dos filtros do tipo data ("_gte" e "_lte") e
+      // adiciona em um novo objeto. Isso é necessário, pois o campo precisa
+      // existir no esquema da colletion.
+      const _qCleanKey = _qPropertie.replace("_gte", "").replace("_lte", "");
+
+      // O parametro informado na url é um campo do schema?
+      // Se sim, então determina-o como um filtro no find
+      if (schema[_qObject].hasOwnProperty(_qCleanKey)) {
+
+        switch (schema[_qObject][_qCleanKey].type) {
+          case Number:
+            if (parseInt(req.query[key])) {
+              _obj[key] = parseInt(req.query[key]);
+            }
+            break;
+          case Boolean:
+            ((req.query[key].toLowerCase() == "true") || (req.query[key].toLowerCase() == "yes")) ? _obj[key] = true : _obj[key] = false;
+            break;
+          default:
+            if (req.query[key] != "") {
+              _obj[key] = req.query[key];
+            }
+        }
       }
+
+    } else {
+
+      // Remove as strings finais dos filtros do tipo data ("_start" e "_lte") e
+      // adiciona em um novo objeto. Isso é necessário, pois o campo precisa
+      // existir no esquema da colletion.
+      const _cleanKey = key.replace("_gte", "").replace("_lte", "");
+
+      // O parametro informado na url é um campo do schema?
+      // Se sim, então determina-o como um filtro no find
+      if (schema.hasOwnProperty(_cleanKey)) {
+
+        switch (schema[_cleanKey].type) {
+          case Number:
+            if (parseInt(req.query[key])) {
+              _obj[key] = parseInt(req.query[key]);
+            }
+            break;
+          case Boolean:
+            ((req.query[key].toLowerCase() == "true") || (req.query[key].toLowerCase() == "yes")) ? _obj[key] = true : _obj[key] = false;
+            break;
+          default:
+            if (req.query[key] != "") {
+              _obj[key] = req.query[key];
+            }
+        }
+      }
+
     }
+
   });
 
 
@@ -171,10 +207,10 @@ const _toPopulatedFiltersObject = function(req, schema) {
       return;
     }
 
-    // Remove as strings finais dos filtros do tipo data ("_start" e "_end") e
+    // Remove as strings finais dos filtros do tipo data ("_gte" e "_lte") e
     // adiciona em um novo objeto. Isso é necessário, pois o campo precisa
     // existir no esquema da colletion.
-    const _cleanKey = key.replace("_start", "").replace("_end", "").replace(_prefix, "");
+    const _cleanKey = key.replace("_gte", "").replace("_lte", "").replace(_prefix, "");
 
     // O parametro informado na url é um campo do schema?
     // Se sim, então determina-o como um filtro no find

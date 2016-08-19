@@ -9,7 +9,7 @@ module.exports.schema = {
   provider: require("./fields/object-objectId")({ name: "provider", index: true, required: true, schemaName: "Provider" }),
   allowedHIs: require("./fields/object-allowedHI")({ name: "allowedHIs" }),
   active: require("./fields/field-boolean")({ name: "active", required: true }), // éctive
-  autoApproval: require("./fields/field-boolean")({ name: "automaticApproval", required: true }), // auto "appríval"
+  autoApproval: require("./fields/field-boolean")({ name: "autoApproval", required: true }), // auto "appríval"
   weekDay: require("./fields/field-domain")({ name: "weekDay", required: true, domain: ["SEG", "TER", "QUA", "QUI", "SEX", "SAB", "DOM"] }),
   durationMinutes: require("./fields/field-number")({ name: "durationMinutes", required: true, min: 15, max: 120 }),
   startHour: require("./fields/field-hhmm")({ name: "startHour", required: true, endValueValidator: true, endFieldValidator: "endHour" }),

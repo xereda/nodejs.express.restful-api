@@ -162,30 +162,21 @@ module.exports = function(collection, model) {
             // Caso o campo seja do tipo string
             if ((typeof _populatedFilters[key]) === "string") {
 
-              // Caso o parâmetro de filtro termina com _start é porque ele deverá ser
+              // Caso o parâmetro de filtro termina com _gte é porque ele deverá ser
               // a data inicial para um filtro de data, com isso aplicamos .where(campo)
               // e .gte(data) para o model do find(). Lembrando que gte significa
               // "igual ou maior que".
-              if (key.indexOf("_start") > 0) {
+              if (key.indexOf("_gte") > 0) {
 
-                if (new Date(_populatedFilters[key]) > new Date(element[_objSubDoc.indexField][originalKey.replace("_start", "")])) {
-                  //console.log("o valor informado em " + key + " e menor que " + element.provider[key.replace("_start", "")]);
+                if (new Date(_populatedFilters[key]) > new Date(element[_objSubDoc.indexField][originalKey.replace("_gte", "")])) {
                   control = false;
                 }
 
-                //_objFilters[key.replace("_start", "")] = { $gte: _filters[key] };
-                //modelDoc.where(_objSubDoc.fieldName + "." + key.replace("_start", "")).gte(_filters[key]);
+              } else if (originalKey.indexOf("_lte") > 0) {
 
-              } else if (originalKey.indexOf("_end") > 0) {
-
-                if (new Date(_populatedFilters[key]) < new Date(element[_objSubDoc.indexField][originalKey.replace("_end", "")])) {
+                if (new Date(_populatedFilters[key]) < new Date(element[_objSubDoc.indexField][originalKey.replace("_lte", "")])) {
                   control = false;
                 }
-
-                // O mesmo controle mencionado acima ("_start"), mas agora determina
-                // que a data informado deve ser "igual ou menor que".
-                //_objFilters[key.replace("_end", "")] = { $lte: _filters[key] };
-                //modelDoc.where(key.replace("_end", "")).lte(_filters[key]);
 
               } else if ((_populatedFilters[key].indexOf("/i") > 0) || (_populatedFilters[key][0] == "/")) {
 
@@ -241,20 +232,20 @@ module.exports = function(collection, model) {
             // Caso o campo seja do tipo string
             if ((typeof _filters[key]) === "string") {
 
-              // Caso o parâmetro de filtro termina com _start é porque ele deverá ser
+              // Caso o parâmetro de filtro termina com _gte é porque ele deverá ser
               // a data inicial para um filtro de data, com isso aplicamos .where(campo)
               // e .gte(data) para o model do find(). Lembrando que gte significa
               // "igual ou maior que".
-              if (key.indexOf("_start") > 0) {
+              if (key.indexOf("_gte") > 0) {
 
 
-                if (new Date(_filters[key]) > new Date(element[key.replace("_start", "")])) {
+                if (new Date(_filters[key]) > new Date(element[key.replace("_gte", "")])) {
                   control = false;
                 }
 
-              } else if (key.indexOf("_end") > 0) {
+              } else if (key.indexOf("_lte") > 0) {
 
-                if (new Date(_filters[key]) < new Date(element[key.replace("_end", "")])) {
+                if (new Date(_filters[key]) < new Date(element[key.replace("_lte", "")])) {
                   control = false;
                 }
 
