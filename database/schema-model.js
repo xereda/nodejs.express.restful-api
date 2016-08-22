@@ -98,6 +98,27 @@ module.exports = function(collection) {
       });
     }
 
+    // adiciona uma caracteristica de validacao para campos array em sub documentos
+    // determina que uma campo de tipo array e que seja interna a um subdoc
+    // é obrigatorio.
+    if (schemaDef.subDocsRequiredFields !== undefined) {
+
+      Object.keys(schemaDef.subDocsRequiredFields).forEach(function (key, i) {
+
+        _schema.path(schemaDef.subDocsRequiredFields[key].subDocName).schema.path(schemaDef.subDocsRequiredFields[key].field).validate(function (value, respond) {
+
+          if (value.length > 0) {
+            respond(true);
+          } else {
+            respond(false);
+          }
+
+        }, messages.getMessage("error", 8).replace("%1", schemaDef.subDocsRequiredFields[key].field) );
+
+      });
+    }
+
+
     // Adiciona uma característica de validação para o campo (path) "createdById".
     _schema.path("createdById").validate(function (value, respond) {
 

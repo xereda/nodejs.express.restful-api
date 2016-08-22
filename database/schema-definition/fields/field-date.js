@@ -71,6 +71,10 @@ module.exports = function(param) {
     required: [ param.required, messages.getMessage("error", 8).replace("%1", _prefix + param.name) ]
   }
 
+  if (param.default) {
+    _field["default"] = param.default;
+  }
+
   return _field;
 
 }

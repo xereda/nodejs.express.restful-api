@@ -27,8 +27,8 @@ module.exports.schema = {
   autoApproved: require("./fields/field-boolean")({ name: "autoApproved", required: true }),  // auto "apprillved"
   lifeConfirmationDate: require("./fields/field-date")({ name: "confirmationDate" }), // confirmacao pelo usuario do app
   originCancellation: require("./fields/field-domain")({ name: "originCancellation", domain: [ "app", "portal" ] }),
-  status: require("./fields/field-domain")({ name: "status", required: true, index: true, domain: [ "opened", "canceled", "approved", "transferred", "missed", "confirmedByLife",
-                                                                                                    "confirmed", "checkIn", "closed", "reopened" ] }),
+  status: require("./fields/field-domain")({ name: "status", required: true, index: true, domain: [ "opened", "canceled", "approved", "transferred", "missed", "started",
+                                                                                                    "confirmedByLife", "confirmed", "checkIn", "closed", "reopened" ] }),
   canceled: {
     date: require("./fields/field-date")({ name: "canceled.date" }), //kénseld
     user: require("./fields/object-objectId")({ name: "canceled.user", schemaName: "User" }),
@@ -49,12 +49,17 @@ module.exports.schema = {
     user: require("./fields/object-objectId")({ name: "missed.user", schemaName: "User" }),
     note: require("./fields/field-string")({ name: "missed.note", maxLength: 200 })
   },
+  started: { // estáred
+    date: require("./fields/field-date")({ name: "started.date" }),
+    user: require("./fields/object-objectId")({ name: "started.user", schemaName: "User" }),
+    note: require("./fields/field-string")({ name: "started.note", maxLength: 200 })
+  },
   confirmed: {
     date: require("./fields/field-date")({ name: "confirmed.date" }), // canfârmed
     user: require("./fields/object-objectId")({ name: "confirmed.user", schemaName: "User" }),
     note: require("./fields/field-string")({ name: "confirmed.note", maxLength: 200 })
   },
-  checkIn: {
+  checkIn: { // data da chegada do paciente no local de atendimento, normalmente confirmada pela recepcionista
     date: require("./fields/field-date")({ name: "checkIn.date" }),
     user: require("./fields/object-objectId")({ name: "checkIn.user", schemaName: "User" }),
     note: require("./fields/field-string")({ name: "checkIn.note", maxLength: 200 })
@@ -79,6 +84,7 @@ module.exports.schema = {
     date: require("./fields/field-date")({ name: "workplaceEvaluation.date" }),
     note: require("./fields/field-string")({ name: "workplaceEvaluation.note", maxLength: 200 })
   },
+  lifeSuggestions: require("./fields/object-lifeSuggestions")({ name: "lifeSuggestions" }),
   createdById: require("./fields/field-createdById")({ name: "createdById", required: true }),
   updatedById: require("./fields/field-updatedById")({ name: "updatedById", required: true }),
   createdAt: require("./fields/field-date")({ name: "createdAt" }),
@@ -88,9 +94,13 @@ module.exports.schema = {
 module.exports.schemaProperties = { timestamps: true };
 
 // array contendo os campos referentes a subdocumentos.
-// module.exports.subDocs = [
-//   { fieldName: "allowedHIs", ref: "HealthInsurance", indexField: "allowedHI" },
-// ];
+module.exports.subDocs = [
+  { fieldName: "lifeSuggestions", ref: "Schedule", indexField: "_id", simple: true },
+];
+
+module.exports.subDocsRequiredFields = [
+  { subDocName: "lifeSuggestions", field: "weekDays" },
+];
 
 module.exports.referencedFields = [
   { fieldName: "scheduleDefinition", ref: "ScheduleDefinition"},
@@ -104,11 +114,13 @@ module.exports.referencedFields = [
   { fieldName: "approved.user", ref: "User"},
   { fieldName: "transferred.user", ref: "User"},
   { fieldName: "missed.user", ref: "User"},
+  { fieldName: "started.user", ref: "User"},
   { fieldName: "confirmed.user", ref: "User"},
   { fieldName: "checkIn.user", ref: "User"},
   { fieldName: "closed.user", ref: "User"},
   { fieldName: "reopened.user", ref: "User"},
 ];
+
 
 module.exports.setIndexFields = { scheduleDefinition: 1, life: 1, specialty: 1, workplace: 1, provider: 1, healthInsurance: 1, parentSchedule: 1, date: 1 };
 module.exports.setIndexOptions = { unique: true };
