@@ -35,6 +35,7 @@ module.exports = {
               { name: "holidays", collection: "Holiday" },
               { name: "holidayExceptions", collection: "HolidayException" },
               { name: "schedules", collection: "Schedule" },
+              { name: "scheduleSuggestions", collection: "ScheduleSuggestion" },
             ]
 
 };

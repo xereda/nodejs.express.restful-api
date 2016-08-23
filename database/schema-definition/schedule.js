@@ -1,7 +1,7 @@
 // Schedule - Determina as instâncias de agendamento.
 // É o coração do controle de agendas. Tanto o portal web como o
 // aplicativo irão se basear nesta collection.
-// Pronúncia: Iskédiou
+// Pronúncia: Iskédjou
 
 
 "use strict";
@@ -77,14 +77,14 @@ module.exports.schema = {
   providerEvaluation: {
     score: require("./fields/field-domain")({ name: "providerEvaluation.score", valueType: "number", domain: [ 1, 2, 3, 4, 5 ] }),
     date: require("./fields/field-date")({ name: "providerEvaluation.date" }),
-    note: require("./fields/field-string")({ name: "providerEvaluation.note", maxLength: 200 })
+    note: require("./fields/field-string")({ name: "providerEvaluation.note", maxLength: 500 })
   },
   workplaceEvaluation: {
     score: require("./fields/field-domain")({ name: "workplaceEvaluation.score", valueType: "number", domain: [ 1, 2, 3, 4, 5 ] }),
     date: require("./fields/field-date")({ name: "workplaceEvaluation.date" }),
-    note: require("./fields/field-string")({ name: "workplaceEvaluation.note", maxLength: 200 })
+    note: require("./fields/field-string")({ name: "workplaceEvaluation.note", maxLength: 500 })
   },
-  lifeSuggestions: require("./fields/object-lifeSuggestions")({ name: "lifeSuggestions" }),
+  lifeSuggestions: require("./fields/object-lifeSuggestion")({ name: "lifeSuggestions" }),
   createdById: require("./fields/field-createdById")({ name: "createdById", required: true }),
   updatedById: require("./fields/field-updatedById")({ name: "updatedById", required: true }),
   createdAt: require("./fields/field-date")({ name: "createdAt" }),
