@@ -4,6 +4,7 @@
 
 const bodyParser = require("body-parser");
 const express = require("express");
+const cors = require("cors");
 
 // Cabeçalhos de CORS para liberação das requisições feitas a API
 const allowCors = require("./cors");
@@ -28,7 +29,8 @@ app.listen(config.application_port, function() {
 });
 
 // Executa o cabeçalho/head CORS
-app.use(allowCors);
+//app.use(allowCors
+app.use(cors(config.corsOptions));
 
 // Adiciona controles para emissão de JSON
 app.use(bodyParser.json());

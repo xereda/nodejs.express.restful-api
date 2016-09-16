@@ -12,7 +12,6 @@ if (cluster.isMaster) {
 
 if (cluster.isWorker) {
 
-
   // Script de inicializações dos resources das restful apis do Docmob.
 
   // Configuração geral da API
@@ -78,6 +77,7 @@ if (cluster.isWorker) {
     app.get("/" + config.resources[key].name, restInterface.list);
     app.get("/" + config.resources[key].name + "/:_id", restInterface.get);
     app.post("/" + config.resources[key].name, restInterface.post);
+    //app.put("/" + config.resources[key].name, cors(config.corsOptions), restInterface.put);
     app.put("/" + config.resources[key].name, restInterface.put);
     app.delete("/" + config.resources[key].name + "/:_id", restInterface.delete);
     app.get("/" + config.resources[key].name + "/:_id/:_field", restInterface.subDocList);

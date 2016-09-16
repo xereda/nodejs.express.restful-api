@@ -9,6 +9,8 @@ module.exports = function(collection, model) {
   const config = require("../config/config");
   const initTest = require("./init-test");
 
+  const sleep = require("sleep");
+
 
 
   let _testControl;
@@ -23,10 +25,11 @@ module.exports = function(collection, model) {
   // o device chamador (navegador, aplicativo, etc...)
   const _readAll = function(_populate, _lean, _pagination, _filters, _fields, _sort, callback) {
 
-
     initTest.test(function(returnTest) {
       _testInit(returnTest);
     });
+
+    //sleep.sleep(4);    
 
     // Parâmetros recebidos na função anônima:
     // * _lean: determina se a consulta irá retornar um objeto mongoose ou apenas

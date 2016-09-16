@@ -17,6 +17,14 @@ module.exports = {
   // informato o parâmetro "_limit" na query string (/?_limit=[número]).
   pagination_limit: 100,
 
+  // Configuração do CORS
+  corsOptions: {
+    origin: "*",
+    allowedHeaders: true,
+    methods: [ "GET", "HEAD", "PUT", "PATCH", "POST", "DELETE" ],
+    preflightContinue: false
+  },
+
   // lista de resources da API
   resources: [
               { name: "workplaces", collection: "Workplace" },
