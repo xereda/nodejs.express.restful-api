@@ -71,8 +71,12 @@ if (cluster.isWorker) {
   // http://localhost:5000/providers/579a6404308a23780dcfdaad -> para pegar apenas um provider, basta acessar diretamente o provider em seu resource na api.
 
 
+  console.log("---------------------------------------------------------------------------");
+  console.log("                 DOCMOB - Saúde na Ponta dos Dedos");
+  console.log("              RESTFUL API - Istância de recursos para HTTP");
+  console.log("---------------------------------------------------------------------------");
   Object.keys(config.resources).forEach(function(key) {
-    console.log("config.resources[key].name: ", config.resources[key].name);
+    console.log("Recurso: ", config.resources[key].name, config.resources[key].detail);
     restInterface = require("./controller/interface")(config.resources[key].collection);
     app.get("/" + config.resources[key].name, restInterface.list);
     app.get("/" + config.resources[key].name + "/:_id", restInterface.get);

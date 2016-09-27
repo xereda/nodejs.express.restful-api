@@ -188,7 +188,6 @@ const _toFiltersObject = function(req, schema) {
   });
 
 
-  console.log("_obj: ", _obj);
   return _obj;
 
 }
@@ -239,7 +238,7 @@ const _toPopulatedFiltersObject = function(req, schema) {
 // seja maior que o definido nas configurações gerais (config/config.js),
 // determina como padrão o próprio parâmetro que está nas configurações gerais.
 // Isso serve para limitar a quantidade de documentos a serem retornados
-//  pela API, forçando com que o programador frondend crie paginação de
+//  pela API, forçando com que o programador frontend crie paginação de
 // resultados.
 const _toPaginationObject = function(req) {
   const _obj = {};

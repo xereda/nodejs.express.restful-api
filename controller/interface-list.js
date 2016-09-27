@@ -46,8 +46,16 @@ module.exports = function(collection, schemaDef, controllerCRUD) {
     // _pag: Define qual a página de documentos a ser retornada.
     const _pagination = utils.toPaginationObject(req);
 
+    console.log("aqui");
+
+    controllerCRUD.count(_filters, function(count) {
+      res.header("X-Total-Count", count);
+    });
+
+    console.log("passou da chamada");
+
     // Lista todos os documentos.
-    controllerCRUD.readAll(_populate, _lean, _pagination, _filters, _fields, _sort, function(objectList, status) {
+    controllerCRUD.readAll(_populate, _lean, _pagination, _filters, _fields, _sort, function(objectList, status, countDocs) {
       res.status(status).json(objectList);
     });
 

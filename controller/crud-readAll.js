@@ -29,7 +29,7 @@ module.exports = function(collection, model) {
       _testInit(returnTest);
     });
 
-    //sleep.sleep(4);    
+    //sleep.sleep(4);
 
     // Parâmetros recebidos na função anônima:
     // * _lean: determina se a consulta irá retornar um objeto mongoose ou apenas
@@ -97,7 +97,6 @@ module.exports = function(collection, model) {
         }
 
       });
-
 
       // Determina o limite e paginação. A função skip() determina quantos
       // documentos devem ser pulados. Como o valor informado como filtro na API é

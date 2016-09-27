@@ -5,6 +5,7 @@ module.exports = function(collection) {
   // Importa o módulo de definação da collection de usuários do docmob
   const model = require("../database/schema-model")(collection);
 
+  const _crud_count = require("./crud-count")(collection, model);
   const _crud_readAll = require("./crud-readAll")(collection, model);
   const _crud_subDocReadAll = require("./crud-subDocReadAll")(collection, model);
   const _crud_read = require("./crud-read")(collection, model);
@@ -14,6 +15,8 @@ module.exports = function(collection) {
   const _crud_subDocUpdate = require("./crud-subDocUpdate")(collection, model);
   const _crud_delete = require("./crud-delete")(collection, model);
   const _crud_subDocDelete = require("./crud-subDocDelete")(collection, model);
+
+  const _count = _crud_count.count;
 
   // ** READ ALL - GET **
   // Funcão que retorna a lista de todos os documentos da collection
@@ -51,6 +54,7 @@ module.exports = function(collection) {
 
   // Define o objeto encapsulador das funções de CRUD da api
   const docController = {
+    count: _count, // total de registros afetados para paginacao
     readAll: _readAll, // get
     subDocReadAll: _subDocReadAll, // get para um subdocumento
     read: _read, // get
