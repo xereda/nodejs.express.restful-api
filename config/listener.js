@@ -6,9 +6,6 @@ const bodyParser = require("body-parser");
 const express = require("express");
 const cors = require("cors");
 
-// Cabeçalhos de CORS para liberação das requisições feitas a API
-const allowCors = require("./cors");
-
 // Mantém a conexão com o banco de dados
 const conn = require("../config/connection");
 

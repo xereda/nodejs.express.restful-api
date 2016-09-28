@@ -20,7 +20,7 @@ module.exports = {
   // Configuração do CORS
   corsOptions: {
     origin: "*",
-    allowedHeaders: true,
+    exposedHeaders: ['X-total-Count', 'Authorization'],
     methods: [ "GET", "HEAD", "PUT", "PATCH", "POST", "DELETE" ],
     preflightContinue: false
   },
