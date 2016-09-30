@@ -23,13 +23,13 @@ module.exports = function(collection, model) {
   // Funcão que retorna a lista de todos os documentos da collection
   // Recebe como parâmetro um callback contendo o response para
   // o device chamador (navegador, aplicativo, etc...)
-  const _readAll = function(_populate, _lean, _pagination, _filters, _fields, _sort, callback) {
+  const _readAll = function(_populate, _lean, _pagination, _filters, _fields, _sort, _qFilter, callback) {
 
     initTest.test(function(returnTest) {
       _testInit(returnTest);
     });
 
-    //sleep.sleep(4);
+    // sleep.sleep(2);
 
     // Parâmetros recebidos na função anônima:
     // * _lean: determina se a consulta irá retornar um objeto mongoose ou apenas
@@ -51,8 +51,11 @@ module.exports = function(collection, model) {
 
     } else {
 
+      console.log("vai filtrar por: ", _qFilter );
+
       // cria uma instância do model para realizar a query no banco.
-      const modelDoc = model.find({}, _fields);
+      //const modelDoc = model.find(eval("{ " + _qFilter + " }"), _fields);
+      const modelDoc = model.find(_qFilter, _fields);
 
       // Percorre todos os filtros informados na query string.
       Object.keys(_filters).forEach(function(key,index) {

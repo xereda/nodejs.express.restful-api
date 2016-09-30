@@ -8,10 +8,10 @@ module.exports = function(collection, model) {
   const messages = require("./messages");
   const config = require("../config/config");
 
-  const _count = function(_filters, callback) {
+  const _count = function(_filters, _qFilter, callback) {
 
     // cria uma instância do model para realizar a query no banco.
-    const modelDoc = model.find({});
+    const modelDoc = model.find(_qFilter);
 
     // Percorre todos os filtros informados na query string.
     Object.keys(_filters).forEach(function(key,index) {

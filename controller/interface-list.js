@@ -32,8 +32,6 @@ module.exports = function(collection, schemaDef, controllerCRUD) {
     // Retorna um objeto JSON contendo a regra para ordenação dos resultados.
     const _sort = utils.toJSObject("sort", req.query._sort);
 
-    console.log("_sort: ", _sort);
-
     // Retorna um objeto Javascript contendo os filtros repassados na url
     // da requisição.
 
@@ -46,16 +44,19 @@ module.exports = function(collection, schemaDef, controllerCRUD) {
     // _pag: Define qual a página de documentos a ser retornada.
     const _pagination = utils.toPaginationObject(req);
 
-    console.log("aqui");
+    let _qFilter = {};
+    if (req.query.q !== undefined) {
+      _qFilter = utils.qFilter(req.query.q, schemaDef.schema);
+    }
 
-    controllerCRUD.count(_filters, function(count) {
+    console.log("qFilter eh: ", _qFilter);
+
+    controllerCRUD.count(_filters, _qFilter, function(count) {
       res.header("X-Total-Count", count);
     });
 
-    console.log("passou da chamada");
-
     // Lista todos os documentos.
-    controllerCRUD.readAll(_populate, _lean, _pagination, _filters, _fields, _sort, function(objectList, status, countDocs) {
+    controllerCRUD.readAll(_populate, _lean, _pagination, _filters, _fields, _sort, _qFilter, function(objectList, status, countDocs) {
       res.status(status).json(objectList);
     });
 

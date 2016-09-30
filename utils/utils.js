@@ -273,9 +273,33 @@ const _toSubDocUpdateObject = function(_field, _object) {
 
 }
 
+const _qFilter = function(_q, _schema) {
+
+  let _orQuery = "({ $or: [ ";
+
+  Object.keys(_schema).forEach(function(key,index) {
+
+    if ((_schema[key].type === String) || (_schema[key].type === Number)) {
+
+      if (key !== "password") {
+        _orQuery += " { " + key + ": /" + _q + "/i }, "
+      }
+    }
+
+  });
+
+  _orQuery += " ] })";
+
+  console.log("vai retornar isso aqui: ", eval(_orQuery));
+
+  return eval(_orQuery);
+
+}
+
 
 // Define a interface encapsuladora das funções aqui existentes.
 const controller = {
+  qFilter: _qFilter,
   toPaginationObject: _toPaginationObject,
   toFiltersObject: _toFiltersObject,
   toPopulatedFiltersObject: _toPopulatedFiltersObject,
