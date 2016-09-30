@@ -45,11 +45,10 @@ module.exports = function(collection, schemaDef, controllerCRUD) {
     const _pagination = utils.toPaginationObject(req);
 
     let _qFilter = {};
-    if (req.query.q !== undefined) {
-      _qFilter = utils.qFilter(req.query.q, schemaDef.schema);
+    const _q = req.query.q;
+    if ((_q !== undefined) && (_q !== null) && (_q.length > 0)) {
+      _qFilter = utils.qFilter(utils.validate(req.query.q), schemaDef.schema);
     }
-
-    console.log("qFilter eh: ", _qFilter);
 
     controllerCRUD.count(_filters, _qFilter, function(count) {
       res.header("X-Total-Count", count);

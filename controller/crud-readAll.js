@@ -51,8 +51,6 @@ module.exports = function(collection, model) {
 
     } else {
 
-      console.log("vai filtrar por: ", _qFilter );
-
       // cria uma instância do model para realizar a query no banco.
       //const modelDoc = model.find(eval("{ " + _qFilter + " }"), _fields);
       const modelDoc = model.find(_qFilter, _fields);
@@ -65,8 +63,6 @@ module.exports = function(collection, model) {
         // e .gte(data) para o model do find(). Lembrando que gte significa
         // "igual ou maior que".
         if (key.indexOf("_gte") > 0) {
-
-          console.log("dentro de start", key.replace("_gte", ""), _filters[key], typeof _filters[key]);
 
           modelDoc.where(key.replace("_gte", "")).gte(_filters[key]);
 
