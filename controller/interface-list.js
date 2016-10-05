@@ -52,12 +52,13 @@ module.exports = function(collection, schemaDef, controllerCRUD) {
 
     controllerCRUD.count(_filters, _qFilter, function(count) {
       res.header("X-Total-Count", count);
+      // Lista todos os documentos.
+      controllerCRUD.readAll(_populate, _lean, _pagination, _filters, _fields, _sort, _qFilter, function(objectList, status, countDocs) {
+        res.status(status).json(objectList);
+      });
+
     });
 
-    // Lista todos os documentos.
-    controllerCRUD.readAll(_populate, _lean, _pagination, _filters, _fields, _sort, _qFilter, function(objectList, status, countDocs) {
-      res.status(status).json(objectList);
-    });
 
   }
 

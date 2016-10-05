@@ -290,8 +290,6 @@ const _qFilter = function(_q, _schema) {
 
   _orQuery += " ] })";
 
-  console.log("vai retornar isso aqui: ", eval(_orQuery));
-
   return eval(_orQuery);
 
 }

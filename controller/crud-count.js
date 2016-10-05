@@ -59,6 +59,8 @@ module.exports = function(collection, model) {
 
       if (count) {
         callback(count);
+      } else {
+        callback(0);
       }
 
     });
