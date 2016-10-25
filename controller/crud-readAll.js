@@ -31,6 +31,7 @@ module.exports = function(collection, model) {
 
     // sleep.sleep(2);
 
+
     // Parâmetros recebidos na função anônima:
     // * _lean: determina se a consulta irá retornar um objeto mongoose ou apenas
     // objeto javascript simples. O uso do lean() melhora e muito a performance

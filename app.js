@@ -73,7 +73,7 @@ if (cluster.isWorker) {
 
   console.log("---------------------------------------------------------------------------");
   console.log("                 DOCMOB - Saúde na Ponta dos Dedos");
-  console.log("              RESTFUL API - Istância de recursos para HTTP");
+  console.log("              RESTFUL API - Instância de recursos para HTTP");
   console.log("---------------------------------------------------------------------------");
   Object.keys(config.resources).forEach(function(key) {
     console.log("Recurso: ", config.resources[key].name, config.resources[key].detail);
@@ -89,8 +89,6 @@ if (cluster.isWorker) {
     app.put("/" + config.resources[key].name + "/:_id/:_field/:_subDoc_id", restInterface.subDocPut);
     app.delete("/" + config.resources[key].name + "/:_id/:_field/:_subDoc_id", restInterface.subDocDelete);
   });
-
-
 
   // Caso a rota informada não exista, apresenta uma mensagem de erro com
   // HTTP code 404

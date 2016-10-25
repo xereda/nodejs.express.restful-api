@@ -14,9 +14,6 @@ module.exports = function(collection, model) {
       return element.fieldName === _field;
     });
 
-    console.log("dentro ");
-
-
     let _objFields = {};
     _objFields["_id"] = 0;
     _objFields[_field] = _field;
@@ -26,8 +23,6 @@ module.exports = function(collection, model) {
 
     Object.assign(_objFields, _fields);
 
-    console.log("_objFields: ", _objFields);
-
     // cria uma instância do model para realizar a query no banco.
     const modelDoc = model.findOne({ _id: _id }, _objFields);
 
@@ -36,21 +31,13 @@ module.exports = function(collection, model) {
     // retorno de listas.
     modelDoc.lean(_lean);
 
-    console.log(1);
-
-
     if (_objSubDoc === undefined) {
 
       _populate.forEach(function(v) {
         modelDoc.populate(v);
       });
 
-      console.log(2);
-
     } else {
-
-      console.log(3);
-
 
       let _objPopulate = {};
       let _objPopulateTemp = {};
@@ -63,8 +50,6 @@ module.exports = function(collection, model) {
       if (((Object.keys(_sort).length === 0) && (_sort.constructor === Object)) === false) {
         _objPopulate["options"] = { sort: _sort };
       }
-
-      console.log("_objPopulate: ", _objPopulate);
 
       (_objSubDoc.simple !== true) ? modelDoc.populate(_objPopulate) : null;
 
@@ -121,9 +106,6 @@ module.exports = function(collection, model) {
     // Após todas as definçòes acima, executa a query.
     modelDoc.exec(function(err, docs) {
 
-      console.log(4);
-
-
       if (err) {
         // Não foi possível retornar a lista de documentos
 
@@ -147,8 +129,6 @@ module.exports = function(collection, model) {
 
       } else {
 
-        console.log("docs: ", docs, typeof docs);
-
         const _filteredPopulate = docs[_objSubDoc.fieldName].filter(function(element, index, array) {
 
           let control = true;
@@ -157,7 +137,6 @@ module.exports = function(collection, model) {
           Object.keys(_populatedFilters).forEach(function(key,index) {
 
             const originalKey = key.substr(key.indexOf(".") + 1);
-            //console.log("nome do campo: ", key, " - valor do campo: ", _filters[key]);
 
             // Caso o campo seja do tipo string
             if ((typeof _populatedFilters[key]) === "string") {
