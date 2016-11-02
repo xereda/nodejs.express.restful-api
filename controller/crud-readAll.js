@@ -48,7 +48,7 @@ module.exports = function(collection, model) {
 
     if (_testControl === false) {
 
-      callback({ response: messages.getMessage("message", 8) }, 404);
+      callback({ response: messages.getMessage("message", 8) }, 500);
 
     } else {
 

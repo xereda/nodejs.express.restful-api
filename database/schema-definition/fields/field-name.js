@@ -9,13 +9,24 @@ module.exports = function(param) {
   (!param.minLength) ? param.minLength = 0 : null;
   (!param.required) ? param.required = false : null;
 
-  //const _get = (v) => v.toUpperCase();
-  const _set = (v) => v.toUpperCase();
+  const _set = function(v) {
+    if (param.setUpper) return v.toUpperCase();
+    if (param.setLower) return v.toLowerCase();
+    return v;
+  }
+
+  const _get = function(v) {
+    if (param.getUpper) return v.toUpperCase();
+    if (param.getLower) return v.toLowerCase();
+    return v;
+  }
+  
   const _validate = (v) => v.length >= param.minLength;
 
   const _field = {
     type: String,
     set: _set,
+    get: _get,
     index: param.index,
     validate: [ _validate, messages.getMessage("error", 17).replace("%2", param.minLength).replace("%1", param.name) ],
     required: [ param.required, messages.getMessage("error", 8).replace("%1", param.name) ]

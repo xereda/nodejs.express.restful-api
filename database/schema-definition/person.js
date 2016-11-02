@@ -19,5 +19,5 @@ module.exports.schemaProperties = { timestamps: true };
 
 // array contendo os campos referentes a subdocumentos.
 module.exports.subDocs = [
-  { fieldName: "devices", ref: "Person", indexField: "_id", simple: true },
+  { fieldName: "devices", ref: "Person", indexField: "_id", simple: true }, // simple === true -> subDoc eh apenas uma array de objetos e seu _id de identificacao nao tem relacao com outra collection
 ];

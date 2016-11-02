@@ -51,6 +51,8 @@ module.exports = function(collection, model) {
         _objPopulate["options"] = { sort: _sort };
       }
 
+      console.log('_objPopulate: ', _objPopulate)
+
       (_objSubDoc.simple !== true) ? modelDoc.populate(_objPopulate) : null;
 
       // loop para todos os populates internos primeiramente para nao ocorrer erro

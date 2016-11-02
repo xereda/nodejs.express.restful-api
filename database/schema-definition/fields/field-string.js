@@ -15,6 +15,12 @@ module.exports = function(param) {
     return v;
   }
 
+  const _get = function(v) {
+    if (param.getUpper) return v.toUpperCase();
+    if (param.getLower) return v.toLowerCase();
+    return v;
+  }
+
   const _validate = function(v) {
 
     if ((param.minLength) && (v.length < param.minLength)) {
@@ -58,6 +64,7 @@ module.exports = function(param) {
   const _field = {
     type: String,
     set: _set,
+    get: _get,
     validate: [ _validate, _message() ],
     required: [ param.required, messages.getMessage("error",  8).replace("%1", param.name) ],
     index: param.index

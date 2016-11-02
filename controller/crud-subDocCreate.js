@@ -79,6 +79,11 @@ module.exports = function(collection, model) {
 
       } else if (subDocLocated.length > 0) {
 
+        console.log("_objectFilter: ", _objectFilter)
+        console.log("docObject: ", docObject)
+
+        console.log("subDocLocated", subDocLocated)
+
         // Subdocumento já está vinculado ao documento principal
         callback({ error: messages.getMessage("error", 32) }, 406);
 
