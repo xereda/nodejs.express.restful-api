@@ -29,7 +29,7 @@ module.exports = {
   resources: [
               { name: "workplaces", collection: "Workplace", detail: " [ Local de Atendimento ]" },
               { name: "providers", collection: "Provider", detail: " [ Prestadores ]" },
-              { name: "professionalActivities", collection: "professionalActivity", detail: " [ Atividade Profissional ]" },
+              { name: "professionalActivities", collection: "ProfessionalActivity", detail: " [ Atividade Profissional ]" },
               { name: "specialties", collection: "Specialty", detail: " [ Especializações ]" },
               { name: "users", collection: "User", detail: " [ Usuários ]" },
               { name: "healthInsurances", collection: "HealthInsurance", detail: " [ Plano de Saúde ]" },

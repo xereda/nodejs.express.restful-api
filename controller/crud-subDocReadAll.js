@@ -1,5 +1,6 @@
 module.exports = function(collection, model) {
 
+  // console.log("1");
   // Faz o controle das funções de CRUD da restapi
 
   const mongoose = require("mongoose");
@@ -7,12 +8,15 @@ module.exports = function(collection, model) {
   const schemaDef  = require("../database/schema-definition/" + collection);
   const messages = require("./messages");
   const config = require("../config/config");
+  // console.log("2");
 
   const _subDocReadAll = function(_id, _field, _populate, _populatedFields, _lean, _pagination, _filters, _populatedFilters, _fields, _sort, callback) {
 
     const _objSubDoc = schemaDef.subDocs.find(function(element) {
       return element.fieldName === _field;
     });
+
+    // console.log("3");
 
     let _objFields = {};
     _objFields["_id"] = 0;
@@ -22,6 +26,7 @@ module.exports = function(collection, model) {
     }
 
     Object.assign(_objFields, _fields);
+    // console.log("4");
 
     // cria uma instância do model para realizar a query no banco.
     const modelDoc = model.findOne({ _id: _id }, _objFields);
@@ -30,6 +35,7 @@ module.exports = function(collection, model) {
     // documento mongoose. A aplicação de lean() melhora e muito as querys e
     // retorno de listas.
     modelDoc.lean(_lean);
+    // console.log("5");
 
     if (_objSubDoc === undefined) {
 
@@ -39,6 +45,9 @@ module.exports = function(collection, model) {
 
     } else {
 
+      // console.log("51");
+
+
       let _objPopulate = {};
       let _objPopulateTemp = {};
 
@@ -46,12 +55,11 @@ module.exports = function(collection, model) {
       _objPopulate["model"] = _objSubDoc.ref;
       _objPopulate["select"] = _populatedFields.replace(new RegExp(",", 'g'), " ");
       //_objPopulate["match"] = _objFilters;
+      // console.log("52");
 
       if (((Object.keys(_sort).length === 0) && (_sort.constructor === Object)) === false) {
         _objPopulate["options"] = { sort: _sort };
       }
-
-      console.log('_objPopulate: ', _objPopulate)
 
       (_objSubDoc.simple !== true) ? modelDoc.populate(_objPopulate) : null;
 
@@ -68,6 +76,8 @@ module.exports = function(collection, model) {
 
       });
 
+      // // console.log("54");
+
       _populate.forEach(function(v) {
 
         let _slicePopulateParam = v.split(".");
@@ -78,6 +88,8 @@ module.exports = function(collection, model) {
         }
 
       });
+
+      // // console.log("55");
 
       _populate.forEach(function(v) {
 
@@ -108,6 +120,8 @@ module.exports = function(collection, model) {
     // Após todas as definçòes acima, executa a query.
     modelDoc.exec(function(err, docs) {
 
+      // console.log("6");
+
       if (err) {
         // Não foi possível retornar a lista de documentos
 
@@ -130,6 +144,8 @@ module.exports = function(collection, model) {
         callback(docs, 200);
 
       } else {
+
+        // console.log("7");
 
         const _filteredPopulate = docs[_objSubDoc.fieldName].filter(function(element, index, array) {
 

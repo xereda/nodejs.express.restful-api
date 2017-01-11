@@ -7,7 +7,7 @@ module.exports.schema = {
   email: require("./fields/field-email")({ name: "email", required: true, index: true, unique: true }),
   password: require("./fields/field-password")({ name: "password", required: true, minLength: 5 }),
   active: require("./fields/field-boolean")({ name: "active" }),
-  phone: require("./fields/field-number")({ name: "phone", required: true, min: 1111111111, max: 99999999999 }),
+  phone: require("./fields/field-string")({ name: "phone", required: true, minlength: 10, maxLength: 11 }),
   devices: require("./fields/object-device")({ name: "devices" }),
   createdById: require("./fields/field-createdById")({ name: "createdById", required: true }),
   updatedById: require("./fields/field-updatedById")({ name: "updatedById", required: true }),

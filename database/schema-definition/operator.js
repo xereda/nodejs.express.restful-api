@@ -10,6 +10,7 @@ module.exports.schema = {
   webService: require("./fields/object-webService")({ name: "webService" }),
   ANSCode: require("./fields/field-string")({ name: "ANSCode" }),
   internalCode: require("./fields/field-string")({ name: "InternalCode" }),
+  active: require("./fields/field-boolean")({ name: "active" }),  
   createdById: require("./fields/field-createdById")({ name: "createdById", required: true }),
   updatedById: require("./fields/field-updatedById")({ name: "updatedById", required: true }),
   createdAt: require("./fields/field-date")({ name: "createdAt" }),

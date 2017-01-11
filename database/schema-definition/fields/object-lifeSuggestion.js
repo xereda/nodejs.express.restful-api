@@ -11,8 +11,9 @@ module.exports = function(param) {
   const Schema = mongoose.Schema;
 
   const _object = [{
-    weekDays: [ require("./field-domain")({ name: "weekDays", required: true, index: true, subDoc: "lifeSuggestions", domain: [ "SEG", "TER", "QUA", "QUI", "SEX", "SAB", "DOM" ] }) ],
+    weekDays: [ require("./field-domain")({ name: "weekDays", required: true, index: true, subDoc: "lifeSuggestions", domain: [ "IND", "SEG", "TER", "QUA", "QUI", "SEX", "SAB", "DOM" ] }) ],
     morning: require("./field-boolean")({ name: "morning", subDoc: "lifeSuggestions" }),
+    indifferent: require("./field-boolean")({ name: "indifferent", subDoc: "lifeSuggestions" }),
     earlyMorning: require("./field-boolean")({ name: "earlyMorning", subDoc: "lifeSuggestions" }),
     lateMorning: require("./field-boolean")({ name: "lateMorning", subDoc: "lifeSuggestions" }),
     afternoon: require("./field-boolean")({ name: "afternoon", subDoc: "lifeSuggestions" }),

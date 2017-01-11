@@ -83,9 +83,11 @@ module.exports = function(collection) {
 
           // Verifica se usuário informado no campo "updatedById" existe
           // na collection de usuários.
+          console.log("schemaDef.referencedFields[key]: ", schemaDef.referencedFields[key])
           mongoose.models[schemaDef.referencedFields[key].ref].findOne({_id: value}, function (err, doc) {
 
             if (err || !doc) {
+                console.log("ERR: ", err)
                 respond(false); // documento informado nao tem referência em outra collection
             } else {
                 respond(true); // ok, não apresenta erro.

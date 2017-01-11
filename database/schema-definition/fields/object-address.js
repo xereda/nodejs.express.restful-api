@@ -7,8 +7,8 @@ module.exports = function(param) {
   const Schema = mongoose.Schema;
 
   const _object = {
-    name: require("./field-string")({ name: "streetName", minLength: 3, required: true, setUpper: true }),
-    number: require("./field-number")({ name: "streetNumber", min: 0, max: 9999999 }),
+    name: require("./field-string")({ name: "name", minLength: 3, required: true, setUpper: true }),
+    number: require("./field-number")({ name: "number", min: 0, max: 9999999 }),
     complement: require("./field-string")({ name: "complement" }),
     neighborhood: require("./field-string")({ name: "neighborhood", required: true, setUpper: true }),
     zipCode: require("./field-number")({ name: "zipCode", required: true, max: 99999999 })

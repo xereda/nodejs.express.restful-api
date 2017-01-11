@@ -2,12 +2,16 @@
 
 // Módulo que implementa uma interface de abstração análoga ao métodos HTTP
 // (GET, PUT, POST, DELETE). Para cada método, invoca uma funcão respectiva
-// no módulo de CRUD (create, retrive, update e delete).
+// no módulo de CRUD (create, retrieve, update e delete).
 
 module.exports = function(collection) {
 
   // Módulo que define o esquema da collection informada como parâmetro
   const schemaDef  = require("../database/schema-definition/" + collection);
+  // console.log("collection: ", collection);
+  // if (collection === "User") {
+  //   console.log("schemaDef: ", JSON.stringify(schemaDef));
+  // }
 
   // Módulo que implementa as funções de CRUD dinamicamente, conforme
   // collection informada parâmetro.

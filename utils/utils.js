@@ -187,7 +187,7 @@ const _toFiltersObject = function(req, schema) {
 
   });
 
-
+  console.log("objeto de filtro: ", _obj);
   return _obj;
 
 }

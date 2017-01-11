@@ -10,6 +10,7 @@ module.exports.schema = {
   birthdate: require("./fields/field-date")({ name: "birthdate", required: true }),
   mothersName: require("./fields/field-name")({ name: "mothersName", required: true, minLength: 3 }),
   healthInsurances: require("./fields/object-healthInsurance")({ name: "healthInsurances" }),
+  active: require("./fields/field-boolean")({ name: "active" }),  
   createdById: require("./fields/field-createdById")({ name: "createdById", required: true }),
   updatedById: require("./fields/field-updatedById")({ name: "updatedById", required: true }),
   createdAt: require("./fields/field-date")({ name: "createdAt" }),

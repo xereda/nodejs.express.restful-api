@@ -1,4 +1,3 @@
-// scheduledAbsence - Ausencias agendadas
 
 "use strict";
 
@@ -7,6 +6,7 @@ module.exports.schema = {
   state: require("./fields/field-string")({ name: "state", required: true, setUpper: true, length: 2 }),
   country: require("./fields/field-string")({ name: "country", required: true, setUpper: true }),
   geoLocation: require("./fields/field-geolocation")({ name: "geoLocation", required: true }),
+  active: require("./fields/field-boolean")({ name: "active" }),
   createdById: require("./fields/field-createdById")({ name: "createdById", required: true }),
   updatedById: require("./fields/field-updatedById")({ name: "updatedById", required: true }),
   createdAt: require("./fields/field-date")({ name: "createdAt" }),
