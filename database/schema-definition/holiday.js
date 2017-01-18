@@ -1,4 +1,3 @@
-// scheduledAbsence - Ausencias agendadas
 
 "use strict";
 
