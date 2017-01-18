@@ -9,7 +9,7 @@ module.exports.schema = {
   active: require("./fields/field-boolean")({ name: "active" }),
   address: require("./fields/object-address")({ name: "address" }),
   city: require("./fields/object-objectId")({ name: "city", index: true, required: true, schemaName: "City" }),
-  geoLocation: require("./fields/field-geolocation")({ name: "geoLocation", required: true }),
+  geoLocation: require("./fields/field-geoLocation")({ name: "geoLocation", required: true }),
   phone: require("./fields/field-number")({ name: "phone", required: true, min: 1111111111, max: 99999999999 }),
   deadlineUserChoose: require("./fields/field-number")({ name: "deadlineUserChoose" }),
   nationalCode: require("./fields/field-string")({ name: "nationalCode" }), //  Cadastro Nacional de Estabelecimentos de Saúde
