@@ -5,7 +5,7 @@ module.exports.schema = {
   name: require("./fields/field-name")({ name: "name", required: true, index: true, unique: true }),
   state: require("./fields/field-string")({ name: "state", required: true, setUpper: true, length: 2 }),
   country: require("./fields/field-string")({ name: "country", required: true, setUpper: true }),
-  geoLocation: require("./fields/field-geolocation")({ name: "geoLocation", required: true }),
+  geoLocation: require("./fields/field-geoLocation")({ name: "geoLocation", required: true }),
   active: require("./fields/field-boolean")({ name: "active" }),
   createdById: require("./fields/field-createdById")({ name: "createdById", required: true }),
   updatedById: require("./fields/field-updatedById")({ name: "updatedById", required: true }),
