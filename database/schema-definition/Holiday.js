@@ -6,7 +6,7 @@ module.exports.schema = {
   name: require("./fields/field-name")({ name: "name", required: true, index: true }),
   recurrent: require("./fields/field-boolean")({ name: "recurrent", required: true }),
   regional: require("./fields/field-boolean")({ name: "regional", required: true }),
-  city: require("./fields/object-objectId")({ name: "city", index: true, required: true, schemaName: "City" }),
+  city: require("./fields/object-objectId")({ name: "city", schemaName: "City" }),
   createdById: require("./fields/field-createdById")({ name: "createdById", required: true }),
   updatedById: require("./fields/field-updatedById")({ name: "updatedById", required: true }),
   createdAt: require("./fields/field-date")({ name: "createdAt" }),

@@ -5,6 +5,7 @@
 const bodyParser = require("body-parser");
 const express = require("express");
 const cors = require("cors");
+const os = require("os");
 
 // Mantém a conexão com o banco de dados
 const conn = require("../config/connection");
@@ -19,10 +20,16 @@ const config = require("../config/config");
 // Gera uma instância do Express
 const app = express();
 
+// verifica se o ambiente é local (desenvolvimento) ou é o ambiente de homologacao
+let _domainAPI = config.application_domain_local
+if (os.hostname() !== "macminixereda.home") {
+  _domainAPI = config.application_domain;
+}
+
 // Executa o server que manterá a API online. Pra verificar porta e host,
 // acesso o módulo de configurações (config/config.js)
-app.listen(config.application_port, function() {
-  console.log(messages.getMessage("message", 2) + " na porta " + config.application_port);
+app.listen(config.application_port, _domainAPI,  function() {
+  console.log(messages.getMessage("message", 2) + " na porta " + config.application_port + " e no domínio '" + _domainAPI + "'");
 });
 
 // Executa o cabeçalho/head CORS

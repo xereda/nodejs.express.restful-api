@@ -7,6 +7,8 @@ module.exports = {
   database_name: "docmob", // nome da database no mongodb
 
   application_port: 5000, // porta tcp onde a applicação esterá disponível
+  application_domain: "homologa.docmob.com.br",
+  application_domain_local: "localhost",
 
   // define o _id de um usuário já existente (collection "users")
   // para que a API, no método POST, não mostre a mensagem de crítica

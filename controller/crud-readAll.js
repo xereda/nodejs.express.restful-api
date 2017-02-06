@@ -29,7 +29,7 @@ module.exports = function(collection, model) {
       _testInit(returnTest);
     });
 
-    // sleep.sleep(2);
+    //sleep.sleep(2);
 
 
     // Parâmetros recebidos na função anônima:
