@@ -90,7 +90,7 @@ module.exports = function(collection, model) {
 
             doc.save(function(err, docUpdated) {
 
-            console.log('docUpdate.updatedFields: ', docUpdated.updatedFields);
+            console.log('docUpdate: ', docUpdated);
 
               // Erro - Não foi possível atualizar o usuário
               if (err) {

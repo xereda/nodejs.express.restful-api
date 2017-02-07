@@ -68,6 +68,7 @@ module.exports = function(collection) {
       // não está definida como campo, no esquema do mongoose.
       // Serve apenas para que seja recuperada e retornada no método PUT.
       this.updatedFields = _updatedFieldsObject;
+      console.log('_updatedFieldsObject: ', _updatedFieldsObject);
 
       next();
 
