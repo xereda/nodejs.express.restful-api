@@ -1,3 +1,5 @@
+const _ = require("lodash")
+
 module.exports = function(collection, model) {
 
   // Faz o controle das funções de CRUD da restapi
@@ -88,15 +90,18 @@ module.exports = function(collection, model) {
 
             doc.save(function(err, docUpdated) {
 
+            console.log('docUpdate.updatedFields: ', docUpdated.updatedFields);
+
               // Erro - Não foi possível atualizar o usuário
               if (err) {
                 callback({ error: messages.getMessage("error", 5), err }, 400);
-              } else if (Object.keys(docUpdated.updatedFields).length === 0 && docUpdated.updatedFields.constructor === Object) {
+              // } else if (Object.keys(docUpdated.updatedFields).length === 0 && docUpdated.updatedFields.constructor === Object) {
+              } else if (_.isEmpty(docUpdated.updatedFields)) {
                 // nenhum campo da collection foi atualizado
                 callback({}, 204);
               } else {
                 // Campos foram atualizado
-                // Retorna somente num objeto somente os campos alterados
+                // Retorna somente num objeto somente com os campos alterados
                 callback(docUpdated.updatedFields, 200);
               }
             });
