@@ -28,7 +28,7 @@ module.exports = function(collection) {
   const _schema = mongoose.Schema(schemaDef.schema, schemaDef.schemaProperties);
 
   // quando a conexão com o banco de dados estiver aberta
-  conn.once("open", function() {
+  // conn.once("open", function() {
 
     // pre.save - define rotinas para serem executadas antes de salvar o
     // documento, tanto na criação (post, create), como na atualização
@@ -49,6 +49,8 @@ module.exports = function(collection) {
     // midlleware do pre.save para retornar um objeto contendo
     // apenas os campos alterados para método PUT.
     _schema.pre("save", function(next) {
+
+      console.log("entro num dos pre.save");
 
       // define um novo objeto
       let _updatedFieldsObject = {};
@@ -164,7 +166,7 @@ module.exports = function(collection) {
 
     }, messages.getMessage("error", 12) );
 
-  });
+  // }); -- fim do conn.once
 
   // Caso as propriedades sejam definidas no arquivo de esquema, cria um índice customizado
   if ((schemaDef.setIndexFields !== undefined) && (schemaDef.setIndexOptions !== undefined)) {
