@@ -26,3 +26,7 @@ module.exports.schemaProperties = { timestamps: true };
 
 // module.exports.setIndexFields = { date: 1, city: 1 };
 // module.exports.setIndexOptions = { unique: true };
+
+module.exports.refIdentityCollections = [
+  { collection: 'Holiday', field: 'city' },
+]
