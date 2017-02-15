@@ -26,3 +26,7 @@ module.exports.referencedFields = [
 
 module.exports.setIndexFields = { date: 1, city: 1 };
 module.exports.setIndexOptions = { unique: true };
+
+module.exports.refIdentityCollections = {
+
+}

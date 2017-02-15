@@ -13,3 +13,7 @@ module.exports.schema = {
 };
 
 module.exports.schemaProperties = { timestamps: true };
+
+module.exports.refIdentityCollections = [
+  { collection: 'Specialty', field: 'professionalActivity' }
+]

@@ -44,5 +44,6 @@ module.exports = [
   { code: 40, description: "O valor informado em '%1' não pode ser igual ou maior que o valor informado em '%2'." },
   { code: 41, description: "A data informada em '%1' não pode ser igual ou maior que a data informada em '%2'." },
   { code: 42, description: "A data informada em '%1' deve ser maior ou igual a data atual." },
+  { code: 43, description: "Esse documento não pode ser excluído pois está relacionado em outros documentos do sistema. Segue lista de dependentes: %1" },
 
 ];

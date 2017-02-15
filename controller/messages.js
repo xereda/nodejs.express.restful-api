@@ -33,11 +33,35 @@ const _getDescription = function(type, indexMessage) {
   return _object.description;
 }
 
+const _translateCollections = function(_array) {
+  const _translateArray = _array.map((element) => {
+    return element.replace("City", "Cidades")
+                  .replace("HealthInsurance", "Convênios")
+                  .replace("Holiday", "Feriados")
+                  .replace("HolidayExcetion", "Exceções de feriados")
+                  .replace("Life", "Vidas")
+                  .replace("Operator", "Operadoras")
+                  .replace("Person", "Pessoas")
+                  .replace("ProfessionalActivity", "Ramos de Atividades")
+                  .replace("Provider", "Prestadores")
+                  .replace("Schedule", "Agenda")
+                  .replace("ScheduleAbsence", "Ausências Agendadas")
+                  .replace("ScheduleDefinition", "Definição da Agenda")
+                  .replace("ScheduleSuggestion", "Sugestões de Datas")
+                  .replace("Specialty", "Especializações")
+                  .replace("User", "Usuários")
+                  .replace("Workplace", "Locais de Atendimento")
+                  .replace("WorkplaceProviderHI", "Convênios de um Prestador");
+  });
+  return _translateArray;
+}
+
 // Objeto de interface para acesso as funções de recuperação de mensagens.
 const messageObject = {
   getObject: _getObject,
   getMessage: _getMessage,
-  getDescription: _getDescription
+  getDescription: _getDescription,
+  translateCollections: _translateCollections
 };
 
 // Exporta o objeto de interface

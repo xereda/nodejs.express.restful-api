@@ -15,6 +15,6 @@ module.exports.schema = {
 
 module.exports.schemaProperties = { timestamps: true };
 
-// module.exports.referencedFields = [
-//   { fieldName: "professionalActivity", ref: "ProfessionalActivity"},
-// ];
+module.exports.refIdentityCollections = [
+  { collection: 'Operator', field: 'healthInsurance' },
+]
