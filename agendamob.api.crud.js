@@ -15,13 +15,13 @@ if (cluster.isWorker) {
   // Script de inicializações dos resources das restful apis do Docmob.
 
   // Configuração geral da API
-  const config = require("./config/config");
+  const config = require("./src/config/config");
 
   // Modelador e validador de objetos para o banco de dados mongodb
   const mongoose = require("mongoose");
 
   // Instancia e executa um servidor express
-  const app = require("./config/listener");
+  const app = require("./src/config/listener");
 
   // Importa o módulo e define uma interface completa para manutenção da
   // colletion users. Observe que é informado um parâmetro no require, que define
@@ -31,7 +31,7 @@ if (cluster.isWorker) {
   // Módulo que trata rotas informadas, mas não existentes (404) ou ainda
   // rotinas com erro no servidor (500)
 
-  const exceptions = require("./controller/exceptions");
+  const exceptions = require("./src/controller/exceptions");
 
   // Métodos HTTP para tratativas das requisições feitas na API.
   // Método LIST: Lista todos os documentos, limitado ao
@@ -77,7 +77,7 @@ if (cluster.isWorker) {
   console.log("---------------------------------------------------------------------------");
   Object.keys(config.resources).forEach(function(key) {
     console.log("Recurso: ", config.resources[key].name, config.resources[key].detail);
-    restInterface = require("./controller/interface")(config.resources[key].collection);
+    restInterface = require("./src/controller/interface")(config.resources[key].collection);
     app.get("/" + config.resources[key].name, restInterface.list);
     app.get("/" + config.resources[key].name + "/:_id", restInterface.get);
     app.post("/" + config.resources[key].name, restInterface.post);
