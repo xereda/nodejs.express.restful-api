@@ -3,7 +3,7 @@
 "use strict";
 
 module.exports.schema = {
-  name: require("./fields/field-name")({ name: "name", required: true, minLength: 3, index: true, getUpper: true }),
+  name: require("./fields/field-name")({ name: "name", required: true, minLength: 3, index: true, setUpper: true, getUpper: true }),
   email: require("./fields/field-email")({ name: "email", required: true, index: true, unique: true }),
   password: require("./fields/field-password")({ name: "password", required: true, minLength: 5 }),
   admin: require("./fields/field-boolean")({ name: "admin", required: true }),

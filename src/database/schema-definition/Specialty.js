@@ -5,7 +5,7 @@
 "use strict";
 
 module.exports.schema = {
-  name: require("./fields/field-name")({ name: "name", required: true, index: true, unique: true, minLength: 3 }),
+  name: require("./fields/field-name")({ name: "name", required: true, index: true, unique: true, minLength: 3, setUpper: true }),
   registrationCode: require("./fields/field-string")({ name: "registrationCode" }),
   active: require("./fields/field-boolean")({ name: "active" }),
   professionalActivity: require("./fields/object-objectId")({ name: "professionalActivity", index: true, required: true, schemaName: "ProfessionalActivity" }),

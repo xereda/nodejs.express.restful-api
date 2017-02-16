@@ -9,13 +9,13 @@ module.exports = function(param) {
   (!param.required) ? param.required = false : null;
 
   //const _get = (v) => v.toUpperCase();
-  const _set = function(v) {
+  const _set = v => {
     if (param.setUpper) return v.toUpperCase();
     if (param.setLower) return v.toLowerCase();
     return v;
   }
 
-  const _get = function(v) {
+  const _get = v => {
     if (param.getUpper) return v.toUpperCase();
     if (param.getLower) return v.toLowerCase();
     return v;

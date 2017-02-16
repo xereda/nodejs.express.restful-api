@@ -3,8 +3,8 @@
 "use strict";
 
 module.exports.schema = {
-  name: require("./fields/field-name")({ name: "name", required: true, index: true, unique: true, minLength: 3 }),
-  regionalCouncilAcronym: require("./fields/field-string")({ name: "regionalCouncilAcronym", index: true, unique: true }),
+  name: require("./fields/field-name")({ name: "name", required: true, index: true, unique: true, minLength: 3, setUpper: true }),
+  regionalCouncilAcronym: require("./fields/field-string")({ name: "regionalCouncilAcronym", index: true, unique: true, setUpper: true }),
   active: require("./fields/field-boolean")({ name: "active" }),
   createdById: require("./fields/field-createdById")({ name: "createdById", required: true }),
   updatedById: require("./fields/field-updatedById")({ name: "updatedById", required: true }),

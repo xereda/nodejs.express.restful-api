@@ -3,9 +3,9 @@
 "use strict";
 
 module.exports.schema = {
-  name: require("./fields/field-name")({ name: "name", required: true, index: true, minLength: 3 }),
+  name: require("./fields/field-name")({ name: "name", required: true, index: true, minLength: 3, setUpper: true }),
   description: require("./fields/field-string")({ name: "description" }),
-  email: require("./fields/field-email")({ name: "email", required: true, index: true, unique: true }),
+  email: require("./fields/field-email")({ name: "email", required: true, index: true, unique: true, setLower: true }),
   active: require("./fields/field-boolean")({ name: "active" }),
   entityType: require("./fields/field-domain")({ name: "entityType", required: true, domain: ["F", "J"] }),
   cpf: require("./fields/field-cpf")({ name: "cpf", index: true, unique: true }),
