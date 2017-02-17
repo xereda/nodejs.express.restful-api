@@ -8,7 +8,7 @@ module.exports = function(param) {
 
   const _object = [{
     healthInsurance: require("./object-objectId")({ name: "healthInsurance", required: true, index: true, schemaName: "HealthInsurance" }),
-    code: require("./field-string")({ name: "code", required: true }),
+    code: require("./field-string")({ name: "code", required: true, setUpper: true }),
     createdById: require("./field-createdById")({ name: "createdById", required: true, subDoc: "healthInsurances" }),
     updatedById: require("./field-updatedById")({ name: "updatedById", required: true, subDoc: "healthInsurances" }),
     createdAt: require("./field-date")({ name: "createdAt", required: true, subDoc: "healthInsurances" }),

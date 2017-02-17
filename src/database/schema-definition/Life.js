@@ -4,13 +4,13 @@
 
 module.exports.schema = {
   person: require("./fields/object-objectId")({ name: "person", index: true, required: true, schemaName: "Person" }),
-  name: require("./fields/field-name")({ name: "name", required: true, minLength: 3, index: true }),
-  shortName: require("./fields/field-name")({ name: "shortName", required: true, minLength: 3, maxLength: 10 }),
+  name: require("./fields/field-name")({ name: "name", required: true, minLength: 3, index: true, setUpper: true }),
+  shortName: require("./fields/field-name")({ name: "shortName", required: true, minLength: 3, maxLength: 10, setUpper: true }),
   cpf: require("./fields/field-cpf")({ name: "cpf" }),
   birthdate: require("./fields/field-date")({ name: "birthdate", required: true }),
-  mothersName: require("./fields/field-name")({ name: "mothersName", required: true, minLength: 3 }),
+  mothersName: require("./fields/field-name")({ name: "mothersName", required: true, minLength: 3, seUpper: true }),
   healthInsurances: require("./fields/object-healthInsurance")({ name: "healthInsurances" }),
-  active: require("./fields/field-boolean")({ name: "active" }),  
+  active: require("./fields/field-boolean")({ name: "active" }),
   createdById: require("./fields/field-createdById")({ name: "createdById", required: true }),
   updatedById: require("./fields/field-updatedById")({ name: "updatedById", required: true }),
   createdAt: require("./fields/field-date")({ name: "createdAt" }),
