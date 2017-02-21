@@ -2,6 +2,20 @@
 
 // Define middleware e o model para manipulação da collection
 
+const _isRequeridRef = function(schema, fieldName) {
+  if ((schema[fieldName].required !== undefined) && (schema[fieldName].required === true)) {
+    return true;
+  }
+  return false;
+}
+
+const _isValue = function(field) {
+  if ((field !== undefined) && (field !== null) && (field !== "")) {
+    return true;
+  }
+  return false;
+}
+
 module.exports = function(collection) {
 
   const mongoose = require("mongoose");
@@ -50,8 +64,6 @@ module.exports = function(collection) {
     // apenas os campos alterados para método PUT.
     _schema.pre("save", function(next) {
 
-      console.log("entro num dos pre.save");
-
       // define um novo objeto
       let _updatedFieldsObject = {};
 
@@ -70,7 +82,6 @@ module.exports = function(collection) {
       // não está definida como campo, no esquema do mongoose.
       // Serve apenas para que seja recuperada e retornada no método PUT.
       this.updatedFields = _updatedFieldsObject;
-      console.log('_updatedFieldsObject: ', _updatedFieldsObject);
 
       next();
 
@@ -84,19 +95,21 @@ module.exports = function(collection) {
         // referência a outras collections
         _schema.path(schemaDef.referencedFields[key].fieldName).validate(function (value, respond) {
 
-          // Verifica se usuário informado no campo "updatedById" existe
-          // na collection de usuários.
-          console.log("schemaDef.referencedFields[key]: ", schemaDef.referencedFields[key])
-          mongoose.models[schemaDef.referencedFields[key].ref].findOne({_id: value}, function (err, doc) {
+          if (_isRequeridRef(schemaDef.schema, schemaDef.referencedFields[key].fieldName) || _isValue(value)) {
 
-            if (err || !doc) {
-                console.log("ERR: ", err)
-                respond(false); // documento informado nao tem referência em outra collection
-            } else {
-                respond(true); // ok, não apresenta erro.
-            }
+            mongoose.models[schemaDef.referencedFields[key].ref].findOne({_id: value}, function (err, doc) {
 
-          });
+              if (err || !doc) {
+                  respond(false); // documento informado nao tem referência em outra collection
+              } else {
+                  respond(true); // ok, não apresenta erro.
+              }
+
+            });
+
+          } else {
+            respond(true);
+          }
 
         }, messages.getMessage("error", 36).replace("%1", schemaDef.referencedFields[key].fieldName).replace("%2", schemaDef.referencedFields[key].ref) );
 
