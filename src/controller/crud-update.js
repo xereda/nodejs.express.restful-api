@@ -73,10 +73,10 @@ module.exports = function(collection, model) {
                   doc[key].coordinates[1] = parseFloat(docObject[key].coordinates[1]);
                 }
               } else {
-                (docObject[key]) ? doc[key] = docObject[key] : null;
+                (docObject[key] || docObject[key] === "") ? doc[key] = docObject[key] : null;
               }
             } else { // para todos os demais campos
-              (docObject[key]) ? doc[key] = docObject[key] : null;
+              (docObject[key] || docObject[key] === "") ? doc[key] = docObject[key] : null;
             }
 
           });

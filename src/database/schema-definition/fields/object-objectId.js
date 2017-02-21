@@ -10,7 +10,7 @@ module.exports = function(param) {
   (!param.required) ? param.required = false : null;
 
   const _set = (v) => {
-    console.log("v: ", v)
+    console.log("v------>>>>>>: ", v)
     if ((param.acceptEmpty) && ((v === "") || (v === null))) {
       console.log("campo que aceita valor vazio: ", v);
       return undefined;

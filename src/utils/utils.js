@@ -66,6 +66,8 @@ const _getObjectBody = function(req, schema) {
 
   });
 
+  console.log("_objectBody: ", _objectBody)
+
   //console.log("_objectBody: ", _objectBody);
   return _objectBody;
 
