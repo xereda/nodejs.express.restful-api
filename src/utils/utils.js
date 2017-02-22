@@ -48,27 +48,22 @@ const _getObjectBody = function(req, schema) {
 
   // Percorre todos os campos informados no corpo da requisição.
   Object.keys(req.body).forEach(function (key) {
-
     // Verifica se o campo informado faz parte do esquema atual.
     if (schema[key]) {
-
       // Verifica se o campo informado é do tipo string e caso verdade
       // limpa o valor informado com trim e escape. (segurança)
-
       if ((typeof req.body[key]) === "string") {
         _objectBody[key] = _validate(req.body[key])
       } else if ((typeof req.body[key]) === "object") { // quando for um objeto
         _objectBody[key] = req.body[key];
+      // } else if ((typeof req.body[key]) === "boolean") { // quando for um BOOLEAN
+      //   _objectBody[key] = req.body[key].toString();
       } else { // caso nao seja string, apenas atribui o mesmo campo/valor para o objeto de retorno da função
         _objectBody[key] = req.body[key];
       }
     }
 
   });
-
-  console.log("_objectBody: ", _objectBody)
-
-  //console.log("_objectBody: ", _objectBody);
   return _objectBody;
 
 }

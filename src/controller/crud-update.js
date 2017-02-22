@@ -16,6 +16,9 @@ module.exports = function(collection, model) {
   // o callback de retorno para express.
   const _update = function(_id, docObject, callback) {
 
+    console.log("dentro da _update");
+    console.log("objeto recebido: ", docObject);
+
     let updateControle = true;
 
     // Adiciona validacao para sub documentos. Sub documentos não podem ser
@@ -26,13 +29,9 @@ module.exports = function(collection, model) {
 
       Object.keys(schemaDef.subDocs).forEach(function (key, i) {
 
-        if (docObject[schemaDef.subDocs[key].fieldName] !== undefined) {
-
-          if ((docObject[schemaDef.subDocs[key].fieldName] !== undefined) || (docObject[schemaDef.subDocs[key].fieldName].length > 0)) {
-            updateControle = false;
-            callback({ error: messages.getMessage("error", 38).replace("%1", schemaDef.subDocs[key].fieldName) }, 400);
-          }
-
+        if ((docObject[schemaDef.subDocs[key].fieldName] !== undefined) || (docObject[schemaDef.subDocs[key].fieldName].length > 0)) {
+          updateControle = false;
+          callback({ error: messages.getMessage("error", 38).replace("%1", schemaDef.subDocs[key].fieldName) }, 400);
         }
 
       });
@@ -62,28 +61,30 @@ module.exports = function(collection, model) {
           Object.keys(docObject).forEach(function (key) {
 
             // Tratativa para os campos de geoposicionamento
-            if ((typeof docObject[key]) === "object") {
-
+            if ((typeof docObject[key]) !== "object") {
+              doc[key] = docObject[key];
+            } else {
               if ((key == "geoLocation") && (typeof docObject[key].coordinates === "object")) {
-
                 if ((docObject[key].coordinates[0] != doc[key].coordinates[0]) || (docObject[key].coordinates[1] != doc[key].coordinates[1])) {
-
                   doc[key].coordinates = [];
                   doc[key].coordinates[0] = parseFloat(docObject[key].coordinates[0]);
                   doc[key].coordinates[1] = parseFloat(docObject[key].coordinates[1]);
                 }
-              } else {
-                (docObject[key] || docObject[key] === "") ? doc[key] = docObject[key] : null;
               }
-            } else { // para todos os demais campos
-              (docObject[key] || docObject[key] === "") ? doc[key] = docObject[key] : null;
             }
+            console.log("dentro do foreach dos campos: ", key, doc[key])
 
           });
+
+
 
           if (!docObject.updatedById) {
             callback({ error: messages.getMessage("error", 13).replace("%1", "updatedById") }, 400);
           } else {
+
+            console.log("==========");
+            console.log("doc que será efetivamente atualizado: ", doc);
+            console.log("==========");
 
             doc.save(function(err, docUpdated) {
 
