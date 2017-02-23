@@ -29,9 +29,13 @@ module.exports = function(collection, model) {
 
       Object.keys(schemaDef.subDocs).forEach(function (key, i) {
 
-        if ((docObject[schemaDef.subDocs[key].fieldName] !== undefined) || (docObject[schemaDef.subDocs[key].fieldName].length > 0)) {
-          updateControle = false;
-          callback({ error: messages.getMessage("error", 38).replace("%1", schemaDef.subDocs[key].fieldName) }, 400);
+        if (docObject[schemaDef.subDocs[key].fieldName] !== undefined) {
+
+          if ((docObject[schemaDef.subDocs[key].fieldName] !== undefined) || (docObject[schemaDef.subDocs[key].fieldName].length > 0)) {
+            updateControle = false;
+            callback({ error: messages.getMessage("error", 38).replace("%1", schemaDef.subDocs[key].fieldName) }, 400);
+          }
+
         }
 
       });
@@ -60,19 +64,27 @@ module.exports = function(collection, model) {
 
           Object.keys(docObject).forEach(function (key) {
 
-            // Tratativa para os campos de geoposicionamento
-            if ((typeof docObject[key]) !== "object") {
-              doc[key] = docObject[key];
-            } else {
+            console.log("dentro do foreach dos campos: ", key, doc[key])
+
+            if ((typeof docObject[key]) === "boolean") {
+                doc[key] = docObject[key];
+            } else if ((typeof docObject[key]) === "object") { // Tratativa para os campos de geoposicionamento
+
               if ((key == "geoLocation") && (typeof docObject[key].coordinates === "object")) {
+
                 if ((docObject[key].coordinates[0] != doc[key].coordinates[0]) || (docObject[key].coordinates[1] != doc[key].coordinates[1])) {
+
                   doc[key].coordinates = [];
                   doc[key].coordinates[0] = parseFloat(docObject[key].coordinates[0]);
                   doc[key].coordinates[1] = parseFloat(docObject[key].coordinates[1]);
                 }
+              } else {
+                (docObject[key] || docObject[key] === "") ? doc[key] = docObject[key] : null;
               }
+            } else { // para todos os demais campos
+              (docObject[key] || docObject[key] === "") ? doc[key] = docObject[key] : null;
             }
-            console.log("dentro do foreach dos campos: ", key, doc[key])
+
 
           });
 

@@ -46,6 +46,7 @@ module.exports = {
               { name: "cities", collection: "City", detail: " [ Cidades Atendidas ]" },
               { name: "holidays", collection: "Holiday", detail: " [ Feriados ]" },
               { name: "holidayExceptions", collection: "HolidayException", detail: " [ Exceções de Feriados ]" },
+              { name: "examples", collection: "Example", detail: " [ Exemplos e testes ]" },
             ]
 
 };
