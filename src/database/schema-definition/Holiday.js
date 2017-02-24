@@ -3,7 +3,7 @@
 
 module.exports.schema = {
   date: require("./fields/field-date")({ name: "date", required: true, index: true }),
-  name: require("./fields/field-name")({ name: "name", required: true, index: true, setUpper: true }),
+  name: require("./fields/field-name")({ name: "name", required: true, index: true, setUpper: true, getUpper: true }),
   recurrent: require("./fields/field-boolean")({ name: "recurrent", required: true }),
   regional: require("./fields/field-boolean")({ name: "regional", required: true }),
   city: require("./fields/object-objectId")({ name: "city", schemaName: "City", acceptEmpty: true }),
@@ -13,8 +13,12 @@ module.exports.schema = {
   updatedAt: require("./fields/field-date")({ name: "updatedAt" })
 };
 
-module.exports.schemaProperties = { timestamps: true };
-
+module.exports.schemaProperties = {
+  timestamps: true,
+  toJSON: {
+    getters: true
+  }
+};
 // array contendo os campos referentes a subdocumentos.
 // module.exports.subDocs = [
 //   { fieldName: "allowedHIs", ref: "HealthInsurance", indexField: "allowedHI" },

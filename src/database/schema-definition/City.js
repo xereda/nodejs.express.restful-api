@@ -13,7 +13,12 @@ module.exports.schema = {
   updatedAt: require("./fields/field-date")({ name: "updatedAt" })
 };
 
-module.exports.schemaProperties = { timestamps: true };
+module.exports.schemaProperties = {
+  timestamps: true,
+  toJSON: {
+    getters: true
+  }
+};
 
 // array contendo os campos referentes a subdocumentos.
 // module.exports.subDocs = [

@@ -17,12 +17,7 @@ module.exports.schema = {
 
 module.exports.schemaProperties = {
   timestamps: true,
-  toObject: {
-    virtuals: true,
-    getters: true
-  },
   toJSON: {
-    virtuals: true,
     getters: true
   }
 };

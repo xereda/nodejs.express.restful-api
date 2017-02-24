@@ -16,7 +16,12 @@ module.exports.schema = {
   updatedAt: require("./fields/field-date")({ name: "updatedAt" })
 };
 
-module.exports.schemaProperties = { timestamps: true };
+module.exports.schemaProperties = {
+  timestamps: true,
+  toJSON: {
+    getters: true
+  }
+};
 
 module.exports.referencedFields = [
   { fieldName: "workplace", ref: "Workplace" },
