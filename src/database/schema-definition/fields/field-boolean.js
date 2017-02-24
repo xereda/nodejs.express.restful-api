@@ -9,14 +9,10 @@ module.exports = function(param) {
   (!param.subDoc) ? param.subDoc = "" : param.subDoc + ".";
 
   const _validate = (v) => {
-    console.log("typeof v: ", param.name, typeof v)
     return typeof v === "boolean";
   }
 
   const _set = (v) => {
-    console.log("*******************************************************")
-    console.log('campo boolean - ', param.name, v, v === "false", v === false);
-    console.log("*******************************************************")
     return v;
   }
 

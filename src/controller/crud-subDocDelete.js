@@ -20,12 +20,6 @@ module.exports = function(collection, model) {
     _tempObject2[_field] = _tempObject;
     _filterPull["$pull"] = _tempObject2;
 
-    // console.log("------------------------------------")
-    // console.log("_id: ", _id)
-    // console.log("_subDocIdFilterField: ", _subDocIdFilterField)
-    // console.log("_filterPull: ", _filterPull)
-    // console.log("------------------------------------")
-
     // Pesquisa pelo documento passado como parâmetro
     model.update({ $and: [ { _id: _id }, _subDocIdFilterField ] }, _filterPull, function(err, doc) {
 

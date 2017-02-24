@@ -33,8 +33,6 @@ const _validate = function(param) {
 const _getObjectBody = function(req, schema) {
   const _objectBody = {};
 
-  //console.log("dentro da _getObjectBody");
-
   // Controle para não ficar monstrando, na inclusão de um novo documento,
   // mensagem de crítica para o campo "updatedById" não informado.
   // O campo "updatedById" é obrigatório apenas na atualização de um documento.
@@ -184,7 +182,6 @@ const _toFiltersObject = function(req, schema) {
 
   });
 
-  console.log("objeto de filtro: ", _obj);
   return _obj;
 
 }

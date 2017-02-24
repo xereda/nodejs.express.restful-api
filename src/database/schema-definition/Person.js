@@ -3,8 +3,8 @@
 "use strict";
 
 module.exports.schema = {
-  name: require("./fields/field-name")({ name: "name", required: true, minLength: 3, index: true }),
-  email: require("./fields/field-email")({ name: "email", required: true, index: true, unique: true }),
+  name: require("./fields/field-name")({ name: "name", required: true, minLength: 3, index: true, setUpper: true, getUpper: true }),
+  email: require("./fields/field-email")({ name: "email", required: true, index: true, unique: true, setLower: true, getLower: true }),
   password: require("./fields/field-password")({ name: "password", required: true, minLength: 5 }),
   active: require("./fields/field-boolean")({ name: "active" }),
   phone: require("./fields/field-string")({ name: "phone", required: true, minlength: 10, maxLength: 11 }),
@@ -15,7 +15,17 @@ module.exports.schema = {
   updatedAt: require("./fields/field-date")({ name: "updatedAt" })
 };
 
-module.exports.schemaProperties = { timestamps: true };
+module.exports.schemaProperties = {
+  timestamps: true,
+  toObject: {
+    virtuals: true,
+    getters: true
+  },
+  toJSON: {
+    virtuals: true,
+    getters: true
+  }
+};
 
 // array contendo os campos referentes a subdocumentos.
 module.exports.subDocs = [

@@ -91,17 +91,11 @@ module.exports = function(collection) {
 
       Object.keys(schemaDef.referencedFields).forEach(function (key, i) {
 
-        console.log("schemaDef.referencedFields: ", key, i)
-
         // Adiciona uma característica de validação para os campos que fazem
         // referência a outras collections
         _schema.path(schemaDef.referencedFields[key].fieldName).validate(function (value, respond) {
 
-          console.log("valor: ", value, _isRequeridRef(schemaDef.schema, schemaDef.referencedFields[key].fieldName), _isValue(value));
-
           if (_isRequeridRef(schemaDef.schema, schemaDef.referencedFields[key].fieldName) || _isValue(value)) {
-
-            console.log("vai fazer a validacao do valor do campo em outra collection: ", value);
 
             mongoose.models[schemaDef.referencedFields[key].ref].findOne({_id: value}, function (err, doc) {
 

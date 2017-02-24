@@ -49,16 +49,10 @@ module.exports = function(param) {
     }
 
     if ((param.valueType === "string") && (_changedDomain.includes(v.toUpperCase()))) {
-      console.log(1);
       return true;
     } else if (_changedDomain.includes(v)) {
-      console.log(2);
       return true;
     }
-    console.log(3);
-    console.log("_changedDomain: ", _changedDomain);
-    console.log("_changedDomain.includes(v): ", _changedDomain.includes(v));
-    console.log("typeof v: ", typeof v);
     return false;
   }
 

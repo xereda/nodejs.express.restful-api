@@ -44,22 +44,11 @@ module.exports = function(collection, schemaDef, controllerCRUD) {
 
     if ((_objSubDoc !== undefined) && (_objSubDoc !== null)) {
 
-      console.log("_objSubDoc: ", _objSubDoc);
-
-      // if (_objSubDoc.simple === true) {
-      //   console.log("---> schemaDef.schema[_objSubDoc.fieldName][0]: ", schemaDef.schema[_objSubDoc.fieldName][0]);
-      //   const _subDocSchema  = schemaDef.schema[_objSubDoc.fieldName];
-      //   console.log("_subDocSchema[0]: ", _subDocSchema[0]);
-      // } else {
-      //   const _subDocSchema  = require("../database/schema-definition/fields/object-" + _objSubDoc.indexField)({});
-      // }
-
       let _subDocSchema;
 
       if (_objSubDoc.simple === true) {
         _subDocSchema  = schemaDef.schema[_objSubDoc.fieldName];
       } else {
-        console.log("../database/schema-definition/fields/object-" + _objSubDoc.indexField);
         _subDocSchema  = require("../database/schema-definition/fields/object-" + _objSubDoc.indexField)({});
       }
 

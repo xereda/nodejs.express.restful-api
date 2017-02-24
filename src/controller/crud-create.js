@@ -15,8 +15,6 @@ module.exports = function(collection, model) {
 
     let createControl = true;
 
-    console.log("_create");
-
     // Adiciona validacao para sub documentos. Sub documentos não podem ser
     // manipulados diretamente na colllection pai. Apenas no controle específico
     // para sub documentos. Para manipular sub documentos, siga o padrão:

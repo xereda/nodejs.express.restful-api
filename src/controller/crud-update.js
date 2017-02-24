@@ -16,9 +16,6 @@ module.exports = function(collection, model) {
   // o callback de retorno para express.
   const _update = function(_id, docObject, callback) {
 
-    console.log("dentro da _update");
-    console.log("objeto recebido: ", docObject);
-
     let updateControle = true;
 
     // Adiciona validacao para sub documentos. Sub documentos não podem ser
@@ -64,8 +61,6 @@ module.exports = function(collection, model) {
 
           Object.keys(docObject).forEach(function (key) {
 
-            console.log("dentro do foreach dos campos: ", key, doc[key])
-
             if ((typeof docObject[key]) === "boolean") {
                 doc[key] = docObject[key];
             } else if ((typeof docObject[key]) === "object") { // Tratativa para os campos de geoposicionamento
@@ -93,10 +88,6 @@ module.exports = function(collection, model) {
           if (!docObject.updatedById) {
             callback({ error: messages.getMessage("error", 13).replace("%1", "updatedById") }, 400);
           } else {
-
-            console.log("==========");
-            console.log("doc que será efetivamente atualizado: ", doc);
-            console.log("==========");
 
             doc.save(function(err, docUpdated) {
 
