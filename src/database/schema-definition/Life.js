@@ -7,7 +7,7 @@ module.exports.schema = {
   name: require("./fields/field-name")({ name: "name", required: true, minLength: 3, index: true, setUpper: true, getUpper: true }),
   shortName: require("./fields/field-name")({ name: "shortName", required: true, minLength: 3, maxLength: 10, setUpper: true, getUpper: true }),
   cpf: require("./fields/field-cpf")({ name: "cpf" }),
-  birthdate: require("./fields/field-date")({ name: "birthdate", required: true }),
+  birthday: require("./fields/field-date")({ name: "birthday", required: true }),
   mothersName: require("./fields/field-name")({ name: "mothersName", required: true, minLength: 3, seUpper: true, getUpper: true }),
   healthInsurances: require("./fields/object-healthInsurance")({ name: "healthInsurances" }),
   active: require("./fields/field-boolean")({ name: "active" }),
