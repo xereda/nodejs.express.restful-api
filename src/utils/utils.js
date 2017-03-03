@@ -14,11 +14,11 @@ const config = require("../config/config");
 const _getLeanParam = function(param) {
 
   if (param) {
-    if ((param.toLowerCase() == "false") || (param.toLowerCase() == "no")) {
-      return false;
+    if ((param.toLowerCase() == "true") || (param.toLowerCase() == "yes")) {
+      return true;
     }
   }
-  return true;
+  return false;
 
 }
 
