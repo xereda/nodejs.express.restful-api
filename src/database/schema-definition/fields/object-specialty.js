@@ -13,7 +13,8 @@ module.exports = function(param) {
     updatedById: require("./field-updatedById")({ name: "updatedById", required: true, subDoc: "specialties" }),
     createdAt: require("./field-date")({ name: "createdAt", required: true, subDoc: "specialties" }),
     updatedAt: require("./field-date")({ name: "updatedAt", required: true, subDoc: "specialties" }),
-    _id: false
+    _id: false,
+    id: false
   }];
 
   return _object;
