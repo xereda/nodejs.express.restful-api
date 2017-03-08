@@ -8,10 +8,6 @@ module.exports = function(collection) {
 
   // Módulo que define o esquema da collection informada como parâmetro
   const schemaDef  = require("../database/schema-definition/" + collection);
-  // console.log("collection: ", collection);
-  // if (collection === "User") {
-  //   console.log("schemaDef: ", JSON.stringify(schemaDef));
-  // }
 
   // Módulo que implementa as funções de CRUD dinamicamente, conforme
   // collection informada parâmetro.

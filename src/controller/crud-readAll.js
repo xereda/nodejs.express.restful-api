@@ -141,9 +141,6 @@ module.exports = function(collection, model) {
           // retorna o objeto JSON para o requisitante.
 
 
-          console.log('objeto normal: ', docs)
-          console.log('objeto depois de passar por JSON.stringify(): ', JSON.stringify(docs))
-
           var teste = JSON.parse(JSON.stringify(docs));
           // callback(docs, 200);
           callback(teste, 200);

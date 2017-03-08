@@ -14,7 +14,6 @@ module.exports = function(param) {
 
   const _validate = function(v) {
     if ((v === "") || (v === null)) {
-      console.log("dentro da field-cnpj.js: ", param.name, v)
       return true;
     }
     const _cleanedCNPJ = CNPJ.strip(v.replace(/&#{0,1}[a-z0-9]+;/ig, ""));

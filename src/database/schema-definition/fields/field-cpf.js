@@ -12,7 +12,6 @@ module.exports = function(param) {
 
   const _validate = (v) => {
     if ((v === "") || (v === null)) {
-      console.log("dentro da field-cpf.js: ", param.name, v)
       return true;
     }
     const _cleanedCPF = CPF.strip(decodeURI(v.replace(/&#{0,1}[a-z0-9]+;/ig, "")));
