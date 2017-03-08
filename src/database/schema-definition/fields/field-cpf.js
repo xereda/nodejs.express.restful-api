@@ -23,11 +23,11 @@ module.exports = function(param) {
   }
 
   const _set = (v) => {
-    return CPF.strip(decodeURI(v.replace(/&#{0,1}[a-z0-9]+;/ig, "")));
+    if (v !== undefined && v !== null && v !== "") return CPF.strip(decodeURI(v.replace(/&#{0,1}[a-z0-9]+;/ig, "")));
   }
 
   const _get = (v) => {
-    return CPF.format(v);
+    if (v !== undefined && v !== null && v !== "") return CPF.format(v);
   }
 
   const _field = {

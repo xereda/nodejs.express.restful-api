@@ -2,6 +2,7 @@
 "use strict";
 
 module.exports.schema = {
+  id: false,
   date: require("./fields/field-date")({ name: "date", required: true, index: true }),
   name: require("./fields/field-name")({ name: "name", required: true, index: true, setUpper: true, getUpper: true }),
   recurrent: require("./fields/field-boolean")({ name: "recurrent", required: true }),

@@ -25,11 +25,11 @@ module.exports = function(param) {
   }
 
   const _set = function(v) {
-    return CNPJ.strip(v.replace(/&#{0,1}[a-z0-9]+;/ig, ""));
+    if (v !== undefined && v !== null && v !== "") return CNPJ.strip(v.replace(/&#{0,1}[a-z0-9]+;/ig, ""));
   }
 
   const _get = function(v) {
-    return CNPJ.format(v);
+    if (v !== undefined && v !== null && v !== "") return CNPJ.format(v);
   }
 
   const _field = {

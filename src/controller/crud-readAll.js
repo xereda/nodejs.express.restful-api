@@ -139,7 +139,14 @@ module.exports = function(collection, model) {
 
           // Caso encontre documentos através dos critérios informados,
           // retorna o objeto JSON para o requisitante.
-          callback(docs, 200);
+
+
+          console.log('objeto normal: ', docs)
+          console.log('objeto depois de passar por JSON.stringify(): ', JSON.stringify(docs))
+
+          var teste = JSON.parse(JSON.stringify(docs));
+          // callback(docs, 200);
+          callback(teste, 200);
         }
       });
 

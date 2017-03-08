@@ -54,6 +54,7 @@ module.exports = function(collection, schemaDef, controllerCRUD) {
       res.header("X-Total-Count", count);
       // Lista todos os documentos.
       controllerCRUD.readAll(_populate, _lean, _pagination, _filters, _fields, _sort, _qFilter, function(objectList, status, countDocs) {
+        console.log('objectList: ', objectList)
         res.status(status).json(objectList);
       });
 

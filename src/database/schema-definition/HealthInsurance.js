@@ -5,6 +5,7 @@
 "use strict";
 
 module.exports.schema = {
+  id: false,
   name: require("./fields/field-name")({ name: "name", required: true, index: true, unique: true, minLength: 3, setUpper: true, getUpper: true }),
   shortName: require("./fields/field-name")({ name: "shortName", required: true, index: true, unique: true, minLength: 3, maxLength: 10, setUpper: true, getUpper: true }),
   createdById: require("./fields/field-createdById")({ name: "createdById", required: true }),

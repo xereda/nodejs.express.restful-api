@@ -5,6 +5,7 @@
 "use strict";
 
 module.exports.schema = {
+  id: false,
   schedule: require("./fields/object-objectId")({ name: "schedule", index: true, required: true, schemaName: "Schedule" }),
   workplace: require("./fields/object-objectId")({ name: "workplace", schemaName: "Workplace" }),
   provider: require("./fields/object-objectId")({ name: "provider", schemaName: "Provider" }),

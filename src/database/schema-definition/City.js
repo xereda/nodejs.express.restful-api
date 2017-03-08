@@ -2,6 +2,7 @@
 "use strict";
 
 module.exports.schema = {
+  id: false,
   name: require("./fields/field-name")({ name: "name", required: true, index: true, unique: true, setUpper: true }),
   state: require("./fields/field-string")({ name: "state", required: true, setUpper: true, length: 2 }),
   country: require("./fields/field-string")({ name: "country", required: true, setUpper: true }),

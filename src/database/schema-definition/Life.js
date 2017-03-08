@@ -3,6 +3,7 @@
 "use strict";
 
 module.exports.schema = {
+  id: false,
   person: require("./fields/object-objectId")({ name: "person", index: true, required: true, schemaName: "Person" }),
   name: require("./fields/field-name")({ name: "name", required: true, minLength: 3, index: true, setUpper: true, getUpper: true }),
   shortName: require("./fields/field-name")({ name: "shortName", required: true, minLength: 3, maxLength: 10, setUpper: true, getUpper: true }),

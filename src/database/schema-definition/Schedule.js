@@ -7,6 +7,7 @@
 "use strict";
 
 module.exports.schema = {
+  id: false,
   // scheduleDefinition - definição de agenda que serviu de base para essa marcação
   // São as regras vinculadas a definição que permitiram o agendamento neste
   // dia e horário específico.
