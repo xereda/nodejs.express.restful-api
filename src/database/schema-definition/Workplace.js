@@ -12,7 +12,7 @@ module.exports.schema = {
   city: require("./fields/object-objectId")({ name: "city", index: true, required: true, schemaName: "City" }),
   geoLocation: require("./fields/field-geoLocation")({ name: "geoLocation", required: true }),
   phone: require("./fields/field-number")({ name: "phone", required: true, min: 1111111111, max: 99999999999 }),
-  deadlineUserChoose: require("./fields/field-number")({ name: "deadlineUserChoose" }),
+  deadlineTimeForLifeChoose: require("./fields/field-number")({ name: "deadlineTimeForLifeChoose" }),
   nationalCode: require("./fields/field-string")({ name: "nationalCode", setUpper: true, getUpper: true }), //  Cadastro Nacional de Estabelecimentos de Saúde
   providers: require("./fields/object-provider")({ name: "providers" }),
   users: require("./fields/object-user")({ name: "users" }),
