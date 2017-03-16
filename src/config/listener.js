@@ -21,9 +21,9 @@ const config = require("../config/config");
 const app = express();
 
 // verifica se o ambiente é local (desenvolvimento) ou é o ambiente de homologacao
-let _domainAPI = config.application_domain_local
-if (os.hostname() !== "macminixereda.home") {
-  _domainAPI = config.application_domain;
+let _domainAPI = config.application_domain
+if (os.hostname().indexOf("macminixereda") > -1) {
+  _domainAPI = config.application_domain_local;
 }
 
 // Executa o server que manterá a API online. Pra verificar porta e host,

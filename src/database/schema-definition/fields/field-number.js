@@ -3,6 +3,7 @@
 module.exports = function(param) {
 
   const messages = require("../../../controller/messages");
+  const StringMask = require("string-mask");
 
   (!param.index) ? param.index = false : null;
   (!param.min) ? param.min = 0 : null;
@@ -26,6 +27,15 @@ module.exports = function(param) {
 
   if (param.default !== undefined) {
     _field["default"] = param.default;
+  }
+
+  if (param.mask !== undefined) {
+    _field.get = (v) => {
+      if (v === undefined) return v;
+      if (v === null) return v;
+      if (v === '') return v;
+      return (new StringMask(param.mask)).apply(v);
+    }
   }
 
   return _field;

@@ -8,10 +8,10 @@ module.exports = function(param) {
 
   const _object = {
     name: require("./field-string")({ name: "name", minLength: 3, required: true, setUpper: true }),
-    number: require("./field-number")({ name: "number", min: 0, max: 9999999 }),
+    number: require("./field-number")({ name: "number", min: 0, max: 99999 }),
     complement: require("./field-string")({ name: "complement" }),
     neighborhood: require("./field-string")({ name: "neighborhood", required: true, setUpper: true }),
-    zipCode: require("./field-number")({ name: "zipCode", required: true, max: 99999999 })
+    zipCode: require("./field-number")({ name: "zipCode", required: true, max: 99999999, mask: "00.000-000" })
   };
 
   return _object;

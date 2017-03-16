@@ -11,7 +11,7 @@ module.exports = function(param) {
     specialties: [ { specialty: require("./object-objectId")({ name: "specialty", index: true, required: true, schemaName: "Specialty" }), _id: false } ],
     phoneExtension: require("./field-number")({ name: "phoneExtension" }),
     email: require("./field-email")({ name: "email", required: true }),
-    deadlineScheduleCancel: require("./field-number")({ name: "deadlineScheduleCancel", required: true, min: 0, max: 99 }),
+    deadlineScheduleCancel: require("./field-number")({ name: "deadlineScheduleCancel", required: true, min: 0, max: 99 }), // dédlaine iskédjul kêncil
     lockedCancel: require("./field-boolean")({ name: "lockedCancel", required: true, default: false }),
     alertCancel: require("./field-string")({ name: "alertCancel" }),
     // lkdCanNoIntSched (locked Cancel Without Integrated Schedule)

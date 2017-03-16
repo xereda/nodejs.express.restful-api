@@ -5,7 +5,7 @@
 module.exports.schema = {
   id: false,
   name: require("./fields/field-name")({ name: "name", required: true, index: true, unique: true, minLength: 3, setUpper: true, getUpper: true }),
-  email: require("./fields/field-email")({ name: "email", required: true, index: true, unique: true, setUpper: true, getUpper: true }),
+  email: require("./fields/field-email")({ name: "email", required: true, index: true, unique: true, setLower: true, getLower: true }),
   description: require("./fields/field-string")({ name: "description" }),
   active: require("./fields/field-boolean")({ name: "active" }),
   address: require("./fields/object-address")({ name: "address" }),

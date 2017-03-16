@@ -24,6 +24,7 @@
     "moment": "^2.14.1",
     "mongoose": "^4.8.4",
     "mongoose-validator": "^1.2.5",
+    "string-mask": "^0.3.0",
     "validator": "^5.4.0"
   },
   "devDependencies": {
