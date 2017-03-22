@@ -10,7 +10,7 @@ module.exports.schema = {
   cpf: require("./fields/field-cpf")({ name: "cpf" }),
   birthday: require("./fields/field-date")({ name: "birthday", required: true }),
   mothersName: require("./fields/field-name")({ name: "mothersName", required: true, minLength: 3, seUpper: true, getUpper: true }),
-  healthInsurances: require("./fields/object-healthInsurance")({ name: "healthInsurances" }),
+  agreements: require("./fields/object-agreement")({ name: "agreements" }),
   active: require("./fields/field-boolean")({ name: "active" }),
   createdById: require("./fields/field-createdById")({ name: "createdById", required: true }),
   updatedById: require("./fields/field-updatedById")({ name: "updatedById", required: true }),
@@ -27,7 +27,7 @@ module.exports.schemaProperties = {
 
 // array contendo os campos referentes a subdocumentos.
 module.exports.subDocs = [
-  { fieldName: "healthInsurances", ref: "HealthInsurance", indexField: "healthInsurance" },
+  { fieldName: "agreements", ref: "Agreement", indexField: "agreement" },
 ];
 
 module.exports.referencedFields = [

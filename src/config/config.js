@@ -34,9 +34,10 @@ module.exports = {
               { name: "professionalActivities", collection: "ProfessionalActivity", detail: " [ Atividade Profissional ]" },
               { name: "specialties", collection: "Specialty", detail: " [ Especializações ]" },
               { name: "users", collection: "User", detail: " [ Usuários ]" },
-              { name: "healthInsurances", collection: "HealthInsurance", detail: " [ Plano de Saúde ]" },
+              { name: "agreements", collection: "Agreement", detail: " [ Convênios ]" },
               { name: "operators", collection: "Operator", detail: " [ Operadoras de Plano de Saúde ]" },
-              { name: "workplaceProviderHIs", collection: "WorkplaceProviderHI", detail: " [ Planos de Saúde Liberados para um Prestador ]" },
+              // o resource abaixo (workplaceProviderHIs) foi desligado, pois foi transferido para dentro de workplaces no subdoc providers.
+              // { name: "workplaceProviderHIs", collection: "WorkplaceProviderHI", detail: " [ Planos de Saúde Liberados para um Prestador ]" },
               { name: "people", collection: "Person", detail: " [ Usuários do Aplicativo Mobile ]" },
               { name: "lives", collection: "Life", detail: " [ Vidas (Dependentes de um Usuário do App) ]" },
               { name: "scheduleDefinitions", collection: "ScheduleDefinition", detail: " [ Definição da Agenda (Núcleo do Sistema) ]" },

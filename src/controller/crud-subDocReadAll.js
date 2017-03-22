@@ -195,6 +195,8 @@ module.exports = function(collection, model) {
           // Percorre todos os filtros informados na query string.
           Object.keys(_filters).forEach(function(key,index) {
 
+            console.log('_filters[key]: ', _filters[key])
+
             // Caso o campo seja do tipo string
             if ((typeof _filters[key]) === "string") {
 
@@ -225,7 +227,15 @@ module.exports = function(collection, model) {
 
               } else {
 
-                if (typeof element[key]  !== "string") {
+                if (typeof element[key]  === "object") {
+                  
+                  if (element[key]._id !== undefined && element[key]._id.toString() !== _filters[key]) {
+                    control = false;
+                  }
+
+                } else if (typeof element[key]  !== "string") {
+
+
 
                   if (element[key].toISOString() !== _filters[key]) {
                     control = false;

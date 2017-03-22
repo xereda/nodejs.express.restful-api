@@ -16,7 +16,7 @@ module.exports.schema = {
   specialty: require("./fields/object-objectId")({ name: "specialty", schemaName: "Specialty" }),
   workplace: require("./fields/object-objectId")({ name: "workplace", schemaName: "Workplace" }),
   provider: require("./fields/object-objectId")({ name: "provider", schemaName: "Provider" }),
-  healthInsurance: require("./fields/object-objectId")({ name: "healthInsurance", schemaName: "HealthInsurance" }),
+  agreement: require("./fields/object-objectId")({ name: "agreement", schemaName: "Agreement" }),
   // parentSchedule - agenda origem da transferência
   parentSchedule: require("./fields/object-objectId")({ name: "parentSchedule", schemaName: "Schedule" }),
   // data da consulta - será informada completa, apenas zerando os segundos e milisegundos.
@@ -114,7 +114,7 @@ module.exports.referencedFields = [
   { fieldName: "specialty", ref: "Specialty"},
   { fieldName: "workplace", ref: "Workplace"},
   { fieldName: "provider", ref: "Provider"},
-  { fieldName: "healthInsurance", ref: "HealthInsurance"},
+  { fieldName: "agreement", ref: "Agreement"},
   { fieldName: "parentSchedule", ref: "Schedule"},
   { fieldName: "canceled.user", ref: "User"},
   { fieldName: "approved.user", ref: "User"},
@@ -128,5 +128,5 @@ module.exports.referencedFields = [
 ];
 
 
-module.exports.setIndexFields = { scheduleDefinition: 1, life: 1, specialty: 1, workplace: 1, provider: 1, healthInsurance: 1, parentSchedule: 1, date: 1 };
+module.exports.setIndexFields = { scheduleDefinition: 1, life: 1, specialty: 1, workplace: 1, provider: 1, agreement: 1, parentSchedule: 1, date: 1 };
 module.exports.setIndexOptions = { unique: true };

@@ -1,6 +1,5 @@
-// Nome da collection: Health Insurance
-// (Health Insurance - Pronúncia: rélfi enxúrence)
-// Finalidade: Planos de Saúde - Unimed, Agemed, Saúde Bradesco
+// Nome da collection: Agreement
+// Finalidade: Gerenciar convênsios, no caso de planos de saúde: Unimed, Agemed, Saúde Bradesco
 
 "use strict";
 
@@ -22,5 +21,5 @@ module.exports.schemaProperties = {
 };
 
 module.exports.refIdentityCollections = [
-  { collection: 'Operator', field: 'healthInsurance' },
+  { collection: 'Operator', field: 'agreement' },
 ]

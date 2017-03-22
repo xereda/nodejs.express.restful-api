@@ -1,3 +1,8 @@
+// ********
+// Este resource foi desligado em 20/03/2017. A relação de convênios ficará dentro de worklplaces, subdoc providers.
+// HealthInsurance tambem mudou para Agreement
+// ********
+
 // Nome da collection: WorlplaceProviderHI, onde HI = Health Insurance (Seguro de Saúde / Plano de Sáude)
 // (Health Insurance - Pronúncia: rélfi enxúrence)
 // Finalidade: Determinar os planos de saúde (HI) liberados para um prestador (provider) dentro de um local de trabalho (workplace)

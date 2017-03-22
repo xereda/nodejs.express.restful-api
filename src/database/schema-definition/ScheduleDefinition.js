@@ -8,7 +8,7 @@ module.exports.schema = {
   id: false,
   workplace: require("./fields/object-objectId")({ name: "workplace", index: true, required: true, schemaName: "Workplace" }),
   provider: require("./fields/object-objectId")({ name: "provider", index: true, required: true, schemaName: "Provider" }),
-  allowedHIs: require("./fields/object-allowedHI")({ name: "allowedHIs" }),
+  allowedAgreements: require("./fields/object-allowedAgreements")({ name: "allowedAgreements" }),
   active: require("./fields/field-boolean")({ name: "active", required: true }), // éctive
   autoApproval: require("./fields/field-boolean")({ name: "autoApproval", required: true }), // auto "appríval"
   weekDay: require("./fields/field-domain")({ name: "weekDay", required: true, domain: ["SEG", "TER", "QUA", "QUI", "SEX", "SAB", "DOM"] }),
@@ -39,7 +39,7 @@ module.exports.schemaProperties = {
 
 // array contendo os campos referentes a subdocumentos.
 module.exports.subDocs = [
-  { fieldName: "allowedHIs", ref: "HealthInsurance", indexField: "allowedHI" },
+  { fieldName: "allowedAgreements", ref: "Agreement", indexField: "agreement" },
 ];
 
 module.exports.referencedFields = [

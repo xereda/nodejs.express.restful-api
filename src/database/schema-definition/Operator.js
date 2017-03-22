@@ -7,7 +7,7 @@
 module.exports.schema = {
   id: false,
   name: require("./fields/field-name")({ name: "name", required: true, index: true, unique: true, minLength: 3, setUpper: true, getUppwer: true }),
-  healthInsurance: require("./fields/object-objectId")({ name: "healthInsurance", index: true, required: true, schemaName: "HealthInsurance" }),
+  agreement: require("./fields/object-objectId")({ name: "agreement", index: true, required: true, schemaName: "Agreement" }),
   webService: require("./fields/object-webService")({ name: "webService" }),
   ANSCode: require("./fields/field-string")({ name: "ANSCode", setUpper: true, getUpper: true }),
   internalCode: require("./fields/field-string")({ name: "InternalCode", setUpper: true }),
@@ -26,5 +26,5 @@ module.exports.schemaProperties = {
 };
 
 module.exports.referencedFields = [
-  { fieldName: "healthInsurance", ref: "HealthInsurance"},
+  { fieldName: "agreement", ref: "Agreement"},
 ];
