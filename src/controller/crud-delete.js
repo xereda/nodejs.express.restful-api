@@ -32,6 +32,7 @@ module.exports = function(collection, model) {
           }
 
           if (index === array.length - 1) { // ultimo
+
             if (_collectionList.length > 0) {
               const _translatedList = messages.translateCollections(_collectionList.map((a) => { return a.collection }).filter((element, index, array) => { return array.indexOf(element) === index })).join(", ");
               callback({ error: messages.getMessage("error", 43).replace("%1", _translatedList) }, 400);
@@ -61,10 +62,8 @@ module.exports = function(collection, model) {
         // documento inexistente
         callback({ response: messages.getMessage("message", 3), err}, 404);
       } else {
-
         // Encontrou o documento e irá remove-lo
         doc.remove(function(err) {
-
           // Documento foi removido com sucesso
           if (!err) {
             // Documento excluído com sucesso

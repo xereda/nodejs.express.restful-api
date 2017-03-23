@@ -1,12 +1,13 @@
 module.exports = function(collection, model) {
 
   // Faz o controle das funções de CRUD da restapi
-
   const mongoose = require("mongoose");
   // Módulo que define o esquema da collection informada como parâmetro
   const schemaDef  = require("../database/schema-definition/" + collection);
   const messages = require("./messages");
   const config = require("../config/config");
+
+  const sleep = require("sleep");
 
   // ** READ - GET **
   // Função que retorna um determinado documento da collection.
@@ -32,6 +33,8 @@ module.exports = function(collection, model) {
     //        }});
 
     modelDoc.exec(function(err, doc) {
+
+      // sleep.sleep(2);
 
       if (err) {
         // Nao foi possivel retornar o documento

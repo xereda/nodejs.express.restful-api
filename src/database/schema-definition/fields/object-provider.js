@@ -22,8 +22,8 @@ module.exports = function(param) {
     // lkdCanNoIntSched (locked Cancel Without Integrated Schedule)
     // Determina se é possível cancelar uma agenda quando o  prestador não
     // possui agenda integrada ao docmob. Yes => "Não permite cancelar"
-    lkdCanNoIntSched: require("./field-boolean")({ name: "lkdCanNoIntSched", required: true, default: false }),
-    msgCanNoIntSched: require("./field-string")({ name: "msgCanNoIntSched" }),
+    // lkdCanNoIntSched: require("./field-boolean")({ name: "lkdCanNoIntSched", required: true, default: false }),
+    // msgCanNoIntSched: require("./field-string")({ name: "msgCanNoIntSched" }),
     createdById: require("./field-createdById")({ name: "createdById", required: true, subDoc: "provider" }),
     updatedById: require("./field-updatedById")({ name: "updatedById", required: true, subDoc: "provider" }),
     createdAt: require("./field-date")({ name: "createdAt", required: true, subDoc: "provider" }),

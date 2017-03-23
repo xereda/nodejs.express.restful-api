@@ -26,8 +26,8 @@ module.exports.schemaProperties = {
 module.exports.refIdentityCollections = [
   { collection: 'City', field: 'createdById' },
   { collection: 'City', field: 'updatedById' },
-  { collection: 'HealthInsurance', field: 'createdById' },
-  { collection: 'HealthInsurance', field: 'updatedById' },
+  { collection: 'Agreement', field: 'createdById' },
+  { collection: 'Agreement', field: 'updatedById' },
   { collection: 'Holiday', field: 'createdById' },
   { collection: 'Holiday', field: 'updatedById' },
   { collection: 'HolidayException', field: 'createdById' },
@@ -56,6 +56,4 @@ module.exports.refIdentityCollections = [
   { collection: 'User', field: 'updatedById' },
   { collection: 'Workplace', field: 'createdById' },
   { collection: 'Workplace', field: 'updatedById' },
-  { collection: 'WorkplaceProviderHI', field: 'createdById' },
-  { collection: 'WorkplaceProviderHI', field: 'updatedById' },
 ]
